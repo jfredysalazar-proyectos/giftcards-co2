@@ -282,3 +282,15 @@
 - [x] Generar imagen impactante de Fortnite para hero carousel
 - [x] Actualizar HeroCarousel.tsx con nuevas imágenes
 - [x] Verificar que las imágenes se muestren correctamente en el carousel
+
+## Barra de Anuncios Dinámica
+- [x] Crear tabla announcements en esquema de base de datos
+- [x] Agregar campos: id, text, isActive, backgroundColor, textColor, createdAt, updatedAt
+- [x] Ejecutar migración de base de datos
+- [x] Crear query helpers para announcements en server/db.ts
+- [x] Crear router de announcements en server/routers/
+- [x] Crear componente AnnouncementBar.tsx para mostrar anuncio
+- [x] Integrar AnnouncementBar en Home.tsx
+- [x] Crear interfaz de gestión en Admin para editar anuncio
+- [x] Insertar anuncio inicial con TRM del día
+- [x] Probar edición y visualización del anuncio

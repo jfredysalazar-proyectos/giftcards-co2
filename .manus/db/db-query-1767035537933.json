@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO announcements (text, isActive, backgroundColor, textColor) VALUES ('TRM para Hoy es de: $3900 COP por Dólar', true, '#7c3aed', '#ffffff')",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user q8Ed9efAHcuZDzr.root --database iVAPtUQGMwL6qxGuVbNjoM --execute INSERT INTO announcements (text, isActive, backgroundColor, textColor) VALUES ('TRM para Hoy es de: $3900 COP por Dólar', true, '#7c3aed', '#ffffff')",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 86
+}

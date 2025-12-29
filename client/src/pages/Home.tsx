@@ -7,6 +7,7 @@ import { useState, useMemo } from "react";
 import { Search, ShoppingCart, MessageCircle, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import HeroCarousel from "@/components/HeroCarousel";
 import TestimonialsCarousel from "@/components/TestimonialsCarousel";
+import AnnouncementBar from "@/components/AnnouncementBar";
 import { Link } from "wouter";
 import { useCart } from "@/contexts/CartContext";
 import { CartModal } from "@/components/CartModal";
@@ -99,6 +100,9 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-white">
+      {/* Announcement Bar */}
+      <AnnouncementBar />
+      
       {/* Navigation */}
       <nav className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
         <div className="container flex items-center justify-between py-4">

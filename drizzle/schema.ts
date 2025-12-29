@@ -238,3 +238,19 @@ export const settings = mysqlTable("settings", {
 
 export type Setting = typeof settings.$inferSelect;
 export type InsertSetting = typeof settings.$inferInsert;
+
+/**
+ * Announcements table for dynamic announcement bar
+ */
+export const announcements = mysqlTable("announcements", {
+  id: int("id").autoincrement().primaryKey(),
+  text: text("text").notNull(),
+  isActive: boolean("isActive").default(true).notNull(),
+  backgroundColor: varchar("backgroundColor", { length: 50 }).default("#7c3aed").notNull(),
+  textColor: varchar("textColor", { length: 50 }).default("#ffffff").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Announcement = typeof announcements.$inferSelect;
+export type InsertAnnouncement = typeof announcements.$inferInsert;

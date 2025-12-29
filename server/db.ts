@@ -12,6 +12,7 @@ import {
   reviews, 
   faqs,
   settings,
+  announcements,
   InsertCategory,
   InsertProduct,
   InsertProductAmount,
@@ -20,7 +21,8 @@ import {
   InsertOrderItem,
   InsertReview,
   InsertFAQ,
-  InsertSetting
+  InsertSetting,
+  InsertAnnouncement
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -437,4 +439,45 @@ export async function createSetting(setting: InsertSetting) {
   
   const result = await db.insert(settings).values(setting);
   return result;
+}
+
+// Announcements queries
+export async function getActiveAnnouncement() {
+  const db = await getDb();
+  if (!db) return undefined;
+  
+  const result = await db.select().from(announcements)
+    .where(eq(announcements.isActive, true))
+    .orderBy(desc(announcements.createdAt))
+    .limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getAllAnnouncements() {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(announcements).orderBy(desc(announcements.createdAt));
+}
+
+export async function createAnnouncement(announcement: InsertAnnouncement) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const result = await db.insert(announcements).values(announcement);
+  return result;
+}
+
+export async function updateAnnouncement(id: number, announcement: Partial<InsertAnnouncement>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.update(announcements).set(announcement).where(eq(announcements.id, id));
+}
+
+export async function deleteAnnouncement(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.delete(announcements).where(eq(announcements.id, id));
 }
