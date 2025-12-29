@@ -256,3 +256,8 @@
 - [x] Probar edición de montos sin tocar imágenes
 - [x] Probar edición de descripción sin tocar imágenes
 - [x] Verificar que las imágenes persisten después de guardar
+
+## Regeneración de Imagen Amazon Gift Card
+- [x] Generar imagen impactante y profesional de Amazon Gift Card
+- [x] Actualizar referencia en base de datos
+- [x] Verificar que la imagen se muestre correctamente en el sitio
