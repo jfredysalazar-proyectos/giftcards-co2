@@ -16,7 +16,7 @@ export default function RefundPolicy() {
               <img 
                 src="/logo-giftcards-colombia.webp" 
                 alt="GiftCards Colombia" 
-                className="h-12 w-auto"
+                className="h-16 w-auto"
               />
             </div>
           </Link>

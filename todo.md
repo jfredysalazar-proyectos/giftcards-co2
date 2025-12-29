@@ -323,3 +323,9 @@
 - [x] Actualizar todas las páginas legales y de soporte
 - [x] Ajustar tamaño y estilo del logo para que se vea bien
 - [x] Verificar que el logo se muestre correctamente en todas las páginas
+
+## Procesamiento de Imagen del Logo
+- [x] Remover bordes blancos de la imagen del logo
+- [x] Remover fondo blanco dejando transparencia
+- [x] Ajustar tamaño del logo en el código (aumentar de h-12 a h-16 o más)
+- [x] Verificar que el logo se vea más grande y prominente
