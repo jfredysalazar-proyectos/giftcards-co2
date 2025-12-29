@@ -7,12 +7,19 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Plus, Edit, Trash2, Loader2 } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Plus, Edit, Trash2, Loader2, X } from "lucide-react";
 import { toast } from "sonner";
+
+type AmountEntry = {
+  amount: string;
+  price: string;
+};
 
 export function ProductsManagement() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any>(null);
+  const [amounts, setAmounts] = useState<AmountEntry[]>([{ amount: "", price: "" }]);
 
   const utils = trpc.useUtils();
   const { data: products = [], isLoading } = trpc.products.list.useQuery();
@@ -22,6 +29,7 @@ export function ProductsManagement() {
     onSuccess: () => {
       utils.products.list.invalidate();
       setIsDialogOpen(false);
+      setAmounts([{ amount: "", price: "" }]);
       toast.success("Producto creado exitosamente");
     },
     onError: (error) => {
@@ -34,6 +42,7 @@ export function ProductsManagement() {
       utils.products.list.invalidate();
       setIsDialogOpen(false);
       setEditingProduct(null);
+      setAmounts([{ amount: "", price: "" }]);
       toast.success("Producto actualizado exitosamente");
     },
     onError: (error) => {
@@ -55,6 +64,13 @@ export function ProductsManagement() {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     
+    // Validate amounts
+    const validAmounts = amounts.filter(a => a.amount && a.price);
+    if (validAmounts.length === 0) {
+      toast.error("Debes agregar al menos un monto válido");
+      return;
+    }
+
     const data = {
       name: formData.get("name") as string,
       slug: formData.get("slug") as string,
@@ -65,6 +81,10 @@ export function ProductsManagement() {
       gradient: formData.get("gradient") as string,
       inStock: formData.get("inStock") === "true",
       featured: formData.get("featured") === "true",
+      amounts: validAmounts.map(a => ({
+        amount: a.amount,
+        price: parseFloat(a.price)
+      }))
     };
 
     if (editingProduct) {
@@ -77,6 +97,8 @@ export function ProductsManagement() {
   const handleEdit = (product: any) => {
     setEditingProduct(product);
     setIsDialogOpen(true);
+    // TODO: Load existing amounts for this product
+    setAmounts([{ amount: "", price: "" }]);
   };
 
   const handleDelete = (id: number) => {
@@ -85,16 +107,33 @@ export function ProductsManagement() {
     }
   };
 
-  const handleDialogClose = (open: boolean) => {
-    setIsDialogOpen(open);
-    if (!open) {
-      setEditingProduct(null);
-    }
-  };
-
   const handleNewProduct = () => {
     setEditingProduct(null);
     setIsDialogOpen(true);
+    setAmounts([{ amount: "", price: "" }]);
+  };
+
+  const handleAddAmount = () => {
+    setAmounts([...amounts, { amount: "", price: "" }]);
+  };
+
+  const handleRemoveAmount = (index: number) => {
+    if (amounts.length > 1) {
+      setAmounts(amounts.filter((_, i) => i !== index));
+    }
+  };
+
+  const handleAmountChange = (index: number, field: "amount" | "price", value: string) => {
+    const newAmounts = [...amounts];
+    newAmounts[index][field] = value;
+    setAmounts(newAmounts);
+  };
+
+  const addPresetAmount = (amount: string) => {
+    const exists = amounts.some(a => a.amount === amount);
+    if (!exists) {
+      setAmounts([...amounts, { amount, price: amount }]);
+    }
   };
 
   if (isLoading) {
@@ -116,110 +155,195 @@ export function ProductsManagement() {
               Nuevo Producto
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
                 {editingProduct ? "Editar Producto" : "Crear Nuevo Producto"}
               </DialogTitle>
             </DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <Label htmlFor="name">Nombre *</Label>
-                <Input
-                  id="name"
-                  name="name"
-                  defaultValue={editingProduct?.name}
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="slug">Slug (URL) *</Label>
-                <Input
-                  id="slug"
-                  name="slug"
-                  defaultValue={editingProduct?.slug}
-                  placeholder="playstation-network"
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="categoryId">Categoría *</Label>
-                <Select name="categoryId" defaultValue={editingProduct?.categoryId?.toString()} required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecciona una categoría" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((cat) => (
-                      <SelectItem key={cat.id} value={cat.id.toString()}>
-                        {cat.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label htmlFor="description">Descripción Corta</Label>
-                <Textarea
-                  id="description"
-                  name="description"
-                  defaultValue={editingProduct?.description || ""}
-                  rows={2}
-                />
-              </div>
-              <div>
-                <Label htmlFor="fullDescription">Descripción Completa</Label>
-                <Textarea
-                  id="fullDescription"
-                  name="fullDescription"
-                  defaultValue={editingProduct?.fullDescription || ""}
-                  rows={4}
-                />
-              </div>
-              <div>
-                <Label htmlFor="image">URL de Imagen</Label>
-                <Input
-                  id="image"
-                  name="image"
-                  defaultValue={editingProduct?.image || ""}
-                  placeholder="/images/product.png"
-                />
-              </div>
-              <div>
-                <Label htmlFor="gradient">Gradiente CSS</Label>
-                <Input
-                  id="gradient"
-                  name="gradient"
-                  defaultValue={editingProduct?.gradient || ""}
-                  placeholder="from-purple-700 to-purple-500"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Basic Product Info */}
+              <div className="space-y-4">
+                <h3 className="font-semibold text-lg">Información Básica</h3>
                 <div>
-                  <Label htmlFor="inStock">En Stock</Label>
-                  <Select name="inStock" defaultValue={editingProduct?.inStock ? "true" : "false"}>
+                  <Label htmlFor="name">Nombre *</Label>
+                  <Input
+                    id="name"
+                    name="name"
+                    defaultValue={editingProduct?.name}
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="slug">Slug (URL) *</Label>
+                  <Input
+                    id="slug"
+                    name="slug"
+                    defaultValue={editingProduct?.slug}
+                    placeholder="playstation-network"
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="categoryId">Categoría *</Label>
+                  <Select name="categoryId" defaultValue={editingProduct?.categoryId?.toString()} required>
                     <SelectTrigger>
-                      <SelectValue />
+                      <SelectValue placeholder="Selecciona una categoría" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="true">Sí</SelectItem>
-                      <SelectItem value="false">No</SelectItem>
+                      {categories.map((cat) => (
+                        <SelectItem key={cat.id} value={cat.id.toString()}>
+                          {cat.name}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
                 <div>
-                  <Label htmlFor="featured">Destacado</Label>
-                  <Select name="featured" defaultValue={editingProduct?.featured ? "true" : "false"}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="true">Sí</SelectItem>
-                      <SelectItem value="false">No</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Label htmlFor="description">Descripción Corta</Label>
+                  <Textarea
+                    id="description"
+                    name="description"
+                    defaultValue={editingProduct?.description || ""}
+                    rows={2}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="fullDescription">Descripción Completa</Label>
+                  <Textarea
+                    id="fullDescription"
+                    name="fullDescription"
+                    defaultValue={editingProduct?.fullDescription || ""}
+                    rows={4}
+                  />
                 </div>
               </div>
-              <div className="flex justify-end gap-2 pt-4">
+
+              {/* Appearance */}
+              <div className="space-y-4">
+                <h3 className="font-semibold text-lg">Apariencia</h3>
+                <div>
+                  <Label htmlFor="image">URL de Imagen</Label>
+                  <Input
+                    id="image"
+                    name="image"
+                    defaultValue={editingProduct?.image || ""}
+                    placeholder="/images/product.png"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="gradient">Gradiente CSS</Label>
+                  <Input
+                    id="gradient"
+                    name="gradient"
+                    defaultValue={editingProduct?.gradient || ""}
+                    placeholder="from-purple-700 to-purple-500"
+                  />
+                </div>
+              </div>
+
+              {/* Amounts Configuration */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-semibold text-lg">Montos Disponibles</h3>
+                  <div className="flex gap-2">
+                    <Button type="button" variant="outline" size="sm" onClick={() => addPresetAmount("10")}>
+                      +$10
+                    </Button>
+                    <Button type="button" variant="outline" size="sm" onClick={() => addPresetAmount("25")}>
+                      +$25
+                    </Button>
+                    <Button type="button" variant="outline" size="sm" onClick={() => addPresetAmount("50")}>
+                      +$50
+                    </Button>
+                    <Button type="button" variant="outline" size="sm" onClick={() => addPresetAmount("100")}>
+                      +$100
+                    </Button>
+                  </div>
+                </div>
+                
+                <Card className="p-4 space-y-3">
+                  {amounts.map((amount, index) => (
+                    <div key={index} className="flex gap-2 items-end">
+                      <div className="flex-1">
+                        <Label htmlFor={`amount-${index}`}>Monto</Label>
+                        <Input
+                          id={`amount-${index}`}
+                          placeholder="10, 25, 50, 100..."
+                          value={amount.amount}
+                          onChange={(e) => handleAmountChange(index, "amount", e.target.value)}
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <Label htmlFor={`price-${index}`}>Precio (USD)</Label>
+                        <Input
+                          id={`price-${index}`}
+                          type="number"
+                          step="0.01"
+                          placeholder="10.00"
+                          value={amount.price}
+                          onChange={(e) => handleAmountChange(index, "price", e.target.value)}
+                        />
+                      </div>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleRemoveAmount(index)}
+                        disabled={amounts.length === 1}
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ))}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={handleAddAmount}
+                    className="w-full"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Agregar Monto
+                  </Button>
+                </Card>
+                <p className="text-sm text-gray-500">
+                  Nota: Los montos se guardarán después de crear el producto. Usa los botones rápidos o agrega montos personalizados.
+                </p>
+              </div>
+
+              {/* Settings */}
+              <div className="space-y-4">
+                <h3 className="font-semibold text-lg">Configuración</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="inStock">En Stock</Label>
+                    <Select name="inStock" defaultValue={editingProduct?.inStock ? "true" : "false"}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="true">Sí</SelectItem>
+                        <SelectItem value="false">No</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="featured">Destacado</Label>
+                    <Select name="featured" defaultValue={editingProduct?.featured ? "true" : "false"}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="true">Sí</SelectItem>
+                        <SelectItem value="false">No</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-4 border-t">
                 <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                   Cancelar
                 </Button>
@@ -234,7 +358,7 @@ export function ProductsManagement() {
                       Guardando...
                     </>
                   ) : (
-                    "Guardar"
+                    "Guardar Producto"
                   )}
                 </Button>
               </div>

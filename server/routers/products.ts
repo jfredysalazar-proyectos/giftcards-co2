@@ -58,13 +58,31 @@ export const productsRouter = router({
         gradient: z.string().optional(),
         inStock: z.boolean().default(true),
         featured: z.boolean().default(false),
+        amounts: z.array(z.object({
+          amount: z.string(),
+          price: z.number()
+        })).optional(),
       })
     )
     .mutation(async ({ input, ctx }) => {
       if (ctx.user.role !== "admin") {
         throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
       }
-      return await db.createProduct(input);
+      const { amounts, ...productData } = input;
+      const product = await db.createProduct(productData);
+      
+      // Create amounts if provided
+      if (amounts && amounts.length > 0) {
+        for (const amount of amounts) {
+          await db.createProductAmount({
+            productId: product.id,
+            amount: amount.amount,
+            price: amount.price.toString()
+          });
+        }
+      }
+      
+      return product;
     }),
 
   update: protectedProcedure
@@ -80,14 +98,37 @@ export const productsRouter = router({
         gradient: z.string().optional(),
         inStock: z.boolean().optional(),
         featured: z.boolean().optional(),
+        amounts: z.array(z.object({
+          amount: z.string(),
+          price: z.number()
+        })).optional(),
       })
     )
     .mutation(async ({ input, ctx }) => {
       if (ctx.user.role !== "admin") {
         throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
       }
-      const { id, ...data } = input;
+      const { id, amounts, ...data } = input;
       await db.updateProduct(id, data);
+      
+      // Update amounts if provided
+      if (amounts && amounts.length > 0) {
+        // Delete existing amounts
+        const existingAmounts = await db.getProductAmounts(id);
+        for (const existing of existingAmounts) {
+          await db.deleteProductAmount(existing.id);
+        }
+        
+        // Create new amounts
+        for (const amount of amounts) {
+          await db.createProductAmount({
+            productId: id,
+            amount: amount.amount,
+            price: amount.price.toString()
+          });
+        }
+      }
+      
       return { success: true };
     }),
 

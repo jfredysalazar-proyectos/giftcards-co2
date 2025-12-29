@@ -187,7 +187,15 @@ export async function createProduct(product: InsertProduct) {
   if (!db) throw new Error("Database not available");
   
   const result = await db.insert(products).values(product);
-  return result;
+  const insertId = (result as any).insertId || (result as any)[0]?.insertId;
+  
+  if (!insertId) {
+    throw new Error("Failed to get product ID after insert");
+  }
+  
+  // Return the created product
+  const [createdProduct] = await db.select().from(products).where(eq(products.id, insertId));
+  return createdProduct;
 }
 
 export async function updateProduct(id: number, product: Partial<InsertProduct>) {

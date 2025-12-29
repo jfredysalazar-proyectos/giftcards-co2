@@ -92,3 +92,16 @@
 - [x] Actualizar Dialog para usar setIsDialogOpen correctamente
 - [x] Verificar que el diálogo de crear producto se abra correctamente
 - [x] Probar funcionalidad completa de creación de productos
+
+## Gestión de Montos por Producto
+- [x] Agregar tabla de montos dentro del formulario de producto en Admin
+- [x] Permitir agregar múltiples montos ($10, $25, $50, $100, personalizado)
+- [x] Implementar funcionalidad de agregar/eliminar montos dinámicamente
+- [x] Implementar botones rápidos para montos preestablecidos
+- [x] Agregar validación de montos antes de guardar producto
+- [x] Actualizar router de productos para aceptar amounts en create y update
+- [x] Actualizar createProduct en db.ts para retornar producto creado con ID
+- [x] Guardar montos en base de datos asociados al producto
+- [ ] Cargar montos existentes al editar producto
+- [ ] Actualizar frontend para mostrar montos disponibles en detalle de producto
+- [ ] Actualizar selector de montos en página de producto
