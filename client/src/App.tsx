@@ -8,8 +8,8 @@ import { CartProvider } from "./contexts/CartContext";
 import Home from "./pages/Home";
 import ProductDetail from "./pages/ProductDetail";
 
-
 function Router() {
+  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path={"\\"} component={Home} />

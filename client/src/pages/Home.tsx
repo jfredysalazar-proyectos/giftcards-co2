@@ -1,29 +1,11 @@
+import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { CartModal } from "@/components/CartModal";
-import { useCart } from "@/contexts/CartContext";
-import { useState } from "react";
-import { Search, ShoppingCart, MessageCircle, ChevronLeft, ChevronRight } from "lucide-react";
-
-/**
- * Design Philosophy: Playful Gradient Grid
- * - Dynamic gradients flowing from purple → cyan with peach accents
- * - Cards with individual colors and rounded corners (20px)
- * - Playful animations on hover: elevation + rotation + glow
- * - Typography: Fredoka (display/bold), Outfit (body/regular)
- * - Color palette: Purple (#A855F7), Cyan (#06B6D4), Peach (#FF6B35), White
- */
-
-interface Product {
-  id: string;
-  name: string;
-  category: string;
-  price: string;
-  image: string;
-  gradient: string;
-  description: string;
-}
+import { trpc } from "@/lib/trpc";
+import { useState, useMemo } from "react";
+import { Search, ShoppingCart, MessageCircle, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { Link } from "wouter";
 
 interface Creator {
   id: string;
@@ -32,63 +14,6 @@ interface Creator {
   specialty: string;
   rating: number;
 }
-
-const PRODUCTS: Product[] = [
-  {
-    id: "psn-1",
-    name: "PlayStation Network",
-    category: "Videojuegos",
-    price: "$10 - $100",
-    image: "/images/product-category-psn.png",
-    gradient: "from-purple-700 to-purple-500",
-    description: "Tarjetas PSN para juegos, complementos y suscripciones",
-  },
-  {
-    id: "xbox-1",
-    name: "Xbox Game Pass",
-    category: "Videojuegos",
-    price: "$15 - $120",
-    image: "/images/product-category-xbox.png",
-    gradient: "from-teal-600 to-cyan-500",
-    description: "Tarjetas Xbox y Game Pass para el juego definitivo",
-  },
-  {
-    id: "nintendo-1",
-    name: "Nintendo eShop",
-    category: "Videojuegos",
-    price: "$20 - $100",
-    image: "/images/product-category-nintendo.png",
-    gradient: "from-orange-500 to-red-500",
-    description: "Juegos digitales y contenido de Nintendo Switch",
-  },
-  {
-    id: "amazon-1",
-    name: "Tarjetas de Regalo Amazon",
-    category: "Compras",
-    price: "$25 - $500",
-    image: "/images/product-category-amazon.png",
-    gradient: "from-orange-500 to-yellow-500",
-    description: "Compra cualquier cosa en Amazon con entrega instantánea",
-  },
-  {
-    id: "steam-1",
-    name: "Billetera Steam",
-    category: "Videojuegos",
-    price: "$5 - $100",
-    image: "/images/product-category-psn.png",
-    gradient: "from-blue-600 to-cyan-500",
-    description: "Tarjetas de regalo Steam para tu biblioteca de PC",
-  },
-  {
-    id: "apple-1",
-    name: "Tarjetas de Regalo Apple",
-    category: "Tecnología",
-    price: "$25 - $200",
-    image: "/images/product-category-amazon.png",
-    gradient: "from-gray-700 to-gray-500",
-    description: "Aplicaciones, juegos y servicios en plataformas Apple",
-  },
-];
 
 const CREATORS: Creator[] = [
   {
@@ -122,17 +47,32 @@ const CREATORS: Creator[] = [
 ];
 
 export default function Home() {
+  const { user, loading: authLoading } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("Todos");
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [carouselIndex, setCarouselIndex] = useState(0);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const { items } = useCart();
 
-  const categories = ["Todos", "Videojuegos", "Compras", "Tecnología"];
-  
-  const filteredProducts = selectedCategory === "Todos" 
-    ? PRODUCTS 
-    : PRODUCTS.filter(p => p.category === selectedCategory);
+  // Fetch categories and products
+  const { data: categories = [], isLoading: categoriesLoading } = trpc.categories.list.useQuery();
+  const { data: allProducts = [], isLoading: productsLoading } = trpc.products.list.useQuery();
+
+  // Filter products
+  const filteredProducts = useMemo(() => {
+    let filtered = allProducts;
+    
+    if (selectedCategory) {
+      filtered = filtered.filter(p => p.categoryId === selectedCategory);
+    }
+    
+    if (searchQuery) {
+      filtered = filtered.filter(p => 
+        p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.description?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+    
+    return filtered;
+  }, [allProducts, selectedCategory, searchQuery]);
 
   const visibleCreators = CREATORS.slice(carouselIndex, carouselIndex + 3);
 
@@ -144,31 +84,42 @@ export default function Home() {
     setCarouselIndex((prev) => (prev - 1 + CREATORS.length) % CREATORS.length);
   };
 
+  const isLoading = categoriesLoading || productsLoading;
+
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
       <nav className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
         <div className="container flex items-center justify-between py-4">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-cyan-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-display font-bold text-lg">GC</span>
+          <Link href="/">
+            <div className="flex items-center gap-2 cursor-pointer">
+              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-cyan-500 rounded-lg flex items-center justify-center">
+                <span className="text-white font-display font-bold text-lg">GC</span>
+              </div>
+              <h1 className="font-display text-2xl font-bold bg-gradient-to-r from-purple-600 to-cyan-600 bg-clip-text text-transparent">
+                Giftcards.Co
+              </h1>
             </div>
-            <h1 className="font-display text-2xl font-bold bg-gradient-to-r from-purple-600 to-cyan-600 bg-clip-text text-transparent">
-              Giftcards.Co
-            </h1>
-          </div>
+          </Link>
           <div className="flex items-center gap-4">
-            <button
-              onClick={() => setIsCartOpen(true)}
-              className="relative p-2 hover:bg-gray-100 rounded-lg transition"
-            >
-              <ShoppingCart className="w-6 h-6 text-purple-600" />
-              {items.length > 0 && (
-                <span className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
-                  {items.length}
-                </span>
-              )}
-            </button>
+            {user ? (
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-gray-600">Hola, {user.name}</span>
+                {user.role === "admin" && (
+                  <Link href="/admin">
+                    <Button variant="outline" size="sm">
+                      Admin
+                    </Button>
+                  </Link>
+                )}
+              </div>
+            ) : (
+              <Link href="/login">
+                <Button variant="outline" size="sm">
+                  Iniciar Sesión
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       </nav>
@@ -210,17 +161,27 @@ export default function Home() {
       {/* Category Filter */}
       <section className="container py-8">
         <div className="flex gap-3 overflow-x-auto pb-2">
+          <button
+            onClick={() => setSelectedCategory(null)}
+            className={`px-6 py-2 rounded-full font-medium transition whitespace-nowrap ${
+              selectedCategory === null
+                ? "bg-gradient-to-r from-purple-600 to-cyan-600 text-white shadow-lg"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            Todos
+          </button>
           {categories.map((cat) => (
             <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
+              key={cat.id}
+              onClick={() => setSelectedCategory(cat.id)}
               className={`px-6 py-2 rounded-full font-medium transition whitespace-nowrap ${
-                selectedCategory === cat
+                selectedCategory === cat.id
                   ? "bg-gradient-to-r from-purple-600 to-cyan-600 text-white shadow-lg"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
             >
-              {cat}
+              {cat.name}
             </button>
           ))}
         </div>
@@ -228,58 +189,59 @@ export default function Home() {
 
       {/* Product Grid */}
       <section className="container py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProducts.map((product) => (
-            <div
-              key={product.id}
-              className="group cursor-pointer transform transition duration-300 hover:scale-105 hover:rotate-1"
-            >
-              <Card className="overflow-hidden border-0 shadow-lg hover:shadow-2xl transition">
-                <div className={`h-64 bg-gradient-to-br ${product.gradient} relative overflow-hidden`}>
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+        {isLoading ? (
+          <div className="flex justify-center items-center py-20">
+            <Loader2 className="w-10 h-10 animate-spin text-purple-600" />
+          </div>
+        ) : filteredProducts.length === 0 ? (
+          <div className="text-center py-20">
+            <p className="text-gray-600 text-lg">No se encontraron productos</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredProducts.map((product) => (
+              <Link key={product.id} href={`/product/${product.slug}`}>
+                <div className="group cursor-pointer transform transition duration-300 hover:scale-105 hover:rotate-1">
+                  <Card className="overflow-hidden border-0 shadow-lg hover:shadow-2xl transition">
+                    <div className={`h-64 bg-gradient-to-br ${product.gradient || "from-gray-400 to-gray-600"} relative overflow-hidden`}>
+                      {product.image && (
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition"
+                        />
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+                    </div>
+                    <div className="p-6 bg-white">
+                      <h3 className="font-display text-xl font-bold text-gray-900 mb-2">
+                        {product.name}
+                      </h3>
+                      <p className="text-gray-600 text-sm mb-4">{product.description}</p>
+                      <div className="flex items-center justify-between mb-4">
+                        <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-cyan-600 bg-clip-text text-transparent">
+                          Desde $10
+                        </span>
+                        {product.inStock ? (
+                          <span className="px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
+                            En Stock
+                          </span>
+                        ) : (
+                          <span className="px-3 py-1 bg-red-100 text-red-700 text-xs font-semibold rounded-full">
+                            Agotado
+                          </span>
+                        )}
+                      </div>
+                      <Button className="w-full bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white font-semibold py-3 rounded-lg transition shadow-md hover:shadow-lg">
+                        Ver Detalles
+                      </Button>
+                    </div>
+                  </Card>
                 </div>
-                <div className="p-6 bg-white">
-                  <h3 className="font-display text-xl font-bold text-gray-900 mb-2">
-                    {product.name}
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-4">{product.description}</p>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-cyan-600 bg-clip-text text-transparent">
-                      {product.price}
-                    </span>
-                    <span className="px-3 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full">
-                      {product.category}
-                    </span>
-                  </div>
-                  <button
-                    onClick={() => {
-                      // Navigate to product detail or add to cart
-                      const amount = "$25"; // Default amount
-                      const price = 25;
-                      const cartItem = {
-                        id: `${product.id}-${amount}`,
-                        productName: product.name,
-                        amount,
-                        quantity: 1,
-                        price,
-                      };
-                      // For now, just show a toast
-                      alert(`¡${product.name} agregado al carrito!`);
-                    }}
-                    className="w-full bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white font-semibold py-3 rounded-lg transition shadow-md hover:shadow-lg"
-                  >
-                    Ver Detalles
-                  </button>
-                </div>
-              </Card>
-            </div>
-          ))}
-        </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Creator Spotlight Carousel */}
@@ -347,9 +309,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Cart Modal */}
-      <CartModal isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
-
       {/* Footer */}
       <footer className="bg-gray-900 text-gray-300 py-12">
         <div className="container">
@@ -361,9 +320,9 @@ export default function Home() {
             <div>
               <h3 className="font-display font-bold text-white mb-4">Soporte</h3>
               <ul className="text-sm space-y-2">
+                <li><Link href="/faq"><a className="hover:text-white transition">Preguntas Frecuentes</a></Link></li>
                 <li><a href="#" className="hover:text-white transition">Centro de Ayuda</a></li>
                 <li><a href="#" className="hover:text-white transition">Contáctanos</a></li>
-                <li><a href="#" className="hover:text-white transition">Preguntas Frecuentes</a></li>
               </ul>
             </div>
             <div>
@@ -377,9 +336,8 @@ export default function Home() {
             <div>
               <h3 className="font-display font-bold text-white mb-4">Cuenta</h3>
               <ul className="text-sm space-y-2">
-                <li><a href="#" className="hover:text-white transition">Mis Pedidos</a></li>
-                <li><a href="#" className="hover:text-white transition">Mi Cuenta</a></li>
-                <li><a href="#" className="hover:text-white transition">Iniciar Sesión</a></li>
+                <li><Link href="/orders"><a className="hover:text-white transition">Mis Pedidos</a></Link></li>
+                <li><Link href="/login"><a className="hover:text-white transition">Iniciar Sesión</a></Link></li>
               </ul>
             </div>
           </div>
