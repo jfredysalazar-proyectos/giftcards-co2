@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { trpc } from "@/lib/trpc";
 import { useState, useMemo } from "react";
 import { Search, ShoppingCart, MessageCircle, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import HeroCarousel from "@/components/HeroCarousel";
 import { Link } from "wouter";
 import { getLoginUrl } from "@/const";
 
@@ -133,37 +134,24 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-50 via-white to-cyan-50" />
-        <img 
-          src="/images/hero-banner.png" 
-          alt="Banner Principal" 
-          className="w-full h-96 object-cover"
-        />
-        <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
-          <div className="text-center max-w-2xl mx-auto px-4">
-            <h2 className="font-display text-5xl font-bold text-white mb-4">
-              Tu Centro de Tarjetas de Regalo Digitales
-            </h2>
-            <p className="text-white text-lg mb-8">
-              Entrega instantánea de PSN, Xbox, Nintendo, Amazon y más
-            </p>
-            <div className="flex gap-3 max-w-md mx-auto">
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
-                <Input
-                  placeholder="Buscar tarjetas de regalo..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 py-6 rounded-lg border-0 shadow-lg"
-                />
-              </div>
-              <Button className="bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white px-8 py-6 rounded-lg shadow-lg">
-                Buscar
-              </Button>
-            </div>
+      {/* Hero Carousel */}
+      <HeroCarousel />
+
+      {/* Search Bar */}
+      <section className="container -mt-8 relative z-10">
+        <div className="flex gap-3 max-w-2xl mx-auto">
+          <div className="flex-1 relative">
+            <Search className="absolute left-4 top-4 w-5 h-5 text-gray-400" />
+            <Input
+              placeholder="Buscar tarjetas de regalo..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-12 py-6 rounded-xl border-0 shadow-2xl bg-white"
+            />
           </div>
+          <Button className="bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white px-8 py-6 rounded-xl shadow-2xl">
+            Buscar
+          </Button>
         </div>
       </section>
 

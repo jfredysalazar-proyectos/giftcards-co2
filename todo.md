@@ -119,3 +119,15 @@
 - [x] Regenerar imagen de Amazon Gift Cards en formato cuadrado 1:1
 - [x] Regenerar imagen de Xbox Game Pass en formato cuadrado 1:1
 - [x] Todas las imágenes ahora son cuadradas y se verán perfectamente en móvil
+
+## Carrusel Hero con Imágenes de Videojuegos
+- [x] Generar 4 imágenes impactantes de videojuegos populares en alta resolución
+- [x] Crear componente HeroCarousel con embla-carousel y autoplay
+- [x] Reemplazar banner de texto estático con carrusel dinámico
+- [x] Implementar transiciones suaves entre slides (autoplay cada 5 segundos)
+- [x] Agregar indicadores de navegación (dots) en la parte inferior
+- [x] Agregar botones de navegación izquierda/derecha
+- [x] Agregar overlay de gradiente para mejor legibilidad del texto
+- [x] Mantener texto superpuesto sobre el carrusel
+- [x] Agregar barra de búsqueda flotante debajo del carrusel
+- [x] Asegurar que el carrusel sea responsive en móvil
