@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO products (name, slug, description, fullDescription, categoryId, image, gradient, inStock, featured, createdAt, updatedAt) \nVALUES (\n  'Xbox Gift Card',\n  'xbox-gift-card',\n  'Tarjetas de regalo Xbox para juegos y contenido digital',\n  'Compra tarjetas de regalo Xbox y úsalas para adquirir los últimos juegos, aplicaciones, películas, programas de TV y más en Xbox y Windows. Compatible con Xbox Series X|S, Xbox One y Windows PC. Código entregado instantáneamente por WhatsApp.',\n  1,\n  '/images/product-xbox-gift-card.png',\n  'from-green-600 to-teal-500',\n  1,\n  1,\n  NOW(),\n  NOW()\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user q8Ed9efAHcuZDzr.root --database iVAPtUQGMwL6qxGuVbNjoM --execute INSERT INTO products (name, slug, description, fullDescription, categoryId, image, gradient, inStock, featured, createdAt, updatedAt) \nVALUES (\n  'Xbox Gift Card',\n  'xbox-gift-card',\n  'Tarjetas de regalo Xbox para juegos y contenido digital',\n  'Compra tarjetas de regalo Xbox y úsalas para adquirir los últimos juegos, aplicaciones, películas, programas de TV y más en Xbox y Windows. Compatible con Xbox Series X|S, Xbox One y Windows PC. Código entregado instantáneamente por WhatsApp.',\n  1,\n  '/images/product-xbox-gift-card.png',\n  'from-green-600 to-teal-500',\n  1,\n  1,\n  NOW(),\n  NOW()\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 105
+}

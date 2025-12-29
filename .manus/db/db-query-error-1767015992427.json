@@ -1,0 +1,8 @@
+{
+  "query": "INSERT INTO product_amounts (productId, amount, price, createdAt, updatedAt) VALUES\n(5, '$10', '10.00', NOW(), NOW()),\n(5, '$25', '25.00', NOW(), NOW()),\n(5, '$50', '50.00', NOW(), NOW()),\n(5, '$100', '100.00', NOW(), NOW());",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user q8Ed9efAHcuZDzr.root --database iVAPtUQGMwL6qxGuVbNjoM --execute INSERT INTO product_amounts (productId, amount, price, createdAt, updatedAt) VALUES\n(5, '$10', '10.00', NOW(), NOW()),\n(5, '$25', '25.00', NOW(), NOW()),\n(5, '$50', '50.00', NOW(), NOW()),\n(5, '$100', '100.00', NOW(), NOW());",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 1: Unknown column 'updatedAt' in 'field list'"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "query": "SHOW TABLES LIKE '%amount%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user q8Ed9efAHcuZDzr.root --database iVAPtUQGMwL6qxGuVbNjoM --execute SHOW TABLES LIKE '%amount%';",
+  "rows": [
+    {
+      "Tables_in_iVAPtUQGMwL6qxGuVbNjoM (%amount%)": "product_amounts"
+    }
+  ],
+  "messages": [],
+  "stdout": "Tables_in_iVAPtUQGMwL6qxGuVbNjoM (%amount%)\nproduct_amounts\n",
+  "stderr": "",
+  "execution_time_ms": 55
+}

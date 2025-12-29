@@ -105,3 +105,9 @@
 - [ ] Cargar montos existentes al editar producto
 - [ ] Actualizar frontend para mostrar montos disponibles en detalle de producto
 - [ ] Actualizar selector de montos en página de producto
+
+## Agregar Xbox Gift Card
+- [x] Generar imagen profesional para Xbox Gift Card
+- [x] Insertar producto Xbox Gift Card en base de datos
+- [x] Agregar montos disponibles para Xbox Gift Card ($10, $25, $50, $100)
+- [x] Verificar que el producto se muestre correctamente en el frontend
