@@ -13,6 +13,8 @@ import MyOrders from "./pages/MyOrders";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import RefundPolicy from "./pages/RefundPolicy";
+import Contact from "./pages/Contact";
+import HelpCenter from "./pages/HelpCenter";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -26,6 +28,8 @@ function Router() {
       <Route path={"/terms"} component={TermsOfService} />
       <Route path={"/privacy"} component={PrivacyPolicy} />
       <Route path={"/refund"} component={RefundPolicy} />
+      <Route path={"/contact"} component={Contact} />
+      <Route path={"/help"} component={HelpCenter} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

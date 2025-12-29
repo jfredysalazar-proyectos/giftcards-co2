@@ -298,9 +298,9 @@ export default function Home() {
             <div>
               <h3 className="font-display font-bold text-white mb-4">Soporte</h3>
               <ul className="text-sm space-y-2">
-                <li><Link href="/faq"><a className="hover:text-white transition">Preguntas Frecuentes</a></Link></li>
-                <li><a href="#" className="hover:text-white transition">Centro de Ayuda</a></li>
-                <li><a href="#" className="hover:text-white transition">Contáctanos</a></li>
+                <li><Link href="/faq"><a className="hover:text-white transition cursor-pointer">Preguntas Frecuentes</a></Link></li>
+                <li><Link href="/help"><a className="hover:text-white transition cursor-pointer">Centro de Ayuda</a></Link></li>
+                <li><Link href="/contact"><a className="hover:text-white transition cursor-pointer">Contáctanos</a></Link></li>
               </ul>
             </div>
             <div>

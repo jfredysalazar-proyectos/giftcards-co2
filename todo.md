@@ -217,3 +217,13 @@
 - [x] Actualizar componente Footer con enlaces funcionales
 - [x] Configurar rutas en App.tsx para páginas legales
 - [x] Verificar que todos los enlaces del footer funcionen correctamente
+
+## Páginas de Soporte del Footer
+- [x] Expandir página de FAQs con preguntas frecuentes sobre productos digitales
+- [x] Agregar preguntas sobre proceso de compra, entrega, canje de códigos
+- [x] Agregar preguntas sobre problemas comunes y soluciones
+- [x] Crear página de Contáctanos con formulario y métodos de contacto
+- [x] Crear página de Centro de Ayuda con guías y recursos
+- [x] Actualizar enlaces del footer de Soporte
+- [x] Configurar rutas en App.tsx para nuevas páginas
+- [x] Verificar que todos los enlaces funcionen correctamente
