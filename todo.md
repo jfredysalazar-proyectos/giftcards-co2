@@ -271,3 +271,8 @@
 - [x] Considerar comparar directamente con existingImages en updateMutation
 - [x] Probar múltiples escenarios: editar solo montos, solo descripción, solo imágenes
 - [x] Verificar que la solución funcione en todos los casos
+
+## Reemplazo de Imagen Amazon Gift Card
+- [x] Copiar imagen proporcionada por usuario al directorio del proyecto
+- [x] Actualizar referencia en base de datos
+- [x] Verificar que la nueva imagen se muestre correctamente
