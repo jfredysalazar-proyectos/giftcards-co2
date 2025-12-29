@@ -7,22 +7,22 @@ import { Button } from "@/components/ui/button";
 const slides = [
   {
     id: 1,
-    image: "/images/hero-slide-1.jpg",
+    image: "/images/hero-slide-1.webp",
     alt: "Elden Ring - Explora las Tierras Intermedias",
   },
   {
     id: 2,
-    image: "/images/hero-slide-2.jpg",
+    image: "/images/hero-slide-2.webp",
     alt: "God of War Ragnarök - La saga nórdica continúa",
   },
   {
     id: 3,
-    image: "/images/hero-slide-3.jpg",
+    image: "/images/hero-slide-3.webp",
     alt: "The Legend of Zelda: Tears of the Kingdom - Aventura épica",
   },
   {
     id: 4,
-    image: "/images/hero-slide-4.jpg",
+    image: "/images/hero-slide-4.webp",
     alt: "Cyberpunk 2077 - Explora Night City",
   },
 ];

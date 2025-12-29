@@ -180,3 +180,13 @@
 - [x] Importar CartModal en ProductDetail.tsx
 - [x] Implementar funcionalidad de abrir/cerrar CartModal desde ícono de carrito
 - [x] Asegurar consistencia visual con el ícono de carrito de Home.tsx
+
+## Optimización de Imágenes a WebP
+- [x] Convertir todas las imágenes existentes (productos, hero, testimonios) a formato WebP
+- [x] Actualizar referencias de imágenes en base de datos
+- [x] Actualizar referencias de imágenes en código frontend
+- [x] Implementar sistema automático de conversión WebP en uploads del Admin
+- [x] Agregar librería sharp para procesamiento de imágenes
+- [x] Crear helper de conversión de imágenes en servidor
+- [x] Integrar conversión automática en ProductsManagement al subir imágenes
+- [x] Probar que las imágenes WebP se carguen correctamente

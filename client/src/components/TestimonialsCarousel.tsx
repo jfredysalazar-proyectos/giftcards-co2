@@ -17,7 +17,7 @@ const testimonials: Testimonial[] = [
   {
     id: 1,
     name: "Carlos Rodríguez",
-    avatar: "/images/testimonial-avatar-1.jpg",
+    avatar: "/images/testimonial-avatar-1.webp",
     rating: 5,
     comment: "Excelente servicio! Recibí mi código de PSN en menos de 5 minutos. Totalmente confiable y rápido. Lo recomiendo 100%.",
     product: "PlayStation Network"
@@ -25,7 +25,7 @@ const testimonials: Testimonial[] = [
   {
     id: 2,
     name: "Mei Chen",
-    avatar: "/images/testimonial-avatar-2.jpg",
+    avatar: "/images/testimonial-avatar-2.webp",
     rating: 5,
     comment: "La mejor experiencia comprando gift cards online. El proceso es súper fácil y el código llegó instantáneamente por WhatsApp. Volveré a comprar!",
     product: "Nintendo eShop"
@@ -33,7 +33,7 @@ const testimonials: Testimonial[] = [
   {
     id: 3,
     name: "David Thompson",
-    avatar: "/images/testimonial-avatar-3.jpg",
+    avatar: "/images/testimonial-avatar-3.webp",
     rating: 5,
     comment: "Increíble atención al cliente. Tuve una duda y me respondieron al instante. El código de Xbox funcionó perfectamente. Muy profesionales!",
     product: "Xbox Gift Card"
@@ -41,7 +41,7 @@ const testimonials: Testimonial[] = [
   {
     id: 4,
     name: "Aisha Williams",
-    avatar: "/images/testimonial-avatar-4.jpg",
+    avatar: "/images/testimonial-avatar-4.webp",
     rating: 5,
     comment: "Compré una Amazon Gift Card y todo perfecto. Entrega instantánea, precios competitivos y proceso seguro. Definitivamente mi tienda favorita!",
     product: "Amazon Gift Cards"
@@ -49,7 +49,7 @@ const testimonials: Testimonial[] = [
   {
     id: 5,
     name: "Omar Hassan",
-    avatar: "/images/testimonial-avatar-5.jpg",
+    avatar: "/images/testimonial-avatar-5.webp",
     rating: 5,
     comment: "Servicio impecable! He comprado varias veces y siempre es la misma calidad. Códigos válidos, entrega rápida y excelente soporte.",
     product: "PlayStation Network"
@@ -57,7 +57,7 @@ const testimonials: Testimonial[] = [
   {
     id: 6,
     name: "María González",
-    avatar: "/images/testimonial-avatar-6.jpg",
+    avatar: "/images/testimonial-avatar-6.webp",
     rating: 5,
     comment: "Me encanta! Es súper conveniente comprar desde casa y recibir el código al instante. Los precios son justos y el servicio es confiable.",
     product: "Nintendo eShop"
