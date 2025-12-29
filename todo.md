@@ -131,3 +131,16 @@
 - [x] Mantener texto superpuesto sobre el carrusel
 - [x] Agregar barra de búsqueda flotante debajo del carrusel
 - [x] Asegurar que el carrusel sea responsive en móvil
+
+## Sección de Testimonios Reales
+- [x] Generar 6 avatares realistas de clientes diversos
+- [x] Crear componente TestimonialsCarousel con embla-carousel
+- [x] Reemplazar sección de creadores destacados con testimonios
+- [x] Implementar sistema de calificación con estrellas (5 estrellas)
+- [x] Agregar nombres, fotos y comentarios de clientes en español
+- [x] Mostrar nombre del producto comprado en cada testimonio
+- [x] Agregar badge de "Cliente Verificado"
+- [x] Implementar navegación del carrusel con flechas izquierda/derecha
+- [x] Agregar autoplay cada 5 segundos
+- [x] Mostrar estadística de calificación global (4.9/5 con 10,000+ reseñas)
+- [x] Asegurar diseño responsive para móvil (1 col móvil, 2 tablet, 3 desktop)

@@ -6,6 +6,7 @@ import { trpc } from "@/lib/trpc";
 import { useState, useMemo } from "react";
 import { Search, ShoppingCart, MessageCircle, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import HeroCarousel from "@/components/HeroCarousel";
+import TestimonialsCarousel from "@/components/TestimonialsCarousel";
 import { Link } from "wouter";
 import { getLoginUrl } from "@/const";
 
@@ -241,49 +242,8 @@ export default function Home() {
         )}
       </section>
 
-      {/* Creator Spotlight Carousel */}
-      <section className="bg-gradient-to-r from-purple-50 via-white to-cyan-50 py-16">
-        <div className="container">
-          <h2 className="font-display text-4xl font-bold text-center mb-12">
-            Creadores Destacados
-          </h2>
-          <div className="flex items-center gap-6">
-            <button
-              onClick={handlePrevCreators}
-              className="p-3 bg-white rounded-full shadow-lg hover:shadow-xl transition hover:bg-gray-50"
-            >
-              <ChevronLeft className="w-6 h-6 text-purple-600" />
-            </button>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 flex-1">
-              {visibleCreators.map((creator) => (
-                <Card
-                  key={creator.id}
-                  className="text-center p-8 border-0 shadow-lg hover:shadow-xl transition transform hover:scale-105"
-                >
-                  <div className="text-6xl mb-4">{creator.avatar}</div>
-                  <h3 className="font-display text-xl font-bold mb-2">{creator.name}</h3>
-                  <p className="text-gray-600 text-sm mb-4">{creator.specialty}</p>
-                  <div className="flex items-center justify-center gap-1 mb-4">
-                    <span className="text-yellow-400">★</span>
-                    <span className="font-semibold text-gray-900">{creator.rating}</span>
-                  </div>
-                  <Button className="w-full bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white">
-                    Ver Perfil
-                  </Button>
-                </Card>
-              ))}
-            </div>
-
-            <button
-              onClick={handleNextCreators}
-              className="p-3 bg-white rounded-full shadow-lg hover:shadow-xl transition hover:bg-gray-50"
-            >
-              <ChevronRight className="w-6 h-6 text-purple-600" />
-            </button>
-          </div>
-        </div>
-      </section>
+      {/* Testimonials Carousel */}
+      <TestimonialsCarousel />
 
       {/* CTA Section with WhatsApp */}
       <section className="bg-gradient-to-r from-purple-600 to-cyan-600 py-16 text-white">
