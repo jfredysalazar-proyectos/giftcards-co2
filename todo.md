@@ -202,3 +202,10 @@
 - [x] Implementar drag & drop para reordenar imágenes
 - [x] Actualizar ProductDetail para mostrar galería de imágenes
 - [x] Probar carga, edición y eliminación de imágenes
+
+## Persistencia del Carrito en localStorage
+- [x] Actualizar CartContext para cargar items desde localStorage al inicializar
+- [x] Implementar función para guardar carrito en localStorage automáticamente
+- [x] Sincronizar carrito con localStorage en cada operación (agregar, eliminar, actualizar cantidad)
+- [x] Manejar casos edge: localStorage no disponible, datos corruptos
+- [x] Probar persistencia del carrito al recargar página y cerrar/abrir navegador
