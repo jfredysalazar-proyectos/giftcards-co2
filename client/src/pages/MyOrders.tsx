@@ -74,7 +74,7 @@ export default function MyOrders() {
   const handleDownloadCode = (orderId: number, productName: string) => {
     // Simulate code download
     const code = `GIFT-${orderId}-${Math.random().toString(36).substring(2, 10).toUpperCase()}`;
-    const blob = new Blob([`Código de Regalo - ${productName}\n\nCódigo: ${code}\n\nGracias por tu compra en Giftcards.Co`], {
+    const blob = new Blob([`Código de Regalo - ${productName}\n\nCódigo: ${code}\n\nGracias por tu compra en GiftCards Colombia`], {
       type: "text/plain",
     });
     const url = URL.createObjectURL(blob);
@@ -120,7 +120,7 @@ export default function MyOrders() {
                 <span className="text-white font-display font-bold text-lg">GC</span>
               </div>
               <h1 className="font-display text-2xl font-bold bg-gradient-to-r from-purple-600 to-cyan-600 bg-clip-text text-transparent">
-                Giftcards.Co
+                GiftCards Colombia
               </h1>
             </div>
           </Link>
@@ -370,7 +370,7 @@ export default function MyOrders() {
       {/* Footer */}
       <footer className="bg-gray-900 text-gray-300 py-12">
         <div className="container text-center">
-          <p className="text-sm">&copy; 2025 Giftcards.Co. Todos los derechos reservados.</p>
+          <p className="text-sm">&copy; 2025 GiftCards Colombia. Todos los derechos reservados.</p>
         </div>
       </footer>
     </div>

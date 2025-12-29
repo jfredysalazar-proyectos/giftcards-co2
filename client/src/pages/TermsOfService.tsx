@@ -17,7 +17,7 @@ export default function TermsOfService() {
                 <span className="text-white font-display font-bold text-lg">GC</span>
               </div>
               <h1 className="font-display text-2xl font-bold bg-gradient-to-r from-purple-600 to-cyan-600 bg-clip-text text-transparent">
-                Giftcards.Co
+                GiftCards Colombia
               </h1>
             </div>
           </Link>
@@ -40,14 +40,14 @@ export default function TermsOfService() {
             <section>
               <h2 className="text-2xl font-semibold mb-4">1. Aceptación de los Términos</h2>
               <p className="text-gray-700 leading-relaxed mb-4">
-                Al acceder y utilizar el sitio web de Giftcards.Co (en adelante, "el Sitio"), usted acepta estar sujeto a estos Términos y Condiciones, todas las leyes y regulaciones aplicables, y acepta que es responsable del cumplimiento de todas las leyes locales aplicables. Si no está de acuerdo con alguno de estos términos, tiene prohibido usar o acceder a este sitio.
+                Al acceder y utilizar el sitio web de GiftCards Colombia (en adelante, "el Sitio"), usted acepta estar sujeto a estos Términos y Condiciones, todas las leyes y regulaciones aplicables, y acepta que es responsable del cumplimiento de todas las leyes locales aplicables. Si no está de acuerdo con alguno de estos términos, tiene prohibido usar o acceder a este sitio.
               </p>
             </section>
 
             <section>
               <h2 className="text-2xl font-semibold mb-4">2. Descripción del Servicio</h2>
               <p className="text-gray-700 leading-relaxed mb-4">
-                Giftcards.Co es una plataforma de comercio electrónico que facilita la venta de tarjetas de regalo digitales y códigos de prepago para diversas plataformas de entretenimiento, incluyendo pero no limitado a PlayStation Network, Xbox, Nintendo eShop, Amazon y otras marcas reconocidas. Todos los productos ofrecidos son códigos digitales que se entregan electrónicamente.
+                GiftCards Colombia es una plataforma de comercio electrónico que facilita la venta de tarjetas de regalo digitales y códigos de prepago para diversas plataformas de entretenimiento, incluyendo pero no limitado a PlayStation Network, Xbox, Nintendo eShop, Amazon y otras marcas reconocidas. Todos los productos ofrecidos son códigos digitales que se entregan electrónicamente.
               </p>
             </section>
 
@@ -77,7 +77,7 @@ export default function TermsOfService() {
             <section>
               <h2 className="text-2xl font-semibold mb-4">5. Entrega de Productos Digitales</h2>
               <p className="text-gray-700 leading-relaxed mb-4">
-                Todos los productos vendidos en Giftcards.Co son códigos digitales que se entregan electrónicamente. La entrega se realiza mediante correo electrónico o WhatsApp a la información de contacto proporcionada durante el proceso de compra. El tiempo de entrega típico es inmediato o dentro de las 24 horas posteriores a la confirmación del pago.
+                Todos los productos vendidos en GiftCards Colombia son códigos digitales que se entregan electrónicamente. La entrega se realiza mediante correo electrónico o WhatsApp a la información de contacto proporcionada durante el proceso de compra. El tiempo de entrega típico es inmediato o dentro de las 24 horas posteriores a la confirmación del pago.
               </p>
               <p className="text-gray-700 leading-relaxed mb-4">
                 Es su responsabilidad proporcionar una dirección de correo electrónico válida y accesible. No somos responsables de retrasos en la entrega causados por información de contacto incorrecta o inaccesible proporcionada por el cliente.
@@ -103,17 +103,17 @@ export default function TermsOfService() {
             <section>
               <h2 className="text-2xl font-semibold mb-4">7. Propiedad Intelectual</h2>
               <p className="text-gray-700 leading-relaxed mb-4">
-                El contenido del Sitio, incluyendo pero no limitado a texto, gráficos, logotipos, iconos, imágenes, clips de audio, descargas digitales y compilaciones de datos, es propiedad de Giftcards.Co o de sus proveedores de contenido y está protegido por las leyes de derechos de autor internacionales.
+                El contenido del Sitio, incluyendo pero no limitado a texto, gráficos, logotipos, iconos, imágenes, clips de audio, descargas digitales y compilaciones de datos, es propiedad de GiftCards Colombia o de sus proveedores de contenido y está protegido por las leyes de derechos de autor internacionales.
               </p>
               <p className="text-gray-700 leading-relaxed mb-4">
-                Las marcas comerciales, logotipos y marcas de servicio mostradas en el Sitio (PlayStation, Xbox, Nintendo, Amazon, etc.) son propiedad de sus respectivos dueños. Giftcards.Co es un revendedor autorizado y no reclama propiedad sobre estas marcas.
+                Las marcas comerciales, logotipos y marcas de servicio mostradas en el Sitio (PlayStation, Xbox, Nintendo, Amazon, etc.) son propiedad de sus respectivos dueños. GiftCards Colombia es un revendedor autorizado y no reclama propiedad sobre estas marcas.
               </p>
             </section>
 
             <section>
               <h2 className="text-2xl font-semibold mb-4">8. Limitación de Responsabilidad</h2>
               <p className="text-gray-700 leading-relaxed mb-4">
-                En ningún caso Giftcards.Co, sus directores, empleados o agentes serán responsables ante usted o cualquier tercero por daños indirectos, consecuentes, ejemplares, incidentales, especiales o punitivos, incluyendo pérdida de beneficios, pérdida de ingresos, pérdida de datos u otros daños intangibles, que surjan de su uso del Sitio o de los productos adquiridos.
+                En ningún caso GiftCards Colombia, sus directores, empleados o agentes serán responsables ante usted o cualquier tercero por daños indirectos, consecuentes, ejemplares, incidentales, especiales o punitivos, incluyendo pérdida de beneficios, pérdida de ingresos, pérdida de datos u otros daños intangibles, que surjan de su uso del Sitio o de los productos adquiridos.
               </p>
               <p className="text-gray-700 leading-relaxed mb-4">
                 Nuestra responsabilidad total hacia usted por cualquier reclamo relacionado con el uso del Sitio o los productos comprados no excederá el monto que usted pagó por el producto específico en cuestión.
@@ -123,7 +123,7 @@ export default function TermsOfService() {
             <section>
               <h2 className="text-2xl font-semibold mb-4">9. Indemnización</h2>
               <p className="text-gray-700 leading-relaxed mb-4">
-                Usted acepta indemnizar, defender y mantener indemne a Giftcards.Co y a sus subsidiarias, afiliadas, socios, funcionarios, directores, agentes, contratistas, licenciantes, proveedores de servicios, subcontratistas, proveedores, pasantes y empleados, de cualquier reclamo o demanda, incluidos los honorarios razonables de abogados, realizados por cualquier tercero debido a o que surja de su incumplimiento de estos Términos y Condiciones o de los documentos que incorporan por referencia, o de su violación de cualquier ley o de los derechos de un tercero.
+                Usted acepta indemnizar, defender y mantener indemne a GiftCards Colombia y a sus subsidiarias, afiliadas, socios, funcionarios, directores, agentes, contratistas, licenciantes, proveedores de servicios, subcontratistas, proveedores, pasantes y empleados, de cualquier reclamo o demanda, incluidos los honorarios razonables de abogados, realizados por cualquier tercero debido a o que surja de su incumplimiento de estos Términos y Condiciones o de los documentos que incorporan por referencia, o de su violación de cualquier ley o de los derechos de un tercero.
               </p>
             </section>
 
@@ -158,7 +158,7 @@ export default function TermsOfService() {
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-8 mt-12">
         <div className="container text-center">
-          <p className="text-gray-400">© 2024 Giftcards.Co. Todos los derechos reservados.</p>
+          <p className="text-gray-400">© 2024 GiftCards Colombia. Todos los derechos reservados.</p>
         </div>
       </footer>
     </div>

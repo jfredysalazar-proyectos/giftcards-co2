@@ -56,7 +56,7 @@ export default function Admin() {
             <h1 className="font-display text-2xl font-bold bg-gradient-to-r from-purple-600 to-cyan-600 bg-clip-text text-transparent">
               Panel de Administración
             </h1>
-            <p className="text-sm text-gray-600">Giftcards.Co</p>
+            <p className="text-sm text-gray-600">GiftCards Colombia</p>
           </div>
           <div className="flex items-center gap-4">
             <span className="text-sm text-gray-600">Admin: {user.name}</span>

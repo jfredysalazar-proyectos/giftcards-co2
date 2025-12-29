@@ -112,7 +112,7 @@ export default function Home() {
                 <span className="text-white font-display font-bold text-lg">GC</span>
               </div>
               <h1 className="font-display text-2xl font-bold bg-gradient-to-r from-purple-600 to-cyan-600 bg-clip-text text-transparent">
-                Giftcards.Co
+                GiftCards Colombia
               </h1>
             </div>
           </Link>
@@ -280,7 +280,7 @@ export default function Home() {
             Chatea con nosotros en WhatsApp para comprar al instante y recibir soporte
           </p>
           <a
-            href={`https://wa.me/${whatsappNumber.replace(/\s/g, "")}?text=¡Hola%20Giftcards.Co!%20Quiero%20comprar%20una%20tarjeta%20de%20regalo`}
+            href={`https://wa.me/${whatsappNumber.replace(/\s/g, "")}?text=¡Hola%20GiftCards Colombia!%20Quiero%20comprar%20una%20tarjeta%20de%20regalo`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 bg-white text-purple-600 font-bold py-4 px-8 rounded-lg hover:bg-gray-100 transition shadow-lg hover:shadow-xl"
@@ -324,7 +324,7 @@ export default function Home() {
             </div>
           </div>
           <div className="border-t border-gray-800 pt-8 text-center text-sm">
-            <p>&copy; 2025 Giftcards.Co. Todos los derechos reservados. | Impulsado por entrega digital instantánea</p>
+            <p>&copy; 2025 GiftCards Colombia. Todos los derechos reservados. | Impulsado por entrega digital instantánea</p>
           </div>
         </div>
       </footer>

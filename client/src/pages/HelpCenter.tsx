@@ -11,7 +11,7 @@ export default function HelpCenter() {
       title: "Cómo Comprar",
       description: "Guía paso a paso para realizar tu primera compra de tarjetas de regalo digitales",
       articles: [
-        { title: "Crear una cuenta", content: "Regístrate en Giftcards.Co con tu correo electrónico o inicia sesión con tu cuenta existente. El registro es gratuito y te permite acceder a tu historial de pedidos y ofertas exclusivas." },
+        { title: "Crear una cuenta", content: "Regístrate en GiftCards Colombia con tu correo electrónico o inicia sesión con tu cuenta existente. El registro es gratuito y te permite acceder a tu historial de pedidos y ofertas exclusivas." },
         { title: "Seleccionar productos", content: "Navega por nuestro catálogo de tarjetas de regalo. Usa los filtros por plataforma (PlayStation, Xbox, Nintendo, Amazon) y denominación para encontrar exactamente lo que necesitas." },
         { title: "Agregar al carrito", content: "Haz clic en 'Agregar al Carrito' en el producto deseado. Puedes continuar comprando o proceder al checkout. El carrito guarda tus productos automáticamente." },
         { title: "Completar el pago", content: "Revisa tu pedido, ingresa tu información de pago y confirma la compra. Aceptamos tarjetas de crédito/débito, PayPal, transferencias y criptomonedas." }
@@ -87,7 +87,7 @@ export default function HelpCenter() {
                 <span className="text-white font-display font-bold text-lg">GC</span>
               </div>
               <h1 className="font-display text-2xl font-bold bg-gradient-to-r from-purple-600 to-cyan-600 bg-clip-text text-transparent">
-                Giftcards.Co
+                GiftCards Colombia
               </h1>
             </div>
           </Link>
@@ -107,7 +107,7 @@ export default function HelpCenter() {
             Centro de Ayuda
           </h1>
           <p className="text-lg opacity-90 max-w-2xl mx-auto">
-            Encuentra guías detalladas, tutoriales y respuestas a todas tus preguntas sobre Giftcards.Co
+            Encuentra guías detalladas, tutoriales y respuestas a todas tus preguntas sobre GiftCards Colombia
           </p>
         </div>
       </section>
@@ -203,7 +203,7 @@ export default function HelpCenter() {
             Nuestro equipo de soporte está disponible para ayudarte. Contáctanos por WhatsApp para asistencia inmediata.
           </p>
           <a
-            href="https://wa.me/573334315646?text=¡Hola%20Giftcards.Co!%20Necesito%20ayuda"
+            href="https://wa.me/573334315646?text=¡Hola%20GiftCards Colombia!%20Necesito%20ayuda"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -218,7 +218,7 @@ export default function HelpCenter() {
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-8 mt-12">
         <div className="container text-center">
-          <p className="text-gray-400">© 2024 Giftcards.Co. Todos los derechos reservados.</p>
+          <p className="text-gray-400">© 2024 GiftCards Colombia. Todos los derechos reservados.</p>
         </div>
       </footer>
     </div>

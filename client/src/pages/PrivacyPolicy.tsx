@@ -17,7 +17,7 @@ export default function PrivacyPolicy() {
                 <span className="text-white font-display font-bold text-lg">GC</span>
               </div>
               <h1 className="font-display text-2xl font-bold bg-gradient-to-r from-purple-600 to-cyan-600 bg-clip-text text-transparent">
-                Giftcards.Co
+                GiftCards Colombia
               </h1>
             </div>
           </Link>
@@ -40,7 +40,7 @@ export default function PrivacyPolicy() {
             <section>
               <h2 className="text-2xl font-semibold mb-4">1. Introducción</h2>
               <p className="text-gray-700 leading-relaxed mb-4">
-                En Giftcards.Co, nos comprometemos a proteger su privacidad y garantizar la seguridad de su información personal. Esta Política de Privacidad describe cómo recopilamos, usamos, divulgamos y protegemos su información cuando visita nuestro sitio web y utiliza nuestros servicios. Al utilizar nuestro sitio, usted acepta las prácticas descritas en esta política.
+                En GiftCards Colombia, nos comprometemos a proteger su privacidad y garantizar la seguridad de su información personal. Esta Política de Privacidad describe cómo recopilamos, usamos, divulgamos y protegemos su información cuando visita nuestro sitio web y utiliza nuestros servicios. Al utilizar nuestro sitio, usted acepta las prácticas descritas en esta política.
               </p>
               <p className="text-gray-700 leading-relaxed mb-4">
                 Esta política cumple con el Reglamento General de Protección de Datos (GDPR) de la Unión Europea, la Ley de Privacidad del Consumidor de California (CCPA) y otras leyes de protección de datos aplicables.
@@ -263,7 +263,7 @@ export default function PrivacyPolicy() {
               <ul className="list-disc list-inside text-gray-700 space-y-2 ml-4">
                 <li><strong>WhatsApp:</strong> +57 333 431 5646</li>
                 <li><strong>Correo electrónico:</strong> privacidad@giftcards.co</li>
-                <li><strong>Dirección postal:</strong> Giftcards.Co - Departamento de Privacidad</li>
+                <li><strong>Dirección postal:</strong> GiftCards Colombia - Departamento de Privacidad</li>
               </ul>
               <p className="text-gray-700 leading-relaxed mb-4 mt-4">
                 Nos comprometemos a resolver cualquier queja sobre nuestra recopilación o uso de su información personal. Si tiene una queja no resuelta relacionada con la privacidad o el uso de datos que no hemos abordado satisfactoriamente, también puede tener derecho a presentar una queja ante su autoridad de protección de datos local.
@@ -276,7 +276,7 @@ export default function PrivacyPolicy() {
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-8 mt-12">
         <div className="container text-center">
-          <p className="text-gray-400">© 2024 Giftcards.Co. Todos los derechos reservados.</p>
+          <p className="text-gray-400">© 2024 GiftCards Colombia. Todos los derechos reservados.</p>
         </div>
       </footer>
     </div>

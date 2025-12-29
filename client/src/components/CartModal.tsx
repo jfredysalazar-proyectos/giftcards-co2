@@ -29,7 +29,7 @@ export function CartModal({ isOpen, onClose }: CartModalProps) {
       )
       .join("\n");
 
-    const message = `¡Hola Giftcards.Co! Quiero comprar:\n\n${itemsList}\n\nTotal: $${total.toFixed(2)}`;
+    const message = `¡Hola GiftCards Colombia! Quiero comprar:\n\n${itemsList}\n\nTotal: $${total.toFixed(2)}`;
     const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/\s/g, "")}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, "_blank");
     setIsCheckingOut(false);

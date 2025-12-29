@@ -302,3 +302,12 @@
 - [x] Integrar AnnouncementBar en todas las páginas legales (Terms, Privacy, Refund)
 - [x] Integrar AnnouncementBar en páginas de soporte (Contact, HelpCenter, FAQ)
 - [x] Verificar que la animación funcione correctamente en todas las páginas
+
+## Nuevo Logo para GiftCards Colombia
+- [x] Generar logo original, sencillo e impactante para GiftCards Colombia
+- [x] Guardar logo en formato WebP optimizado
+- [x] Actualizar logo en navegación de todas las páginas
+- [x] Actualizar favicon del sitio
+- [x] Cambiar nombre de marca de "Giftcards.Co" a "GiftCards Colombia"
+- [x] Actualizar referencias al dominio "Giftcards.Com.co"
+- [x] Verificar que el nuevo branding se vea correctamente en todas las páginas

@@ -17,7 +17,7 @@ export default function RefundPolicy() {
                 <span className="text-white font-display font-bold text-lg">GC</span>
               </div>
               <h1 className="font-display text-2xl font-bold bg-gradient-to-r from-purple-600 to-cyan-600 bg-clip-text text-transparent">
-                Giftcards.Co
+                GiftCards Colombia
               </h1>
             </div>
           </Link>
@@ -40,7 +40,7 @@ export default function RefundPolicy() {
             <section>
               <h2 className="text-2xl font-semibold mb-4">1. Naturaleza de los Productos Digitales</h2>
               <p className="text-gray-700 leading-relaxed mb-4">
-                Giftcards.Co vende exclusivamente productos digitales en forma de códigos de tarjetas de regalo y códigos de prepago para diversas plataformas (PlayStation Network, Xbox, Nintendo eShop, Amazon, entre otras). Debido a la naturaleza instantánea y no recuperable de los productos digitales, nuestra política de reembolso está sujeta a condiciones específicas que se detallan a continuación.
+                GiftCards Colombia vende exclusivamente productos digitales en forma de códigos de tarjetas de regalo y códigos de prepago para diversas plataformas (PlayStation Network, Xbox, Nintendo eShop, Amazon, entre otras). Debido a la naturaleza instantánea y no recuperable de los productos digitales, nuestra política de reembolso está sujeta a condiciones específicas que se detallan a continuación.
               </p>
               <p className="text-gray-700 leading-relaxed mb-4">
                 Al realizar una compra en nuestro sitio web, usted reconoce y acepta que está adquiriendo contenido digital que se entrega electrónicamente y que, una vez revelado el código, el producto se considera entregado y utilizado.
@@ -218,7 +218,7 @@ export default function RefundPolicy() {
             <section>
               <h2 className="text-2xl font-semibold mb-4">8. Crédito de la Tienda como Alternativa</h2>
               <p className="text-gray-700 leading-relaxed mb-4">
-                En algunos casos, podemos ofrecer crédito de la tienda como alternativa al reembolso monetario. El crédito de la tienda puede usarse para futuras compras en Giftcards.Co y generalmente se procesa más rápidamente que los reembolsos tradicionales.
+                En algunos casos, podemos ofrecer crédito de la tienda como alternativa al reembolso monetario. El crédito de la tienda puede usarse para futuras compras en GiftCards Colombia y generalmente se procesa más rápidamente que los reembolsos tradicionales.
               </p>
               <p className="text-gray-700 leading-relaxed mb-4">
                 El crédito de la tienda no tiene fecha de vencimiento y puede aplicarse a cualquier producto disponible en nuestro sitio. Si acepta el crédito de la tienda, se agregará automáticamente a su cuenta y podrá verlo en su panel de usuario.
@@ -304,7 +304,7 @@ export default function RefundPolicy() {
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-8 mt-12">
         <div className="container text-center">
-          <p className="text-gray-400">© 2024 Giftcards.Co. Todos los derechos reservados.</p>
+          <p className="text-gray-400">© 2024 GiftCards Colombia. Todos los derechos reservados.</p>
         </div>
       </footer>
     </div>

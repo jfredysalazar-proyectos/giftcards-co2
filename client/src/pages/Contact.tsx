@@ -49,7 +49,7 @@ export default function Contact() {
                 <span className="text-white font-display font-bold text-lg">GC</span>
               </div>
               <h1 className="font-display text-2xl font-bold bg-gradient-to-r from-purple-600 to-cyan-600 bg-clip-text text-transparent">
-                Giftcards.Co
+                GiftCards Colombia
               </h1>
             </div>
           </Link>
@@ -90,7 +90,7 @@ export default function Contact() {
                     Chatea con nosotros directamente para respuestas inmediatas
                   </p>
                   <a
-                    href="https://wa.me/573334315646?text=¡Hola%20Giftcards.Co!%20Necesito%20ayuda"
+                    href="https://wa.me/573334315646?text=¡Hola%20GiftCards Colombia!%20Necesito%20ayuda"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-purple-600 hover:text-purple-700 font-semibold text-sm"
@@ -274,7 +274,7 @@ export default function Contact() {
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-8 mt-12">
         <div className="container text-center">
-          <p className="text-gray-400">© 2024 Giftcards.Co. Todos los derechos reservados.</p>
+          <p className="text-gray-400">© 2024 GiftCards Colombia. Todos los derechos reservados.</p>
         </div>
       </footer>
     </div>

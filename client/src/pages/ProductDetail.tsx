@@ -101,7 +101,7 @@ export default function ProductDetail() {
       return;
     }
 
-    const message = `¡Hola Giftcards.Co! Quiero comprar:\n\n` +
+    const message = `¡Hola GiftCards Colombia! Quiero comprar:\n\n` +
       `🎮 Producto: ${product?.name}\n` +
       `💰 Monto: ${selectedAmount}\n` +
       `📦 Cantidad: ${quantity}\n` +
@@ -183,7 +183,7 @@ export default function ProductDetail() {
                 <span className="text-white font-display font-bold text-lg">GC</span>
               </div>
               <h1 className="font-display text-2xl font-bold bg-gradient-to-r from-purple-600 to-cyan-600 bg-clip-text text-transparent">
-                Giftcards.Co
+                GiftCards Colombia
               </h1>
             </div>
           </Link>
@@ -470,7 +470,7 @@ export default function ProductDetail() {
       {/* Footer */}
       <footer className="bg-gray-900 text-gray-300 py-12 mt-16">
         <div className="container text-center">
-          <p className="text-sm">&copy; 2025 Giftcards.Co. Todos los derechos reservados.</p>
+          <p className="text-sm">&copy; 2025 GiftCards Colombia. Todos los derechos reservados.</p>
         </div>
       </footer>
 

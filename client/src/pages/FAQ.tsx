@@ -27,7 +27,7 @@ export default function FAQ() {
                 <span className="text-white font-display font-bold text-lg">GC</span>
               </div>
               <h1 className="font-display text-2xl font-bold bg-gradient-to-r from-purple-600 to-cyan-600 bg-clip-text text-transparent">
-                Giftcards.Co
+                GiftCards Colombia
               </h1>
             </div>
           </Link>
@@ -96,7 +96,7 @@ export default function FAQ() {
             Nuestro equipo de soporte está disponible para ayudarte. Contáctanos por WhatsApp y te responderemos de inmediato.
           </p>
           <a
-            href="https://wa.me/1234567890?text=¡Hola%20Giftcards.Co!%20Tengo%20una%20pregunta"
+            href="https://wa.me/1234567890?text=¡Hola%20GiftCards Colombia!%20Tengo%20una%20pregunta"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white font-bold py-4 px-8 rounded-lg transition shadow-lg hover:shadow-xl"
@@ -140,7 +140,7 @@ export default function FAQ() {
             </div>
           </div>
           <div className="border-t border-gray-800 pt-8 text-center text-sm">
-            <p>&copy; 2025 Giftcards.Co. Todos los derechos reservados.</p>
+            <p>&copy; 2025 GiftCards Colombia. Todos los derechos reservados.</p>
           </div>
         </div>
       </footer>
