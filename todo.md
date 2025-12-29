@@ -311,3 +311,8 @@
 - [x] Cambiar nombre de marca de "Giftcards.Co" a "GiftCards Colombia"
 - [x] Actualizar referencias al dominio "Giftcards.Com.co"
 - [x] Verificar que el nuevo branding se vea correctamente en todas las páginas
+
+## Actualización de Logo con Imagen del Usuario
+- [x] Copiar imagen proporcionada por usuario al directorio del proyecto
+- [x] Reemplazar logo-giftcards-colombia.webp con nueva imagen
+- [x] Verificar que el logo se muestre correctamente en todas las páginas
