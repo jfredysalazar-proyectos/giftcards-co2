@@ -85,9 +85,16 @@ export function ProductsManagement() {
     }
   };
 
-  const handleDialogClose = () => {
-    setIsDialogOpen(false);
+  const handleDialogClose = (open: boolean) => {
+    setIsDialogOpen(open);
+    if (!open) {
+      setEditingProduct(null);
+    }
+  };
+
+  const handleNewProduct = () => {
     setEditingProduct(null);
+    setIsDialogOpen(true);
   };
 
   if (isLoading) {
@@ -102,9 +109,9 @@ export function ProductsManagement() {
     <div>
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Gestión de Productos</h2>
-        <Dialog open={isDialogOpen} onOpenChange={handleDialogClose}>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-gradient-to-r from-purple-600 to-cyan-600">
+            <Button onClick={handleNewProduct} className="bg-gradient-to-r from-purple-600 to-cyan-600">
               <Plus className="w-4 h-4 mr-2" />
               Nuevo Producto
             </Button>
@@ -213,7 +220,7 @@ export function ProductsManagement() {
                 </div>
               </div>
               <div className="flex justify-end gap-2 pt-4">
-                <Button type="button" variant="outline" onClick={handleDialogClose}>
+                <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                   Cancelar
                 </Button>
                 <Button

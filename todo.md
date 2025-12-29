@@ -77,3 +77,18 @@
 - [x] Corregir enlaces de login para usar getLoginUrl() en lugar de /login
 - [x] Actualizar Home.tsx con enlaces correctos de OAuth
 - [ ] Probar flujo completo de login con usuario
+
+## Error OAuth Callback
+- [ ] Investigar error "OAuth: callback failed"
+- [ ] Revisar logs del servidor para detalles del error
+- [ ] Verificar configuración de OAuth en server/_core
+- [ ] Comprobar variables de entorno relacionadas con OAuth
+- [ ] Probar flujo de autenticación completo
+
+## Botón Crear Nuevo Producto
+- [x] Investigar por qué el botón "Crear Nuevo Producto" no funciona
+- [x] Revisar componente ProductsManagement.tsx
+- [x] Corregir manejo de estado del diálogo con handleNewProduct
+- [x] Actualizar Dialog para usar setIsDialogOpen correctamente
+- [x] Verificar que el diálogo de crear producto se abra correctamente
+- [x] Probar funcionalidad completa de creación de productos
