@@ -17,6 +17,7 @@ interface CartContextType {
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
   total: number;
+  isCartBouncing: boolean;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -37,6 +38,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     return [];
   });
 
+  const [isCartBouncing, setIsCartBouncing] = useState(false);
+
   // Save cart to localStorage whenever it changes
   useEffect(() => {
     try {
@@ -56,6 +59,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       }
       return [...prev, item];
     });
+
+    // Trigger bounce animation
+    setIsCartBouncing(true);
+    setTimeout(() => setIsCartBouncing(false), 600);
   };
 
   const removeItem = (id: string) => {
@@ -80,7 +87,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <CartContext.Provider
-      value={{ items, addItem, removeItem, updateQuantity, clearCart, total }}
+      value={{ items, addItem, removeItem, updateQuantity, clearCart, total, isCartBouncing }}
     >
       {children}
     </CartContext.Provider>

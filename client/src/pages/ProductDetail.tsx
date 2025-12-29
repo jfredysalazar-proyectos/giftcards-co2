@@ -18,7 +18,7 @@ export default function ProductDetail() {
   const { slug } = useParams();
   const [, setLocation] = useLocation();
   const { user, isAuthenticated } = useAuth();
-  const { addItem, items } = useCart();
+  const { addItem, items, isCartBouncing } = useCart();
   const [isCartOpen, setIsCartOpen] = useState(false);
   
   const [selectedAmount, setSelectedAmount] = useState<string>("");
@@ -191,7 +191,7 @@ export default function ProductDetail() {
               onClick={() => setIsCartOpen(true)}
               className="relative p-2 hover:bg-gray-100 rounded-lg transition"
             >
-              <ShoppingCart className="w-6 h-6 text-purple-600" />
+              <ShoppingCart className={`w-6 h-6 text-purple-600 ${isCartBouncing ? 'animate-cart-bounce' : ''}`} />
               {items.length > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
                   {items.length}
@@ -319,7 +319,7 @@ export default function ProductDetail() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <Button
-                    className="relative overflow-hidden bg-gradient-to-r from-purple-600 via-purple-500 to-pink-500 text-white font-bold py-6 text-sm sm:text-base lg:text-lg flex items-center justify-center whitespace-nowrap shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:brightness-110 animate-pulse-slow"
+                    className="relative overflow-hidden bg-gradient-to-r from-purple-600 via-purple-500 to-pink-500 text-white font-bold py-6 text-sm sm:text-base lg:text-lg flex items-center justify-center whitespace-nowrap shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:brightness-110 animate-pulse-slow animate-bounce-vertical"
                     onClick={handleAddToCart}
                     disabled={!product.inStock || !selectedAmount}
                   >
@@ -328,7 +328,7 @@ export default function ProductDetail() {
                     <span className="truncate relative z-10">Agregar al Carrito</span>
                   </Button>
                   <Button
-                    className="relative overflow-hidden bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 text-white font-bold py-6 text-sm sm:text-base lg:text-lg flex items-center justify-center whitespace-nowrap shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:brightness-110 animate-pulse-slow"
+                    className="relative overflow-hidden bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 text-white font-bold py-6 text-sm sm:text-base lg:text-lg flex items-center justify-center whitespace-nowrap shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:brightness-110 animate-pulse-slow animate-bounce-vertical"
                     onClick={handleWhatsAppCheckout}
                     disabled={!product.inStock || !selectedAmount}
                   >

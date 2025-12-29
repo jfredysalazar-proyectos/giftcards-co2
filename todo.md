@@ -346,3 +346,11 @@
 - [x] Actualizar botones en Home.tsx con el mismo estilo
 - [x] Agregar animaciones CSS keyframes para efectos continuos
 - [x] Verificar que las animaciones funcionen en móvil y desktop
+
+## Animaciones Adicionales de Botones y Carrito
+- [x] Agregar animación bounce vertical a botones de compra
+- [x] Crear keyframe bounce-vertical en index.css
+- [x] Implementar efecto bounce en ícono de carrito al agregar productos
+- [x] Agregar estado de animación en CartContext
+- [x] Actualizar componentes Home y ProductDetail con animación de carrito
+- [x] Verificar que las animaciones funcionen correctamente

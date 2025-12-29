@@ -54,7 +54,7 @@ const CREATORS: Creator[] = [
 
 export default function Home() {
   const { user, isAuthenticated, logout, loading: authLoading } = useAuth();
-  const { items: cartItems, total: cartTotal } = useCart();
+  const { items: cartItems, total: cartTotal, isCartBouncing } = useCart();
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
@@ -121,7 +121,7 @@ export default function Home() {
               onClick={() => setIsCartOpen(true)}
               className="relative p-2 hover:bg-gray-100 rounded-lg transition"
             >
-              <ShoppingCart className="w-6 h-6 text-gray-700" />
+              <ShoppingCart className={`w-6 h-6 text-gray-700 ${isCartBouncing ? 'animate-cart-bounce' : ''}`} />
               {cartItems.length > 0 && (
                 <span className="absolute -top-1 -right-1 bg-gradient-to-r from-purple-600 to-cyan-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
                   {cartItems.length}
