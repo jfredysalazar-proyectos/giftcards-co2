@@ -243,3 +243,8 @@
 - [x] Regenerar imágenes de PSN y Xbox Game Pass si es necesario
 - [x] Actualizar referencias en la base de datos
 - [x] Verificar que las imágenes se muestren correctamente en el sitio
+
+## Regeneración de Imagen Nintendo eShop
+- [x] Generar imagen profesional de Nintendo eShop gift card
+- [x] Actualizar referencia en base de datos
+- [x] Verificar que la imagen se muestre correctamente en el sitio
