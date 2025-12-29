@@ -24,7 +24,7 @@ export function CartModal({ isOpen, onClose }: CartModalProps) {
       )
       .join("\n");
 
-    const message = `Hi Giftcards.Co! I want to purchase:\n\n${itemsList}\n\nTotal: $${total.toFixed(2)}`;
+    const message = `¡Hola Giftcards.Co! Quiero comprar:\n\n${itemsList}\n\nTotal: $${total.toFixed(2)}`;
     const whatsappUrl = `https://wa.me/1234567890?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, "_blank");
     setIsCheckingOut(false);
@@ -42,7 +42,7 @@ export function CartModal({ isOpen, onClose }: CartModalProps) {
       <div className="fixed right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl z-50 flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="font-display text-2xl font-bold">Your Cart</h2>
+          <h2 className="font-display text-2xl font-bold">Tu Carrito</h2>
           <button
             onClick={onClose}
             className="p-2 hover:bg-gray-100 rounded-lg transition"
@@ -55,8 +55,8 @@ export function CartModal({ isOpen, onClose }: CartModalProps) {
         <div className="flex-1 overflow-y-auto p-6">
           {items.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-gray-500">
-              <p className="text-lg font-semibold">Your cart is empty</p>
-              <p className="text-sm">Add some gift cards to get started!</p>
+              <p className="text-lg font-semibold">Tu carrito está vacío</p>
+              <p className="text-sm">¡Agrega algunas tarjetas de regalo para comenzar!</p>
             </div>
           ) : (
             <div className="space-y-4">
@@ -124,13 +124,13 @@ export function CartModal({ isOpen, onClose }: CartModalProps) {
               className="w-full bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white font-bold py-3 px-4 rounded-lg transition shadow-lg hover:shadow-xl flex items-center justify-center gap-2 disabled:opacity-50"
             >
               <MessageCircle className="w-5 h-5" />
-              Checkout on WhatsApp
+              Comprar en WhatsApp
             </button>
             <button
               onClick={clearCart}
               className="w-full text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-100 transition"
             >
-              Clear Cart
+              Limpiar Carrito
             </button>
           </div>
         )}

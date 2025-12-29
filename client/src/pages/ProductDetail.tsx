@@ -26,17 +26,17 @@ export default function ProductDetail({ params }: RouteComponentProps<{ id: stri
   // Mock product data
   const product = {
     id,
-    name: "PlayStation Network Gift Card",
-    category: "Gaming",
-    description: "Add funds to your PlayStation Network account and unlock a world of games, add-ons, and entertainment.",
-    fullDescription: `PlayStation Network Gift Cards are the perfect way to enhance your gaming experience. Whether you're looking to purchase the latest AAA titles, indie gems, or premium add-ons for your favorite games, PSN cards have you covered. With instant delivery, you can start playing within minutes.
+    name: "Tarjeta de Regalo PlayStation Network",
+    category: "Videojuegos",
+    description: "Agrega fondos a tu cuenta de PlayStation Network y desbloquea un mundo de juegos, complementos y entretenimiento.",
+    fullDescription: `Las Tarjetas de Regalo de PlayStation Network son la forma perfecta de mejorar tu experiencia de juego. Ya sea que busques comprar los últimos títulos AAA, gemas indie o complementos premium para tus juegos favoritos, las tarjetas PSN te cubren. Con entrega instantánea, puedes comenzar a jugar en minutos.
 
-Features:
-• Instant digital delivery
-• Works on PS4, PS5, and PSN account
-• No expiration date
-• Secure and verified
-• 24/7 customer support`,
+Características:
+• Entrega digital instantánea
+• Funciona en PS4, PS5 y cuenta PSN
+• Sin fecha de vencimiento
+• Seguro y verificado
+• Soporte al cliente 24/7`,
     image: "/images/product-category-psn.png",
     gradient: "from-purple-700 to-purple-500",
     amounts: ["$10", "$25", "$50", "$100"],
@@ -48,28 +48,28 @@ Features:
       {
         author: "Alex G.",
         rating: 5,
-        text: "Received my PSN card instantly! Great service.",
+        text: "¡Recibí mi tarjeta PSN al instante! Excelente servicio.",
       },
       {
         author: "Jordan M.",
         rating: 5,
-        text: "Fast and reliable. Highly recommended!",
+        text: "Rápido y confiable. ¡Altamente recomendado!",
       },
       {
         author: "Casey T.",
         rating: 4,
-        text: "Good experience, smooth checkout process.",
+        text: "Buena experiencia, proceso de compra fluido.",
       },
     ],
   };
 
   const handleDownloadPreview = () => {
     // Simulate preview download
-    alert("Preview downloaded! Check your downloads folder.");
+    alert("¡Vista previa descargada! Revisa tu carpeta de descargas.");
   };
 
   const handleWhatsAppCheckout = () => {
-    const message = `Hi Giftcards.Co! I want to buy ${quantity}x ${product.name} (${selectedAmount}) for a total of $${quantity * parseFloat(selectedAmount.replace("$", ""))}.`;
+    const message = `¡Hola Giftcards.Co! Quiero comprar ${quantity}x ${product.name} (${selectedAmount}) por un total de $${quantity * parseFloat(selectedAmount.replace("$", ""))}.`;
     const whatsappUrl = `https://wa.me/1234567890?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, "_blank");
   };
@@ -108,7 +108,7 @@ Features:
               className="w-full py-6 text-lg font-semibold border-2 border-purple-600 text-purple-600 hover:bg-purple-50"
             >
               <Download className="w-5 h-5 mr-2" />
-              Download Preview
+              Descargar Vista Previa
             </Button>
           </div>
 
@@ -125,12 +125,12 @@ Features:
                 <div className="flex items-center gap-1">
                   <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
                   <span className="font-semibold text-gray-900">{product.rating}</span>
-                  <span className="text-gray-600">({product.reviews} reviews)</span>
+                  <span className="text-gray-600">({product.reviews} reseñas)</span>
                 </div>
                 {product.inStock && (
                   <div className="flex items-center gap-2 text-green-600 font-semibold">
                     <Check className="w-5 h-5" />
-                    In Stock
+                    En Stock
                   </div>
                 )}
               </div>
@@ -139,7 +139,7 @@ Features:
 
             {/* Amount Selection */}
             <div className="mb-8">
-              <h3 className="font-display font-bold text-lg mb-4">Select Amount</h3>
+              <h3 className="font-display font-bold text-lg mb-4">Selecciona Monto</h3>
               <div className="grid grid-cols-2 gap-3 mb-6">
                 {product.amounts.map((amount) => (
                   <button
@@ -159,7 +159,7 @@ Features:
 
             {/* Quantity Selection */}
             <div className="mb-8">
-              <h3 className="font-display font-bold text-lg mb-4">Quantity</h3>
+              <h3 className="font-display font-bold text-lg mb-4">Cantidad</h3>
               <div className="flex items-center gap-4">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -186,8 +186,8 @@ Features:
                 </span>
               </div>
               <div className="flex justify-between items-center mb-4">
-                <span className="text-gray-700">Delivery:</span>
-                <span className="font-semibold text-green-600">Instant</span>
+                <span className="text-gray-700">Entrega:</span>
+                <span className="font-semibold text-green-600">Instantánea</span>
               </div>
               <div className="border-t border-gray-200 pt-4 flex justify-between items-center">
                 <span className="font-display font-bold text-lg">Total:</span>
@@ -218,7 +218,7 @@ Features:
               className="w-full bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white font-bold py-4 px-6 rounded-lg transition shadow-lg hover:shadow-xl flex items-center justify-center gap-2 mb-4 disabled:opacity-50"
             >
               <ShoppingCart className="w-6 h-6" />
-              {isAddingToCart ? "Added to Cart!" : "Add to Cart"}
+              {isAddingToCart ? "¡Agregado al Carrito!" : "Agregar al Carrito"}
             </button>
 
             {/* WhatsApp Checkout */}
@@ -227,11 +227,11 @@ Features:
               className="w-full bg-white border-2 border-purple-600 text-purple-600 hover:bg-purple-50 font-bold py-4 px-6 rounded-lg transition shadow-lg hover:shadow-xl flex items-center justify-center gap-2 mb-4"
             >
               <MessageCircle className="w-6 h-6" />
-              Direct WhatsApp Checkout
+              Comprar Directamente en WhatsApp
             </button>
 
             <p className="text-center text-sm text-gray-600">
-              Add to cart or checkout directly on WhatsApp
+              Agrega al carrito o compra directamente en WhatsApp
             </p>
           </div>
         </div>
@@ -240,7 +240,7 @@ Features:
       {/* Full Description */}
       <section className="bg-gray-50 py-12">
         <div className="container max-w-3xl">
-          <h2 className="font-display text-3xl font-bold mb-6">About This Product</h2>
+          <h2 className="font-display text-3xl font-bold mb-6">Acerca de este Producto</h2>
           <p className="text-gray-700 whitespace-pre-line leading-relaxed">
             {product.fullDescription}
           </p>
@@ -249,7 +249,7 @@ Features:
 
       {/* Testimonials */}
       <section className="container py-12">
-        <h2 className="font-display text-3xl font-bold mb-8">Customer Reviews</h2>
+        <h2 className="font-display text-3xl font-bold mb-8">Reseñas de Clientes</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {product.testimonials.map((testimonial, idx) => (
             <Card key={idx} className="p-6 border-0 shadow-lg hover:shadow-xl transition">
@@ -270,36 +270,36 @@ Features:
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             <div>
-              <h3 className="font-display font-bold text-white mb-4">About</h3>
-              <p className="text-sm">Your trusted marketplace for instant digital gift cards.</p>
+              <h3 className="font-display font-bold text-white mb-4">Acerca de</h3>
+              <p className="text-sm">Tu marketplace confiable para tarjetas de regalo digitales instantáneas.</p>
             </div>
             <div>
-              <h3 className="font-display font-bold text-white mb-4">Support</h3>
+              <h3 className="font-display font-bold text-white mb-4">Soporte</h3>
               <ul className="text-sm space-y-2">
-                <li><a href="#" className="hover:text-white transition">Help Center</a></li>
-                <li><a href="#" className="hover:text-white transition">Contact Us</a></li>
-                <li><a href="#" className="hover:text-white transition">FAQ</a></li>
+                <li><a href="#" className="hover:text-white transition">Centro de Ayuda</a></li>
+                <li><a href="#" className="hover:text-white transition">Contáctanos</a></li>
+                <li><a href="#" className="hover:text-white transition">Preguntas Frecuentes</a></li>
               </ul>
             </div>
             <div>
               <h3 className="font-display font-bold text-white mb-4">Legal</h3>
               <ul className="text-sm space-y-2">
-                <li><a href="#" className="hover:text-white transition">Terms of Service</a></li>
-                <li><a href="#" className="hover:text-white transition">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-white transition">Refund Policy</a></li>
+                <li><a href="#" className="hover:text-white transition">Términos de Servicio</a></li>
+                <li><a href="#" className="hover:text-white transition">Política de Privacidad</a></li>
+                <li><a href="#" className="hover:text-white transition">Política de Reembolso</a></li>
               </ul>
             </div>
             <div>
-              <h3 className="font-display font-bold text-white mb-4">Account</h3>
+              <h3 className="font-display font-bold text-white mb-4">Cuenta</h3>
               <ul className="text-sm space-y-2">
-                <li><a href="#" className="hover:text-white transition">My Orders</a></li>
-                <li><a href="#" className="hover:text-white transition">My Account</a></li>
-                <li><a href="#" className="hover:text-white transition">Sign In</a></li>
+                <li><a href="#" className="hover:text-white transition">Mis Pedidos</a></li>
+                <li><a href="#" className="hover:text-white transition">Mi Cuenta</a></li>
+                <li><a href="#" className="hover:text-white transition">Iniciar Sesión</a></li>
               </ul>
             </div>
           </div>
           <div className="border-t border-gray-800 pt-8 text-center text-sm">
-            <p>&copy; 2025 Giftcards.Co. All rights reserved.</p>
+            <p>&copy; 2025 Giftcards.Co. Todos los derechos reservados.</p>
           </div>
         </div>
       </footer>
