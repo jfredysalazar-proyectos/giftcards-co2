@@ -236,3 +236,10 @@
 - [x] Modificar handleSubmit para no eliminar datos no modificados
 - [x] Probar edición de producto con montos e imágenes existentes
 - [x] Verificar que los datos persisten después de guardar
+
+## Recuperación de Imágenes de Productos
+- [x] Buscar imágenes originales PNG/JPG de PSN y Xbox en directorio
+- [x] Verificar si existen backups de las imágenes originales
+- [x] Regenerar imágenes de PSN y Xbox Game Pass si es necesario
+- [x] Actualizar referencias en la base de datos
+- [x] Verificar que las imágenes se muestren correctamente en el sitio
