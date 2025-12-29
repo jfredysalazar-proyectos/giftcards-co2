@@ -10,6 +10,9 @@ import Admin from "./pages/Admin";
 import ProductDetail from "./pages/ProductDetail";
 import FAQ from "./pages/FAQ";
 import MyOrders from "./pages/MyOrders";
+import TermsOfService from "./pages/TermsOfService";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import RefundPolicy from "./pages/RefundPolicy";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -20,6 +23,9 @@ function Router() {
       <Route path={"/product/:slug"} component={ProductDetail} />
       <Route path={"/faq"} component={FAQ} />
       <Route path={"/my-orders"} component={MyOrders} />
+      <Route path={"/terms"} component={TermsOfService} />
+      <Route path={"/privacy"} component={PrivacyPolicy} />
+      <Route path={"/refund"} component={RefundPolicy} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

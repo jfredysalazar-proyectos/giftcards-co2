@@ -306,9 +306,9 @@ export default function Home() {
             <div>
               <h3 className="font-display font-bold text-white mb-4">Legal</h3>
               <ul className="text-sm space-y-2">
-                <li><a href="#" className="hover:text-white transition">Términos de Servicio</a></li>
-                <li><a href="#" className="hover:text-white transition">Política de Privacidad</a></li>
-                <li><a href="#" className="hover:text-white transition">Política de Reembolso</a></li>
+                <li><Link href="/terms"><a className="hover:text-white transition cursor-pointer">Términos de Servicio</a></Link></li>
+                <li><Link href="/privacy"><a className="hover:text-white transition cursor-pointer">Política de Privacidad</a></Link></li>
+                <li><Link href="/refund"><a className="hover:text-white transition cursor-pointer">Política de Reembolso</a></Link></li>
               </ul>
             </div>
             <div>

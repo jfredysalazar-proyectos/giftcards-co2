@@ -209,3 +209,11 @@
 - [x] Sincronizar carrito con localStorage en cada operación (agregar, eliminar, actualizar cantidad)
 - [x] Manejar casos edge: localStorage no disponible, datos corruptos
 - [x] Probar persistencia del carrito al recargar página y cerrar/abrir navegador
+
+## Páginas Legales del Footer
+- [x] Crear página de Términos y Condiciones con contenido completo
+- [x] Crear página de Política de Privacidad conforme a GDPR y políticas de Google
+- [x] Crear página de Política de Reembolso para productos digitales
+- [x] Actualizar componente Footer con enlaces funcionales
+- [x] Configurar rutas en App.tsx para páginas legales
+- [x] Verificar que todos los enlaces del footer funcionen correctamente
