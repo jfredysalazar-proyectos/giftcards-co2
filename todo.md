@@ -329,3 +329,11 @@
 - [x] Remover fondo blanco dejando transparencia
 - [x] Ajustar tamaño del logo en el código (aumentar de h-12 a h-16 o más)
 - [x] Verificar que el logo se vea más grande y prominente
+
+## Optimización de Imágenes WebP Pesadas
+- [x] Identificar imágenes WebP mayores a 500KB
+- [x] Optimizar imágenes de productos (PSN, Xbox, Nintendo, Amazon)
+- [x] Optimizar imágenes de hero carousel (FC26, Fortnite)
+- [x] Optimizar imágenes de testimonios
+- [x] Reducir calidad a 80% y redimensionar si es necesario
+- [x] Verificar que todas las imágenes optimizadas se vean bien
