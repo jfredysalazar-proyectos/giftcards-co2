@@ -73,23 +73,26 @@ export function ProductsManagement() {
 
   const updateMutation = trpc.products.update.useMutation({
     onSuccess: async (product) => {
-      // Delete old images that are not in the current list
-      const currentImageIds = productImages.filter(img => img.id).map(img => img.id!);
-      const imagesToDelete = existingImages.filter(img => !currentImageIds.includes(img.id));
-      
-      for (const img of imagesToDelete) {
-        await deleteImageMutation.mutateAsync({ id: img.id });
-      }
-      
-      // Create new images (those without id)
-      const newImages = productImages.filter(img => !img.id);
-      for (const image of newImages) {
-        await createImageMutation.mutateAsync({
-          productId: editingProduct.id,
-          imageUrl: image.url,
-          displayOrder: image.displayOrder,
-          isPrimary: image.isPrimary,
-        });
+      // Only update images if they were actually modified (productImages has items)
+      if (productImages.length > 0) {
+        // Delete old images that are not in the current list
+        const currentImageIds = productImages.filter(img => img.id).map(img => img.id!);
+        const imagesToDelete = existingImages.filter(img => !currentImageIds.includes(img.id));
+        
+        for (const img of imagesToDelete) {
+          await deleteImageMutation.mutateAsync({ id: img.id });
+        }
+        
+        // Create new images (those without id)
+        const newImages = productImages.filter(img => !img.id);
+        for (const image of newImages) {
+          await createImageMutation.mutateAsync({
+            productId: editingProduct.id,
+            imageUrl: image.url,
+            displayOrder: image.displayOrder,
+            isPrimary: image.isPrimary,
+          });
+        }
       }
       
       utils.products.list.invalidate();

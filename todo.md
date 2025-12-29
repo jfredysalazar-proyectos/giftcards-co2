@@ -248,3 +248,11 @@
 - [x] Generar imagen profesional de Nintendo eShop gift card
 - [x] Actualizar referencia en base de datos
 - [x] Verificar que la imagen se muestre correctamente en el sitio
+
+## Bug: Imágenes se Borran al Editar Montos o Descripción
+- [x] Analizar lógica de updateMutation que elimina imágenes incorrectamente
+- [x] Modificar lógica para solo eliminar imágenes si el usuario las modificó explícitamente
+- [x] Agregar flag o comparación para detectar cambios en imágenes
+- [x] Probar edición de montos sin tocar imágenes
+- [x] Probar edición de descripción sin tocar imágenes
+- [x] Verificar que las imágenes persisten después de guardar
