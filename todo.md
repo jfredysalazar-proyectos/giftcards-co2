@@ -227,3 +227,12 @@
 - [x] Actualizar enlaces del footer de Soporte
 - [x] Configurar rutas en App.tsx para nuevas páginas
 - [x] Verificar que todos los enlaces funcionen correctamente
+
+## Bug: Pérdida de Datos al Editar Productos en Admin
+- [x] Agregar queries para cargar productAmounts al abrir modal de edición
+- [x] Agregar queries para cargar productImages al abrir modal de edición
+- [x] Actualizar handleEdit para cargar montos existentes en el estado
+- [x] Actualizar handleEdit para cargar imágenes existentes en el estado
+- [x] Modificar handleSubmit para no eliminar datos no modificados
+- [x] Probar edición de producto con montos e imágenes existentes
+- [x] Verificar que los datos persisten después de guardar

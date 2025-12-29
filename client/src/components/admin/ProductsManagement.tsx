@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,6 +33,19 @@ export function ProductsManagement() {
   const utils = trpc.useUtils();
   const { data: products = [], isLoading } = trpc.products.list.useQuery();
   const { data: categories = [] } = trpc.categories.list.useQuery();
+  
+  // Query for loading existing amounts when editing
+  const [loadingProductId, setLoadingProductId] = useState<number | null>(null);
+  const { data: existingAmounts = [] } = trpc.products.getAmounts.useQuery(
+    { productId: loadingProductId! },
+    { enabled: loadingProductId !== null }
+  );
+  
+  // Query for loading existing images when editing
+  const { data: existingImages = [] } = trpc.products.getImages.useQuery(
+    { productId: loadingProductId! },
+    { enabled: loadingProductId !== null }
+  );
 
   const createMutation = trpc.products.create.useMutation({
     onSuccess: async (product) => {
@@ -47,6 +60,8 @@ export function ProductsManagement() {
       }
       utils.products.list.invalidate();
       setIsDialogOpen(false);
+      setEditingProduct(null);
+      setLoadingProductId(null);
       setAmounts([{ amount: "", price: "" }]);
       setProductImages([]);
       toast.success("Producto creado exitosamente");
@@ -57,12 +72,30 @@ export function ProductsManagement() {
   });
 
   const updateMutation = trpc.products.update.useMutation({
-    onSuccess: async () => {
-      // Note: For now, we'll keep the simple update flow
-      // In a full implementation, we'd delete old images and create new ones
+    onSuccess: async (product) => {
+      // Delete old images that are not in the current list
+      const currentImageIds = productImages.filter(img => img.id).map(img => img.id!);
+      const imagesToDelete = existingImages.filter(img => !currentImageIds.includes(img.id));
+      
+      for (const img of imagesToDelete) {
+        await deleteImageMutation.mutateAsync({ id: img.id });
+      }
+      
+      // Create new images (those without id)
+      const newImages = productImages.filter(img => !img.id);
+      for (const image of newImages) {
+        await createImageMutation.mutateAsync({
+          productId: editingProduct.id,
+          imageUrl: image.url,
+          displayOrder: image.displayOrder,
+          isPrimary: image.isPrimary,
+        });
+      }
+      
       utils.products.list.invalidate();
       setIsDialogOpen(false);
       setEditingProduct(null);
+      setLoadingProductId(null);
       setAmounts([{ amount: "", price: "" }]);
       setProductImages([]);
       toast.success("Producto actualizado exitosamente");
@@ -133,12 +166,30 @@ export function ProductsManagement() {
 
   const handleEdit = async (product: any) => {
     setEditingProduct(product);
+    setLoadingProductId(product.id);
     setIsDialogOpen(true);
-    // TODO: Load existing amounts for this product
-    setAmounts([{ amount: "", price: "" }]);
-    // Load existing images
-    setProductImages([]);
   };
+  
+  // Effect to load amounts and images when editing
+  useEffect(() => {
+    if (editingProduct && existingAmounts.length > 0) {
+      setAmounts(existingAmounts.map(a => ({
+        amount: a.amount.toString(),
+        price: a.price.toString()
+      })));
+    }
+  }, [editingProduct, existingAmounts]);
+  
+  useEffect(() => {
+    if (editingProduct && existingImages.length > 0) {
+      setProductImages(existingImages.map(img => ({
+        id: img.id,
+        url: img.imageUrl,
+        displayOrder: img.displayOrder,
+        isPrimary: img.isPrimary
+      })));
+    }
+  }, [editingProduct, existingImages]);
 
   const handleDelete = (id: number) => {
     if (confirm("¿Estás seguro de que deseas eliminar este producto?")) {
@@ -148,6 +199,7 @@ export function ProductsManagement() {
 
   const handleNewProduct = () => {
     setEditingProduct(null);
+    setLoadingProductId(null);
     setIsDialogOpen(true);
     setAmounts([{ amount: "", price: "" }]);
     setProductImages([]);
