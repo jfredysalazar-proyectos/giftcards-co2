@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import Admin from "./pages/Admin";
 import ProductDetail from "./pages/ProductDetail";
 import FAQ from "./pages/FAQ";
+import MyOrders from "./pages/MyOrders";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -18,6 +19,7 @@ function Router() {
       <Route path={"/admin"} component={Admin} />
       <Route path={"/product/:slug"} component={ProductDetail} />
       <Route path={"/faq"} component={FAQ} />
+      <Route path={"/my-orders"} component={MyOrders} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

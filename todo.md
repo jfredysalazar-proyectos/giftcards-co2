@@ -47,3 +47,14 @@
 - [x] Configurar emails de actualización de estado de pedido
 - [x] Crear página FAQ en español
 - [x] Integrar FAQ con base de datos dinámica
+
+## Dashboard de Usuario
+- [x] Crear página de dashboard de usuario
+- [x] Implementar página "Mis Pedidos" con historial completo
+- [x] Agregar visualización de códigos de regalo por pedido
+- [x] Implementar rastreo de estado de pedidos en tiempo real
+- [x] Agregar funcionalidad de descarga de códigos
+- [x] Crear componente de tarjeta de pedido con detalles
+- [x] Agregar filtros por estado de pedido
+- [x] Implementar búsqueda de pedidos por ID o producto
+- [x] Agregar enlace "Mis Pedidos" en navegación principal

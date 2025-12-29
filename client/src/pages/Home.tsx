@@ -47,7 +47,7 @@ const CREATORS: Creator[] = [
 ];
 
 export default function Home() {
-  const { user, loading: authLoading } = useAuth();
+  const { user, isAuthenticated, logout, loading: authLoading } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [carouselIndex, setCarouselIndex] = useState(0);
@@ -101,18 +101,26 @@ export default function Home() {
               </h1>
             </div>
           </Link>
-          <div className="flex items-center gap-4">
-            {user ? (
-              <div className="flex items-center gap-3">
-                <span className="text-sm text-gray-600">Hola, {user.name}</span>
-                {user.role === "admin" && (
+          <div className="flex items-center gap-3">
+            {isAuthenticated ? (
+              <>
+                <span className="text-gray-700">Hola, {user?.name}</span>
+                <Link href="/my-orders">
+                  <Button variant="ghost" size="sm">
+                    Mis Pedidos
+                  </Button>
+                </Link>
+                {user?.role === "admin" && (
                   <Link href="/admin">
                     <Button variant="outline" size="sm">
                       Admin
                     </Button>
                   </Link>
                 )}
-              </div>
+                <Button variant="outline" size="sm" onClick={logout}>
+                  Cerrar Sesión
+                </Button>
+              </>
             ) : (
               <Link href="/login">
                 <Button variant="outline" size="sm">
