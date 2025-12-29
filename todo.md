@@ -111,3 +111,11 @@
 - [x] Insertar producto Xbox Gift Card en base de datos
 - [x] Agregar montos disponibles para Xbox Gift Card ($10, $25, $50, $100)
 - [x] Verificar que el producto se muestre correctamente en el frontend
+
+## Regenerar Imágenes de Productos en Formato 1:1
+- [x] Regenerar imagen de PlayStation Network en formato cuadrado 1:1
+- [x] Regenerar imagen de Xbox Gift Card en formato cuadrado 1:1
+- [x] Regenerar imagen de Nintendo eShop en formato cuadrado 1:1
+- [x] Regenerar imagen de Amazon Gift Cards en formato cuadrado 1:1
+- [x] Regenerar imagen de Xbox Game Pass en formato cuadrado 1:1
+- [x] Todas las imágenes ahora son cuadradas y se verán perfectamente en móvil
