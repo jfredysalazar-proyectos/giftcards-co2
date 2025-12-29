@@ -1,5 +1,6 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useCart } from "@/contexts/CartContext";
+import { CartModal } from "@/components/CartModal";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -16,7 +17,8 @@ export default function ProductDetail() {
   const { slug } = useParams();
   const [, setLocation] = useLocation();
   const { user, isAuthenticated } = useAuth();
-  const { addItem } = useCart();
+  const { addItem, items } = useCart();
+  const [isCartOpen, setIsCartOpen] = useState(false);
   
   const [selectedAmount, setSelectedAmount] = useState<string>("");
   const [selectedPrice, setSelectedPrice] = useState<string>("");
@@ -174,12 +176,25 @@ export default function ProductDetail() {
               </h1>
             </div>
           </Link>
-          <Link href="/">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Volver
-            </Button>
-          </Link>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setIsCartOpen(true)}
+              className="relative p-2 hover:bg-gray-100 rounded-lg transition"
+            >
+              <ShoppingCart className="w-6 h-6 text-purple-600" />
+              {items.length > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
+                  {items.length}
+                </span>
+              )}
+            </button>
+            <Link href="/">
+              <Button variant="ghost" size="sm">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Volver
+              </Button>
+            </Link>
+          </div>
         </div>
       </nav>
 
@@ -281,20 +296,20 @@ export default function ProductDetail() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <Button
-                    className="bg-white border-2 border-purple-600 text-purple-600 hover:bg-purple-50 font-bold py-6 text-lg"
+                    className="bg-white border-2 border-purple-600 text-purple-600 hover:bg-purple-50 font-bold py-6 text-sm sm:text-base lg:text-lg flex items-center justify-center whitespace-nowrap"
                     onClick={handleAddToCart}
                     disabled={!product.inStock || !selectedAmount}
                   >
-                    <ShoppingCart className="w-5 h-5 mr-2" />
-                    Agregar al Carrito
+                    <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2 flex-shrink-0" />
+                    <span className="truncate">Agregar al Carrito</span>
                   </Button>
                   <Button
-                    className="bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white font-bold py-6 text-lg"
+                    className="bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white font-bold py-6 text-sm sm:text-base lg:text-lg flex items-center justify-center whitespace-nowrap"
                     onClick={handleWhatsAppCheckout}
                     disabled={!product.inStock || !selectedAmount}
                   >
-                    <MessageCircle className="w-5 h-5 mr-2" />
-                    Comprar Ahora
+                    <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2 flex-shrink-0" />
+                    <span className="truncate">Comprar Ahora</span>
                   </Button>
                 </div>
 
@@ -434,6 +449,9 @@ export default function ProductDetail() {
           <p className="text-sm">&copy; 2025 Giftcards.Co. Todos los derechos reservados.</p>
         </div>
       </footer>
+
+      {/* Cart Modal */}
+      <CartModal isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </div>
   );
 }

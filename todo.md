@@ -174,3 +174,9 @@
 - [x] Agregar CartModal en Home.tsx para mostrar el carrito
 - [ ] Implementar persistencia del carrito en localStorage
 - [ ] Probar flujo completo de agregar múltiples productos y comprar
+
+## Ícono de Carrito en Página de Detalle de Producto
+- [x] Agregar ícono de carrito con contador en navegación de ProductDetail.tsx
+- [x] Importar CartModal en ProductDetail.tsx
+- [x] Implementar funcionalidad de abrir/cerrar CartModal desde ícono de carrito
+- [x] Asegurar consistencia visual con el ícono de carrito de Home.tsx
