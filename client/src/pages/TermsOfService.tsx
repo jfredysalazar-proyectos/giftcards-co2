@@ -1,10 +1,13 @@
 import { Link } from "wouter";
+import AnnouncementBar from "@/components/AnnouncementBar";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 
 export default function TermsOfService() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <>
+      <AnnouncementBar />
+      <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <nav className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
         <div className="container flex items-center justify-between py-4">
@@ -159,5 +162,6 @@ export default function TermsOfService() {
         </div>
       </footer>
     </div>
+    </>
   );
 }

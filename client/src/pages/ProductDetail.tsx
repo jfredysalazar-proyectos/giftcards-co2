@@ -12,6 +12,7 @@ import { useState } from "react";
 import { Link, useLocation, useParams } from "wouter";
 import { ArrowLeft, MessageCircle, ShoppingCart, Star, Loader2, Check } from "lucide-react";
 import { toast } from "sonner";
+import AnnouncementBar from "@/components/AnnouncementBar";
 
 export default function ProductDetail() {
   const { slug } = useParams();
@@ -170,6 +171,9 @@ export default function ProductDetail() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Announcement Bar */}
+      <AnnouncementBar />
+      
       {/* Navigation */}
       <nav className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
         <div className="container flex items-center justify-between py-4">

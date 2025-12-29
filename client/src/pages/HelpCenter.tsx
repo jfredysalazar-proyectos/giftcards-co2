@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import AnnouncementBar from "@/components/AnnouncementBar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowLeft, ShoppingCart, CreditCard, Package, HelpCircle, Shield, Users, MessageCircle, FileText } from "lucide-react";
@@ -74,7 +75,9 @@ export default function HelpCenter() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <>
+      <AnnouncementBar />
+      <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <nav className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
         <div className="container flex items-center justify-between py-4">
@@ -219,5 +222,6 @@ export default function HelpCenter() {
         </div>
       </footer>
     </div>
+    </>
   );
 }

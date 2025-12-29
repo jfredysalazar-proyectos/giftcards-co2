@@ -1,4 +1,5 @@
 import { useAuth } from "@/_core/hooks/useAuth";
+import AnnouncementBar from "@/components/AnnouncementBar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -107,7 +108,9 @@ export default function MyOrders() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <>
+      <AnnouncementBar />
+      <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
       <nav className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
         <div className="container flex items-center justify-between py-4">
@@ -371,5 +374,6 @@ export default function MyOrders() {
         </div>
       </footer>
     </div>
+    </>
   );
 }

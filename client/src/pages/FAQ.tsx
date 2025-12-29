@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import AnnouncementBar from "@/components/AnnouncementBar";
 import { Card } from "@/components/ui/card";
 import {
   Accordion,
@@ -14,7 +15,9 @@ export default function FAQ() {
   const { data: faqs = [], isLoading } = trpc.faqs.list.useQuery();
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <>
+      <AnnouncementBar />
+      <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
       <nav className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
         <div className="container flex items-center justify-between py-4">
@@ -142,5 +145,6 @@ export default function FAQ() {
         </div>
       </footer>
     </div>
+    </>
   );
 }

@@ -294,3 +294,11 @@
 - [x] Crear interfaz de gestión en Admin para editar anuncio
 - [x] Insertar anuncio inicial con TRM del día
 - [x] Probar edición y visualización del anuncio
+
+## Animación Marquee y Expansión de Barra de Anuncios
+- [x] Agregar animación CSS marquee al texto de AnnouncementBar
+- [x] Implementar desplazamiento horizontal continuo del texto
+- [x] Integrar AnnouncementBar en ProductDetail.tsx
+- [x] Integrar AnnouncementBar en todas las páginas legales (Terms, Privacy, Refund)
+- [x] Integrar AnnouncementBar en páginas de soporte (Contact, HelpCenter, FAQ)
+- [x] Verificar que la animación funcione correctamente en todas las páginas
