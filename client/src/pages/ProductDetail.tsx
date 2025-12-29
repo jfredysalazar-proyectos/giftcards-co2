@@ -37,6 +37,10 @@ export default function ProductDetail() {
     { enabled: !!product?.id }
   );
 
+  // Fetch WhatsApp number from settings
+  const { data: whatsappSetting } = trpc.settings.get.useQuery({ key: "whatsapp_number" });
+  const whatsappNumber = whatsappSetting?.value || "+573334315646";
+
   const utils = trpc.useUtils();
   const createReviewMutation = trpc.reviews.create.useMutation({
     onSuccess: () => {
@@ -71,7 +75,7 @@ export default function ProductDetail() {
       `💵 Total: $${(parseFloat(selectedPrice) * quantity).toFixed(2)}\n\n` +
       `¿Pueden ayudarme con la compra?`;
 
-    const whatsappUrl = `https://wa.me/1234567890?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/\s/g, "")}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, "_blank");
   };
 

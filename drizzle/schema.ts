@@ -201,3 +201,17 @@ export const usersRelations = relations(users, ({ many }) => ({
   orders: many(orders),
   reviews: many(reviews),
 }));
+
+/**
+ * Settings table for site configuration
+ */
+export const settings = mysqlTable("settings", {
+  id: int("id").autoincrement().primaryKey(),
+  key: varchar("key", { length: 100 }).notNull().unique(),
+  value: text("value").notNull(),
+  description: text("description"),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Setting = typeof settings.$inferSelect;
+export type InsertSetting = typeof settings.$inferInsert;

@@ -2,6 +2,7 @@ import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/button";
 import { X, Trash2, MessageCircle } from "lucide-react";
 import { useState } from "react";
+import { trpc } from "@/lib/trpc";
 
 interface CartModalProps {
   isOpen: boolean;
@@ -11,6 +12,10 @@ interface CartModalProps {
 export function CartModal({ isOpen, onClose }: CartModalProps) {
   const { items, removeItem, updateQuantity, total, clearCart } = useCart();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  
+  // Fetch WhatsApp number from settings
+  const { data: whatsappSetting } = trpc.settings.get.useQuery({ key: "whatsapp_number" });
+  const whatsappNumber = whatsappSetting?.value || "+573334315646";
 
   if (!isOpen) return null;
 
@@ -25,7 +30,7 @@ export function CartModal({ isOpen, onClose }: CartModalProps) {
       .join("\n");
 
     const message = `¡Hola Giftcards.Co! Quiero comprar:\n\n${itemsList}\n\nTotal: $${total.toFixed(2)}`;
-    const whatsappUrl = `https://wa.me/1234567890?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/\s/g, "")}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, "_blank");
     setIsCheckingOut(false);
   };

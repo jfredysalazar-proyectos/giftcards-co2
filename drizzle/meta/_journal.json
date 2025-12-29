@@ -15,6 +15,13 @@
       "when": 1766978885451,
       "tag": "0001_narrow_lady_vermin",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1767018486415,
+      "tag": "0002_dapper_power_man",
+      "breakpoints": true
     }
   ]
 }

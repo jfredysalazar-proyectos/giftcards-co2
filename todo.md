@@ -144,3 +144,19 @@
 - [x] Agregar autoplay cada 5 segundos
 - [x] Mostrar estadística de calificación global (4.9/5 con 10,000+ reseñas)
 - [x] Asegurar diseño responsive para móvil (1 col móvil, 2 tablet, 3 desktop)
+
+## Sistema de Configuración de WhatsApp
+- [x] Crear tabla de configuración (settings) en el esquema de base de datos
+- [x] Agregar campo whatsapp_number en la tabla settings
+- [x] Insertar número inicial +573334315646 en la base de datos
+- [x] Crear query helpers para obtener y actualizar configuración en server/db.ts
+- [x] Crear router tRPC para settings (get, getAll, update, create)
+- [x] Crear componente SettingsManagement en el panel Admin
+- [x] Agregar pestaña "Configuración" en el panel Admin
+- [x] Actualizar todos los botones de WhatsApp en Home.tsx para usar número dinámico
+- [x] Actualizar botón de WhatsApp en ProductDetail.tsx para usar número dinámico
+- [x] Actualizar botón de WhatsApp en CartModal.tsx para usar número dinámico
+- [x] Agregar query de settings en todos los componentes que usan WhatsApp
+- [x] Usar número +573334315646 como valor por defecto
+- [ ] Probar que el número se actualice correctamente desde el Admin
+- [ ] Verificar que todos los enlaces de WhatsApp funcionen correctamente

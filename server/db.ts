@@ -10,13 +10,15 @@ import {
   orderItems, 
   reviews, 
   faqs,
+  settings,
   InsertCategory,
   InsertProduct,
   InsertProductAmount,
   InsertOrder,
   InsertOrderItem,
   InsertReview,
-  InsertFAQ
+  InsertFAQ,
+  InsertSetting
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -363,4 +365,35 @@ export async function deleteFAQ(id: number) {
   if (!db) throw new Error("Database not available");
   
   await db.delete(faqs).where(eq(faqs.id, id));
+}
+
+// Settings queries
+export async function getSetting(key: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  
+  const result = await db.select().from(settings).where(eq(settings.key, key)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getAllSettings() {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(settings);
+}
+
+export async function updateSetting(key: string, value: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.update(settings).set({ value }).where(eq(settings.key, key));
+}
+
+export async function createSetting(setting: InsertSetting) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const result = await db.insert(settings).values(setting);
+  return result;
 }

@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO settings (`key`, `value`, description) VALUES ('whatsapp_number', '+573334315646', 'Número de WhatsApp para contacto y compras')",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user q8Ed9efAHcuZDzr.root --database iVAPtUQGMwL6qxGuVbNjoM --execute INSERT INTO settings (`key`, `value`, description) VALUES ('whatsapp_number', '+573334315646', 'Número de WhatsApp para contacto y compras')",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 110
+}
