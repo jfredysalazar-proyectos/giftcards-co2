@@ -6,14 +6,18 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { CartProvider } from "./contexts/CartContext";
 import Home from "./pages/Home";
+import Admin from "./pages/Admin";
 import ProductDetail from "./pages/ProductDetail";
+import FAQ from "./pages/FAQ";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
-      <Route path={"\\"} component={Home} />
-      <Route path={"/product/:id"} component={ProductDetail} />
+      <Route path={"/"} component={Home} />
+      <Route path={"/admin"} component={Admin} />
+      <Route path={"/product/:slug"} component={ProductDetail} />
+      <Route path={"/faq"} component={FAQ} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

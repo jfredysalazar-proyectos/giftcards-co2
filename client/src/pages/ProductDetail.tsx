@@ -1,306 +1,400 @@
+import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { trpc } from "@/lib/trpc";
 import { useState } from "react";
-import { MessageCircle, Download, Check, Star, ShoppingCart } from "lucide-react";
-import type { RouteComponentProps } from "wouter";
-import { useCart } from "@/contexts/CartContext";
-import { useLocation } from "wouter";
+import { Link, useLocation, useParams } from "wouter";
+import { ArrowLeft, MessageCircle, ShoppingCart, Star, Loader2, Check } from "lucide-react";
+import { toast } from "sonner";
 
-/**
- * Design Philosophy: Playful Gradient Grid
- * - Product detail page with preview image and gradient background
- * - Instant download button for digital preview
- * - WhatsApp checkout integration
- * - Testimonials and ratings section
- */
-
-export default function ProductDetail({ params }: RouteComponentProps<{ id: string }>) {
-  const id = params?.id || "psn-1";
-  const { addItem } = useCart();
+export default function ProductDetail() {
+  const { slug } = useParams();
   const [, setLocation] = useLocation();
+  const { user, isAuthenticated } = useAuth();
   
+  const [selectedAmount, setSelectedAmount] = useState<string>("");
+  const [selectedPrice, setSelectedPrice] = useState<string>("");
   const [quantity, setQuantity] = useState(1);
-  const [selectedAmount, setSelectedAmount] = useState("$25");
-  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [rating, setRating] = useState(5);
+  const [comment, setComment] = useState("");
 
-  // Mock product data
-  const product = {
-    id,
-    name: "Tarjeta de Regalo PlayStation Network",
-    category: "Videojuegos",
-    description: "Agrega fondos a tu cuenta de PlayStation Network y desbloquea un mundo de juegos, complementos y entretenimiento.",
-    fullDescription: `Las Tarjetas de Regalo de PlayStation Network son la forma perfecta de mejorar tu experiencia de juego. Ya sea que busques comprar los últimos títulos AAA, gemas indie o complementos premium para tus juegos favoritos, las tarjetas PSN te cubren. Con entrega instantánea, puedes comenzar a jugar en minutos.
+  const { data: product, isLoading: productLoading } = trpc.products.getBySlug.useQuery(
+    { slug: slug || "" },
+    { enabled: !!slug }
+  );
 
-Características:
-• Entrega digital instantánea
-• Funciona en PS4, PS5 y cuenta PSN
-• Sin fecha de vencimiento
-• Seguro y verificado
-• Soporte al cliente 24/7`,
-    image: "/images/product-category-psn.png",
-    gradient: "from-purple-700 to-purple-500",
-    amounts: ["$10", "$25", "$50", "$100"],
-    basePrice: 25,
-    rating: 4.8,
-    reviews: 1250,
-    inStock: true,
-    testimonials: [
-      {
-        author: "Alex G.",
-        rating: 5,
-        text: "¡Recibí mi tarjeta PSN al instante! Excelente servicio.",
-      },
-      {
-        author: "Jordan M.",
-        rating: 5,
-        text: "Rápido y confiable. ¡Altamente recomendado!",
-      },
-      {
-        author: "Casey T.",
-        rating: 4,
-        text: "Buena experiencia, proceso de compra fluido.",
-      },
-    ],
-  };
+  const { data: amounts = [] } = trpc.products.getAmounts.useQuery(
+    { productId: product?.id || 0 },
+    { enabled: !!product?.id }
+  );
 
-  const handleDownloadPreview = () => {
-    // Simulate preview download
-    alert("¡Vista previa descargada! Revisa tu carpeta de descargas.");
+  const { data: reviews = [] } = trpc.reviews.getByProduct.useQuery(
+    { productId: product?.id || 0 },
+    { enabled: !!product?.id }
+  );
+
+  const utils = trpc.useUtils();
+  const createReviewMutation = trpc.reviews.create.useMutation({
+    onSuccess: () => {
+      utils.reviews.getByProduct.invalidate();
+      setRating(5);
+      setComment("");
+      toast.success("¡Reseña enviada! Será visible después de la aprobación del administrador.");
+    },
+    onError: (error) => {
+      toast.error(`Error: ${error.message}`);
+    },
+  });
+
+  const handleAmountChange = (value: string) => {
+    const selectedAmountObj = amounts.find(a => a.amount === value);
+    if (selectedAmountObj) {
+      setSelectedAmount(value);
+      setSelectedPrice(selectedAmountObj.price);
+    }
   };
 
   const handleWhatsAppCheckout = () => {
-    const message = `¡Hola Giftcards.Co! Quiero comprar ${quantity}x ${product.name} (${selectedAmount}) por un total de $${quantity * parseFloat(selectedAmount.replace("$", ""))}.`;
+    if (!selectedAmount) {
+      toast.error("Por favor selecciona un monto");
+      return;
+    }
+
+    const message = `¡Hola Giftcards.Co! Quiero comprar:\n\n` +
+      `🎮 Producto: ${product?.name}\n` +
+      `💰 Monto: ${selectedAmount}\n` +
+      `📦 Cantidad: ${quantity}\n` +
+      `💵 Total: $${(parseFloat(selectedPrice) * quantity).toFixed(2)}\n\n` +
+      `¿Pueden ayudarme con la compra?`;
+
     const whatsappUrl = `https://wa.me/1234567890?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, "_blank");
   };
 
+  const handleSubmitReview = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!isAuthenticated) {
+      toast.error("Debes iniciar sesión para dejar una reseña");
+      return;
+    }
+
+    if (!product) return;
+
+    createReviewMutation.mutate({
+      productId: product.id,
+      rating,
+      comment: comment.trim() || undefined,
+    });
+  };
+
+  const approvedReviews = reviews.filter(r => r.approved);
+  const averageRating = approvedReviews.length > 0
+    ? approvedReviews.reduce((sum, r) => sum + r.rating, 0) / approvedReviews.length
+    : 0;
+
+  const renderStars = (rating: number, interactive = false, onRate?: (rating: number) => void) => {
+    return (
+      <div className="flex gap-1">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <Star
+            key={star}
+            className={`w-5 h-5 ${interactive ? "cursor-pointer" : ""} ${
+              star <= rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
+            }`}
+            onClick={() => interactive && onRate?.(star)}
+          />
+        ))}
+      </div>
+    );
+  };
+
+  if (productLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-10 h-10 animate-spin text-purple-600" />
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center">
+        <h1 className="text-3xl font-bold mb-4">Producto no encontrado</h1>
+        <Link href="/">
+          <Button>Volver al inicio</Button>
+        </Link>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
       <nav className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
         <div className="container flex items-center justify-between py-4">
-          <a href="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-cyan-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-display font-bold text-lg">GC</span>
+          <Link href="/">
+            <div className="flex items-center gap-2 cursor-pointer">
+              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-cyan-500 rounded-lg flex items-center justify-center">
+                <span className="text-white font-display font-bold text-lg">GC</span>
+              </div>
+              <h1 className="font-display text-2xl font-bold bg-gradient-to-r from-purple-600 to-cyan-600 bg-clip-text text-transparent">
+                Giftcards.Co
+              </h1>
             </div>
-            <h1 className="font-display text-2xl font-bold bg-gradient-to-r from-purple-600 to-cyan-600 bg-clip-text text-transparent">
-              Giftcards.Co
-            </h1>
-          </a>
+          </Link>
+          <Link href="/">
+            <Button variant="ghost" size="sm">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Volver
+            </Button>
+          </Link>
         </div>
       </nav>
 
-      {/* Product Detail */}
-      <section className="container py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Product Image & Preview */}
+      <div className="container py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+          {/* Product Image Gallery */}
           <div>
-            <div className={`bg-gradient-to-br ${product.gradient} rounded-2xl overflow-hidden shadow-2xl mb-6`}>
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-full h-96 object-cover"
-              />
+            <Card className="overflow-hidden border-0 shadow-xl">
+              <div className={`h-96 bg-gradient-to-br ${product.gradient || "from-gray-400 to-gray-600"} relative`}>
+                {product.image && (
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-full object-cover"
+                  />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+              </div>
+            </Card>
+            
+            {/* Additional Images (placeholder for future expansion) */}
+            <div className="grid grid-cols-4 gap-4 mt-4">
+              {[1, 2, 3, 4].map((i) => (
+                <div
+                  key={i}
+                  className={`h-20 rounded-lg bg-gradient-to-br ${product.gradient || "from-gray-400 to-gray-600"} opacity-50 cursor-pointer hover:opacity-100 transition`}
+                />
+              ))}
             </div>
-            <Button
-              onClick={handleDownloadPreview}
-              variant="outline"
-              className="w-full py-6 text-lg font-semibold border-2 border-purple-600 text-purple-600 hover:bg-purple-50"
-            >
-              <Download className="w-5 h-5 mr-2" />
-              Descargar Vista Previa
-            </Button>
           </div>
 
-          {/* Product Details & Checkout */}
+          {/* Product Info & Purchase */}
           <div>
             <div className="mb-6">
-              <span className="inline-block px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold mb-4">
-                {product.category}
-              </span>
-              <h1 className="font-display text-4xl font-bold mb-4 text-gray-900">
-                {product.name}
-              </h1>
-              <div className="flex items-center gap-4 mb-6">
-                <div className="flex items-center gap-1">
-                  <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-                  <span className="font-semibold text-gray-900">{product.rating}</span>
-                  <span className="text-gray-600">({product.reviews} reseñas)</span>
+              <h1 className="font-display text-4xl font-bold mb-4">{product.name}</h1>
+              <div className="flex items-center gap-4 mb-4">
+                <div className="flex items-center gap-2">
+                  {renderStars(Math.round(averageRating))}
+                  <span className="text-sm text-gray-600">
+                    ({approvedReviews.length} reseñas)
+                  </span>
                 </div>
-                {product.inStock && (
-                  <div className="flex items-center gap-2 text-green-600 font-semibold">
-                    <Check className="w-5 h-5" />
+                {product.inStock ? (
+                  <span className="px-3 py-1 bg-green-100 text-green-700 text-sm font-semibold rounded-full">
                     En Stock
-                  </div>
+                  </span>
+                ) : (
+                  <span className="px-3 py-1 bg-red-100 text-red-700 text-sm font-semibold rounded-full">
+                    Agotado
+                  </span>
                 )}
               </div>
-              <p className="text-gray-700 text-lg mb-6">{product.description}</p>
+              <p className="text-gray-700 text-lg leading-relaxed">
+                {product.fullDescription || product.description}
+              </p>
             </div>
 
-            {/* Amount Selection */}
-            <div className="mb-8">
-              <h3 className="font-display font-bold text-lg mb-4">Selecciona Monto</h3>
-              <div className="grid grid-cols-2 gap-3 mb-6">
-                {product.amounts.map((amount) => (
-                  <button
-                    key={amount}
-                    onClick={() => setSelectedAmount(amount)}
-                    className={`py-4 px-4 rounded-lg font-bold transition border-2 ${
-                      selectedAmount === amount
-                        ? "bg-gradient-to-r from-purple-600 to-cyan-600 text-white border-purple-600"
-                        : "bg-white text-gray-900 border-gray-200 hover:border-purple-600"
-                    }`}
-                  >
-                    {amount}
-                  </button>
-                ))}
-              </div>
-            </div>
+            <Card className="p-6 border-2 border-purple-100">
+              <h3 className="font-display text-xl font-bold mb-4">Selecciona tu Monto</h3>
+              
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="amount">Monto de la Tarjeta</Label>
+                  <Select value={selectedAmount} onValueChange={handleAmountChange}>
+                    <SelectTrigger id="amount">
+                      <SelectValue placeholder="Selecciona un monto" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {amounts.map((amt) => (
+                        <SelectItem key={amt.id} value={amt.amount}>
+                          {amt.amount} - ${parseFloat(amt.price).toFixed(2)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
 
-            {/* Quantity Selection */}
-            <div className="mb-8">
-              <h3 className="font-display font-bold text-lg mb-4">Cantidad</h3>
-              <div className="flex items-center gap-4">
-                <button
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="w-12 h-12 rounded-lg border-2 border-gray-200 hover:border-purple-600 transition"
+                <div>
+                  <Label htmlFor="quantity">Cantidad</Label>
+                  <Input
+                    id="quantity"
+                    type="number"
+                    min="1"
+                    value={quantity}
+                    onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                  />
+                </div>
+
+                {selectedPrice && (
+                  <div className="bg-gradient-to-r from-purple-50 to-cyan-50 p-4 rounded-lg">
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-700 font-medium">Total:</span>
+                      <span className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-cyan-600 bg-clip-text text-transparent">
+                        ${(parseFloat(selectedPrice) * quantity).toFixed(2)}
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                <Button
+                  className="w-full bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white font-bold py-6 text-lg"
+                  onClick={handleWhatsAppCheckout}
+                  disabled={!product.inStock || !selectedAmount}
                 >
-                  −
-                </button>
-                <span className="text-2xl font-bold w-8 text-center">{quantity}</span>
-                <button
-                  onClick={() => setQuantity(quantity + 1)}
-                  className="w-12 h-12 rounded-lg border-2 border-gray-200 hover:border-purple-600 transition"
-                >
-                  +
-                </button>
-              </div>
-            </div>
+                  <MessageCircle className="w-5 h-5 mr-2" />
+                  Comprar por WhatsApp
+                </Button>
 
-            {/* Price Summary */}
-            <Card className="p-6 bg-gradient-to-br from-purple-50 to-cyan-50 border-0 mb-8">
-              <div className="flex justify-between items-center mb-4">
-                <span className="text-gray-700">Subtotal:</span>
-                <span className="font-semibold text-gray-900">
-                  ${quantity * parseFloat(selectedAmount.replace("$", ""))}
-                </span>
-              </div>
-              <div className="flex justify-between items-center mb-4">
-                <span className="text-gray-700">Entrega:</span>
-                <span className="font-semibold text-green-600">Instantánea</span>
-              </div>
-              <div className="border-t border-gray-200 pt-4 flex justify-between items-center">
-                <span className="font-display font-bold text-lg">Total:</span>
-                <span className="font-display text-3xl font-bold bg-gradient-to-r from-purple-600 to-cyan-600 bg-clip-text text-transparent">
-                  ${quantity * parseFloat(selectedAmount.replace("$", ""))}
-                </span>
+                <div className="flex items-center gap-2 text-sm text-gray-600 justify-center">
+                  <Check className="w-4 h-4 text-green-600" />
+                  Entrega instantánea por WhatsApp
+                </div>
               </div>
             </Card>
 
-            {/* Add to Cart Button */}
-            <button
-              onClick={() => {
-                const price = parseFloat(selectedAmount.replace("$", ""));
-                addItem({
-                  id: `${product.id}-${selectedAmount}`,
-                  productName: product.name,
-                  amount: selectedAmount,
-                  quantity,
-                  price,
-                });
-                setIsAddingToCart(true);
-                setTimeout(() => {
-                  setIsAddingToCart(false);
-                  setLocation("/");
-                }, 1500);
-              }}
-              disabled={isAddingToCart}
-              className="w-full bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white font-bold py-4 px-6 rounded-lg transition shadow-lg hover:shadow-xl flex items-center justify-center gap-2 mb-4 disabled:opacity-50"
-            >
-              <ShoppingCart className="w-6 h-6" />
-              {isAddingToCart ? "¡Agregado al Carrito!" : "Agregar al Carrito"}
-            </button>
-
-            {/* WhatsApp Checkout */}
-            <button
-              onClick={handleWhatsAppCheckout}
-              className="w-full bg-white border-2 border-purple-600 text-purple-600 hover:bg-purple-50 font-bold py-4 px-6 rounded-lg transition shadow-lg hover:shadow-xl flex items-center justify-center gap-2 mb-4"
-            >
-              <MessageCircle className="w-6 h-6" />
-              Comprar Directamente en WhatsApp
-            </button>
-
-            <p className="text-center text-sm text-gray-600">
-              Agrega al carrito o compra directamente en WhatsApp
-            </p>
+            {/* Features */}
+            <div className="grid grid-cols-2 gap-4 mt-6">
+              <Card className="p-4 text-center">
+                <div className="text-2xl mb-2">⚡</div>
+                <p className="text-sm font-semibold">Entrega Instantánea</p>
+              </Card>
+              <Card className="p-4 text-center">
+                <div className="text-2xl mb-2">🔒</div>
+                <p className="text-sm font-semibold">100% Seguro</p>
+              </Card>
+              <Card className="p-4 text-center">
+                <div className="text-2xl mb-2">💳</div>
+                <p className="text-sm font-semibold">Múltiples Pagos</p>
+              </Card>
+              <Card className="p-4 text-center">
+                <div className="text-2xl mb-2">🎮</div>
+                <p className="text-sm font-semibold">Códigos Válidos</p>
+              </Card>
+            </div>
           </div>
         </div>
-      </section>
 
-      {/* Full Description */}
-      <section className="bg-gray-50 py-12">
-        <div className="container max-w-3xl">
-          <h2 className="font-display text-3xl font-bold mb-6">Acerca de este Producto</h2>
-          <p className="text-gray-700 whitespace-pre-line leading-relaxed">
-            {product.fullDescription}
-          </p>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="container py-12">
-        <h2 className="font-display text-3xl font-bold mb-8">Reseñas de Clientes</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {product.testimonials.map((testimonial, idx) => (
-            <Card key={idx} className="p-6 border-0 shadow-lg hover:shadow-xl transition">
-              <div className="flex gap-1 mb-4">
-                {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
+        {/* Reviews Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          {/* Existing Reviews */}
+          <div>
+            <h2 className="font-display text-3xl font-bold mb-6">
+              Reseñas de Clientes ({approvedReviews.length})
+            </h2>
+            
+            {approvedReviews.length === 0 ? (
+              <Card className="p-8 text-center">
+                <p className="text-gray-500">
+                  Sé el primero en dejar una reseña para este producto.
+                </p>
+              </Card>
+            ) : (
+              <div className="space-y-4">
+                {approvedReviews.map((review) => (
+                  <Card key={review.id} className="p-6">
+                    <div className="flex items-start justify-between mb-3">
+                      <div>
+                        <p className="font-semibold text-gray-900">Usuario #{review.userId}</p>
+                        <p className="text-sm text-gray-500">
+                          {new Date(review.createdAt).toLocaleDateString("es-ES", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          })}
+                        </p>
+                      </div>
+                      {renderStars(review.rating)}
+                    </div>
+                    {review.comment && (
+                      <p className="text-gray-700 leading-relaxed">{review.comment}</p>
+                    )}
+                  </Card>
                 ))}
               </div>
-              <p className="text-gray-700 mb-4 italic">"{testimonial.text}"</p>
-              <p className="font-semibold text-gray-900">— {testimonial.author}</p>
-            </Card>
-          ))}
+            )}
+          </div>
+
+          {/* Write a Review */}
+          <div>
+            <h2 className="font-display text-3xl font-bold mb-6">Escribe una Reseña</h2>
+            
+            {!isAuthenticated ? (
+              <Card className="p-8 text-center">
+                <p className="text-gray-600 mb-4">
+                  Debes iniciar sesión para dejar una reseña
+                </p>
+                <Link href="/login">
+                  <Button className="bg-gradient-to-r from-purple-600 to-cyan-600">
+                    Iniciar Sesión
+                  </Button>
+                </Link>
+              </Card>
+            ) : (
+              <Card className="p-6">
+                <form onSubmit={handleSubmitReview} className="space-y-4">
+                  <div>
+                    <Label>Tu Calificación</Label>
+                    <div className="mt-2">
+                      {renderStars(rating, true, setRating)}
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="comment">Tu Comentario (opcional)</Label>
+                    <Textarea
+                      id="comment"
+                      value={comment}
+                      onChange={(e) => setComment(e.target.value)}
+                      rows={4}
+                      placeholder="Comparte tu experiencia con este producto..."
+                    />
+                  </div>
+
+                  <Button
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-purple-600 to-cyan-600"
+                    disabled={createReviewMutation.isPending}
+                  >
+                    {createReviewMutation.isPending ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Enviando...
+                      </>
+                    ) : (
+                      "Enviar Reseña"
+                    )}
+                  </Button>
+
+                  <p className="text-xs text-gray-500 text-center">
+                    Tu reseña será revisada por un administrador antes de publicarse
+                  </p>
+                </form>
+              </Card>
+            )}
+          </div>
         </div>
-      </section>
+      </div>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-gray-300 py-12 mt-12">
-        <div className="container">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <h3 className="font-display font-bold text-white mb-4">Acerca de</h3>
-              <p className="text-sm">Tu marketplace confiable para tarjetas de regalo digitales instantáneas.</p>
-            </div>
-            <div>
-              <h3 className="font-display font-bold text-white mb-4">Soporte</h3>
-              <ul className="text-sm space-y-2">
-                <li><a href="#" className="hover:text-white transition">Centro de Ayuda</a></li>
-                <li><a href="#" className="hover:text-white transition">Contáctanos</a></li>
-                <li><a href="#" className="hover:text-white transition">Preguntas Frecuentes</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-display font-bold text-white mb-4">Legal</h3>
-              <ul className="text-sm space-y-2">
-                <li><a href="#" className="hover:text-white transition">Términos de Servicio</a></li>
-                <li><a href="#" className="hover:text-white transition">Política de Privacidad</a></li>
-                <li><a href="#" className="hover:text-white transition">Política de Reembolso</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-display font-bold text-white mb-4">Cuenta</h3>
-              <ul className="text-sm space-y-2">
-                <li><a href="#" className="hover:text-white transition">Mis Pedidos</a></li>
-                <li><a href="#" className="hover:text-white transition">Mi Cuenta</a></li>
-                <li><a href="#" className="hover:text-white transition">Iniciar Sesión</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 pt-8 text-center text-sm">
-            <p>&copy; 2025 Giftcards.Co. Todos los derechos reservados.</p>
-          </div>
+      <footer className="bg-gray-900 text-gray-300 py-12 mt-16">
+        <div className="container text-center">
+          <p className="text-sm">&copy; 2025 Giftcards.Co. Todos los derechos reservados.</p>
         </div>
       </footer>
     </div>

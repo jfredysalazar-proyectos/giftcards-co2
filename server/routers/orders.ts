@@ -2,6 +2,7 @@ import { z } from "zod";
 import { publicProcedure, protectedProcedure, router } from "../_core/trpc";
 import { TRPCError } from "@trpc/server";
 import * as db from "../db";
+import { sendOrderConfirmationEmail, sendOrderStatusUpdateEmail } from "../services/email";
 
 export const ordersRouter = router({
   // User procedures
@@ -92,6 +93,17 @@ export const ordersRouter = router({
         });
       }
 
+      // Send confirmation email
+      if (input.customerEmail) {
+        await sendOrderConfirmationEmail({
+          orderId,
+          customerName: input.customerName || "Cliente",
+          customerEmail: input.customerEmail,
+          totalAmount: totalAmount.toFixed(2),
+          items: input.items,
+        });
+      }
+
       return { orderId, success: true };
     }),
 
@@ -114,7 +126,24 @@ export const ordersRouter = router({
       if (ctx.user.role !== "admin") {
         throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
       }
+      
+      // Update order status
       await db.updateOrderStatus(input.id, input.status);
+      
+      // Get order details for email
+      const order = await db.getOrderById(input.id);
+      
+      // Send status update email
+      if (order && order.customerEmail) {
+        await sendOrderStatusUpdateEmail({
+          orderId: order.id,
+          customerName: order.customerName || "Cliente",
+          customerEmail: order.customerEmail,
+          status: input.status,
+          totalAmount: order.totalAmount,
+        });
+      }
+      
       return { success: true };
     }),
 });

@@ -28,3 +28,22 @@
 - [ ] Integrar notificaciones por email
 - [ ] Actualizar carrito para guardar en base de datos
 - [ ] Implementar gestión de pedidos completa
+
+## Nuevas Características Solicitadas
+- [x] Crear panel de administración con dashboard
+- [x] Implementar gestión de productos en admin (crear, editar, eliminar)
+- [x] Implementar gestión de categorías en admin
+- [x] Implementar gestión de pedidos en admin (actualizar estados)
+- [x] Implementar gestión de reseñas en admin (aprobar, eliminar)
+- [x] Implementar gestión de FAQs en admin
+- [x] Crear página de detalle de producto con slug routing
+- [x] Agregar selector de montos en detalle de producto
+- [x] Implementar galería de imágenes en detalle de producto
+- [x] Mostrar reseñas de clientes en detalle de producto
+- [x] Agregar formulario de reseñas para usuarios autenticados
+- [x] Integrar botón de compra directa con WhatsApp
+- [x] Implementar sistema de notificaciones por email
+- [x] Configurar emails de confirmación de pedido
+- [x] Configurar emails de actualización de estado de pedido
+- [x] Crear página FAQ en español
+- [x] Integrar FAQ con base de datos dinámica

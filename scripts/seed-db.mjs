@@ -21,9 +21,14 @@ async function seed() {
 
     // Get category IDs
     const allCategories = await db.select().from(categories);
-    const videojuegosId = allCategories.find(c => c.slug === "videojuegos")?.id;
-    const comprasId = allCategories.find(c => c.slug === "compras")?.id;
-    const tecnologiaId = allCategories.find(c => c.slug === "tecnologia")?.id;
+    const videojuegosId = allCategories.find(c => c.slug === "videojuegos")?.id || 1;
+    const comprasId = allCategories.find(c => c.slug === "compras")?.id || 2;
+    const tecnologiaId = allCategories.find(c => c.slug === "tecnologia")?.id || 3;
+    
+    if (!videojuegosId || !comprasId || !tecnologiaId) {
+      console.error("❌ Error: Could not find category IDs");
+      return;
+    }
 
     // Create products
     console.log("Creating products...");
