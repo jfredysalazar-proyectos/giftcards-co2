@@ -25,6 +25,16 @@ const slides = [
     image: "/images/hero-slide-4.webp",
     alt: "Cyberpunk 2077 - Explora Night City",
   },
+  {
+    id: 5,
+    image: "/images/hero-fc26.webp",
+    alt: "EA Sports FC 26 - Ultimate Edition - Vive la emoción del fútbol",
+  },
+  {
+    id: 6,
+    image: "/images/hero-fortnite.webp",
+    alt: "Fortnite - Battle Royale - Únete a la acción",
+  },
 ];
 
 export default function HeroCarousel() {

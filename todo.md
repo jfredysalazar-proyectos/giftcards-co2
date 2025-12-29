@@ -276,3 +276,9 @@
 - [x] Copiar imagen proporcionada por usuario al directorio del proyecto
 - [x] Actualizar referencia en base de datos
 - [x] Verificar que la nueva imagen se muestre correctamente
+
+## Imágenes para Hero Carousel
+- [x] Generar imagen impactante de FC 26 para hero carousel
+- [x] Generar imagen impactante de Fortnite para hero carousel
+- [x] Actualizar HeroCarousel.tsx con nuevas imágenes
+- [x] Verificar que las imágenes se muestren correctamente en el carousel
