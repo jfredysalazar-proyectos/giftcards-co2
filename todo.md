@@ -58,3 +58,11 @@
 - [x] Agregar filtros por estado de pedido
 - [x] Implementar búsqueda de pedidos por ID o producto
 - [x] Agregar enlace "Mis Pedidos" en navegación principal
+
+## Productos Faltantes
+- [x] Agregar producto Nintendo eShop a categoría Videojuegos
+- [x] Agregar producto Xbox Game Pass a categoría Videojuegos
+- [x] Agregar producto Amazon Gift Cards a categoría Compras
+- [x] Agregar montos ($10, $25, $50, $100) para cada producto nuevo
+- [x] Insertar productos en base de datos con SQL
+- [ ] Verificar que todos los productos se muestren correctamente cuando la base de datos se estabilice

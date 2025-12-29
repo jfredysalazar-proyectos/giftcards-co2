@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO product_amounts (productId, amount, price, createdAt) VALUES \n(3, '$10', '10.00', NOW()),\n(3, '$25', '25.00', NOW()),\n(3, '$50', '50.00', NOW()),\n(3, '$100', '100.00', NOW())",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user q8Ed9efAHcuZDzr.root --database iVAPtUQGMwL6qxGuVbNjoM --execute INSERT INTO product_amounts (productId, amount, price, createdAt) VALUES \n(3, '$10', '10.00', NOW()),\n(3, '$25', '25.00', NOW()),\n(3, '$50', '50.00', NOW()),\n(3, '$100', '100.00', NOW())",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 60
+}

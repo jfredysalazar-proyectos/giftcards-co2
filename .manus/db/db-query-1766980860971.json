@@ -1,0 +1,25 @@
+{
+  "query": "SELECT id, name, slug FROM categories",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user q8Ed9efAHcuZDzr.root --database iVAPtUQGMwL6qxGuVbNjoM --execute SELECT id, name, slug FROM categories",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Videojuegos",
+      "slug": "videojuegos"
+    },
+    {
+      "id": "2",
+      "name": "Compras",
+      "slug": "compras"
+    },
+    {
+      "id": "3",
+      "name": "Tecnología",
+      "slug": "tecnologia"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tslug\n1\tVideojuegos\tvideojuegos\n2\tCompras\tcompras\n3\tTecnología\ttecnologia\n",
+  "stderr": "",
+  "execution_time_ms": 53
+}

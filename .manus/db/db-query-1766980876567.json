@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO products (name, slug, description, fullDescription, categoryId, image, gradient, inStock, featured, createdAt, updatedAt) VALUES ('Nintendo eShop', 'nintendo-eshop', 'Tarjetas Nintendo eShop para Switch y más', 'Compra tarjetas de regalo de Nintendo eShop y accede a miles de juegos para Nintendo Switch, contenido descargable y suscripciones. Entrega instantánea por WhatsApp.', 1, '/images/product-category-nintendo.png', 'from-red-600 to-orange-500', 1, 1, NOW(), NOW())",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user q8Ed9efAHcuZDzr.root --database iVAPtUQGMwL6qxGuVbNjoM --execute INSERT INTO products (name, slug, description, fullDescription, categoryId, image, gradient, inStock, featured, createdAt, updatedAt) VALUES ('Nintendo eShop', 'nintendo-eshop', 'Tarjetas Nintendo eShop para Switch y más', 'Compra tarjetas de regalo de Nintendo eShop y accede a miles de juegos para Nintendo Switch, contenido descargable y suscripciones. Entrega instantánea por WhatsApp.', 1, '/images/product-category-nintendo.png', 'from-red-600 to-orange-500', 1, 1, NOW(), NOW())",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 52
+}
