@@ -316,3 +316,10 @@
 - [x] Copiar imagen proporcionada por usuario al directorio del proyecto
 - [x] Reemplazar logo-giftcards-colombia.webp con nueva imagen
 - [x] Verificar que el logo se muestre correctamente en todas las páginas
+
+## Reemplazo de Ícono GC por Logo Completo
+- [x] Actualizar Home.tsx para usar imagen del logo en lugar de ícono GC
+- [x] Actualizar ProductDetail.tsx para usar imagen del logo
+- [x] Actualizar todas las páginas legales y de soporte
+- [x] Ajustar tamaño y estilo del logo para que se vea bien
+- [x] Verificar que el logo se muestre correctamente en todas las páginas

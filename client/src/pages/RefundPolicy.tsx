@@ -12,13 +12,12 @@ export default function RefundPolicy() {
       <nav className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
         <div className="container flex items-center justify-between py-4">
           <Link href="/">
-            <div className="flex items-center gap-2 cursor-pointer">
-              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-cyan-500 rounded-lg flex items-center justify-center">
-                <span className="text-white font-display font-bold text-lg">GC</span>
-              </div>
-              <h1 className="font-display text-2xl font-bold bg-gradient-to-r from-purple-600 to-cyan-600 bg-clip-text text-transparent">
-                GiftCards Colombia
-              </h1>
+            <div className="flex items-center cursor-pointer">
+              <img 
+                src="/logo-giftcards-colombia.webp" 
+                alt="GiftCards Colombia" 
+                className="h-12 w-auto"
+              />
             </div>
           </Link>
           <Link href="/">
