@@ -77,6 +77,21 @@ export type ProductAmount = typeof productAmounts.$inferSelect;
 export type InsertProductAmount = typeof productAmounts.$inferInsert;
 
 /**
+ * Product images table for multiple images per product
+ */
+export const productImages = mysqlTable("product_images", {
+  id: int("id").autoincrement().primaryKey(),
+  productId: int("productId").notNull(),
+  imageUrl: varchar("imageUrl", { length: 500 }).notNull(),
+  displayOrder: int("displayOrder").default(0).notNull(),
+  isPrimary: boolean("isPrimary").default(false).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ProductImage = typeof productImages.$inferSelect;
+export type InsertProductImage = typeof productImages.$inferInsert;
+
+/**
  * Orders table for tracking purchases
  */
 export const orders = mysqlTable("orders", {
@@ -154,6 +169,7 @@ export const productsRelations = relations(products, ({ one, many }) => ({
   }),
   amounts: many(productAmounts),
   reviews: many(reviews),
+  images: many(productImages),
 }));
 
 export const categoriesRelations = relations(categories, ({ many }) => ({
@@ -200,6 +216,13 @@ export const reviewsRelations = relations(reviews, ({ one }) => ({
 export const usersRelations = relations(users, ({ many }) => ({
   orders: many(orders),
   reviews: many(reviews),
+}));
+
+export const productImagesRelations = relations(productImages, ({ one }) => ({
+  product: one(products, {
+    fields: [productImages.productId],
+    references: [products.id],
+  }),
 }));
 
 /**

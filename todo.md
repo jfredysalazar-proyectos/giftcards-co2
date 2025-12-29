@@ -190,3 +190,15 @@
 - [x] Crear helper de conversión de imágenes en servidor
 - [x] Integrar conversión automática en ProductsManagement al subir imágenes
 - [x] Probar que las imágenes WebP se carguen correctamente
+
+## Sistema de Múltiples Imágenes por Producto
+- [x] Crear tabla productImages en esquema de base de datos
+- [x] Agregar campos: productId, imageUrl, displayOrder, isPrimary
+- [x] Ejecutar migración de base de datos con pnpm db:push
+- [x] Crear query helpers para productImages en server/db.ts
+- [x] Actualizar router de productos para manejar múltiples imágenes
+- [x] Implementar UI de carga de imágenes en ProductsManagement (hasta 3 imágenes)
+- [x] Agregar preview de imágenes con opción de eliminar
+- [x] Implementar drag & drop para reordenar imágenes
+- [x] Actualizar ProductDetail para mostrar galería de imágenes
+- [x] Probar carga, edición y eliminación de imágenes

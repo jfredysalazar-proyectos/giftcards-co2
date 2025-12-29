@@ -41,6 +41,13 @@ export default function ProductDetail() {
     { enabled: !!product?.id }
   );
 
+  const { data: productImages = [] } = trpc.products.getImages.useQuery(
+    { productId: product?.id || 0 },
+    { enabled: !!product?.id }
+  );
+
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
   // Fetch WhatsApp number from settings
   const { data: whatsappSetting } = trpc.settings.get.useQuery({ key: "whatsapp_number" });
   const whatsappNumber = whatsappSetting?.value || "+573334315646";
@@ -204,9 +211,9 @@ export default function ProductDetail() {
           <div>
             <Card className="overflow-hidden border-0 shadow-xl">
               <div className={`h-96 bg-gradient-to-br ${product.gradient || "from-gray-400 to-gray-600"} relative`}>
-                {product.image && (
+                {(productImages.length > 0 ? productImages[selectedImageIndex]?.imageUrl : product.image) && (
                   <img
-                    src={product.image}
+                    src={productImages.length > 0 ? productImages[selectedImageIndex]?.imageUrl : (product.image || "/images/placeholder.png")}
                     alt={product.name}
                     className="w-full h-full object-cover"
                   />
@@ -215,15 +222,28 @@ export default function ProductDetail() {
               </div>
             </Card>
             
-            {/* Additional Images (placeholder for future expansion) */}
-            <div className="grid grid-cols-4 gap-4 mt-4">
-              {[1, 2, 3, 4].map((i) => (
-                <div
-                  key={i}
-                  className={`h-20 rounded-lg bg-gradient-to-br ${product.gradient || "from-gray-400 to-gray-600"} opacity-50 cursor-pointer hover:opacity-100 transition`}
-                />
-              ))}
-            </div>
+            {/* Image Thumbnails */}
+            {productImages.length > 1 && (
+              <div className="grid grid-cols-3 gap-4 mt-4">
+                {productImages.map((img, index) => (
+                  <div
+                    key={img.id}
+                    onClick={() => setSelectedImageIndex(index)}
+                    className={`h-24 rounded-lg overflow-hidden cursor-pointer transition-all ${
+                      index === selectedImageIndex
+                        ? "ring-4 ring-purple-500 scale-105"
+                        : "opacity-70 hover:opacity-100"
+                    }`}
+                  >
+                    <img
+                      src={img.imageUrl}
+                      alt={`${product.name} - Imagen ${index + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Product Info & Purchase */}

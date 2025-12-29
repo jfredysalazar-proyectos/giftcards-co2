@@ -167,4 +167,55 @@ export const productsRouter = router({
       await db.deleteProductAmount(input.id);
       return { success: true };
     }),
+
+  // Product images management
+  getImages: publicProcedure
+    .input(z.object({ productId: z.number() }))
+    .query(async ({ input }) => {
+      return await db.getProductImages(input.productId);
+    }),
+
+  createImage: protectedProcedure
+    .input(
+      z.object({
+        productId: z.number(),
+        imageUrl: z.string(),
+        displayOrder: z.number().default(0),
+        isPrimary: z.boolean().default(false),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      if (ctx.user.role !== "admin") {
+        throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+      }
+      return await db.createProductImage(input);
+    }),
+
+  updateImage: protectedProcedure
+    .input(
+      z.object({
+        id: z.number(),
+        imageUrl: z.string().optional(),
+        displayOrder: z.number().optional(),
+        isPrimary: z.boolean().optional(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      if (ctx.user.role !== "admin") {
+        throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+      }
+      const { id, ...data } = input;
+      await db.updateProductImage(id, data);
+      return { success: true };
+    }),
+
+  deleteImage: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      if (ctx.user.role !== "admin") {
+        throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+      }
+      await db.deleteProductImage(input.id);
+      return { success: true };
+    }),
 });

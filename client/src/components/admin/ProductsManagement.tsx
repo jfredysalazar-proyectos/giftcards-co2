@@ -10,26 +10,45 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Card } from "@/components/ui/card";
 import { Plus, Edit, Trash2, Loader2, X } from "lucide-react";
 import { toast } from "sonner";
+import { ImageUploader } from "./ImageUploader";
 
 type AmountEntry = {
   amount: string;
   price: string;
 };
 
+type ImageEntry = {
+  id?: number;
+  url: string;
+  displayOrder: number;
+  isPrimary: boolean;
+};
+
 export function ProductsManagement() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [amounts, setAmounts] = useState<AmountEntry[]>([{ amount: "", price: "" }]);
+  const [productImages, setProductImages] = useState<ImageEntry[]>([]);
 
   const utils = trpc.useUtils();
   const { data: products = [], isLoading } = trpc.products.list.useQuery();
   const { data: categories = [] } = trpc.categories.list.useQuery();
 
   const createMutation = trpc.products.create.useMutation({
-    onSuccess: () => {
+    onSuccess: async (product) => {
+      // Save product images
+      for (const image of productImages) {
+        await createImageMutation.mutateAsync({
+          productId: product.id,
+          imageUrl: image.url,
+          displayOrder: image.displayOrder,
+          isPrimary: image.isPrimary,
+        });
+      }
       utils.products.list.invalidate();
       setIsDialogOpen(false);
       setAmounts([{ amount: "", price: "" }]);
+      setProductImages([]);
       toast.success("Producto creado exitosamente");
     },
     onError: (error) => {
@@ -38,11 +57,14 @@ export function ProductsManagement() {
   });
 
   const updateMutation = trpc.products.update.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
+      // Note: For now, we'll keep the simple update flow
+      // In a full implementation, we'd delete old images and create new ones
       utils.products.list.invalidate();
       setIsDialogOpen(false);
       setEditingProduct(null);
       setAmounts([{ amount: "", price: "" }]);
+      setProductImages([]);
       toast.success("Producto actualizado exitosamente");
     },
     onError: (error) => {
@@ -60,6 +82,18 @@ export function ProductsManagement() {
     },
   });
 
+  const createImageMutation = trpc.products.createImage.useMutation({
+    onError: (error) => {
+      toast.error(`Error al guardar imagen: ${error.message}`);
+    },
+  });
+
+  const deleteImageMutation = trpc.products.deleteImage.useMutation({
+    onError: (error) => {
+      toast.error(`Error al eliminar imagen: ${error.message}`);
+    },
+  });
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -71,13 +105,16 @@ export function ProductsManagement() {
       return;
     }
 
+    // Get primary image for backward compatibility
+    const primaryImage = productImages.find(img => img.isPrimary)?.url || productImages[0]?.url || "";
+
     const data = {
       name: formData.get("name") as string,
       slug: formData.get("slug") as string,
       description: formData.get("description") as string,
       fullDescription: formData.get("fullDescription") as string,
       categoryId: parseInt(formData.get("categoryId") as string),
-      image: formData.get("image") as string,
+      image: primaryImage,
       gradient: formData.get("gradient") as string,
       inStock: formData.get("inStock") === "true",
       featured: formData.get("featured") === "true",
@@ -94,11 +131,13 @@ export function ProductsManagement() {
     }
   };
 
-  const handleEdit = (product: any) => {
+  const handleEdit = async (product: any) => {
     setEditingProduct(product);
     setIsDialogOpen(true);
     // TODO: Load existing amounts for this product
     setAmounts([{ amount: "", price: "" }]);
+    // Load existing images
+    setProductImages([]);
   };
 
   const handleDelete = (id: number) => {
@@ -111,6 +150,7 @@ export function ProductsManagement() {
     setEditingProduct(null);
     setIsDialogOpen(true);
     setAmounts([{ amount: "", price: "" }]);
+    setProductImages([]);
   };
 
   const handleAddAmount = () => {
@@ -223,12 +263,11 @@ export function ProductsManagement() {
               <div className="space-y-4">
                 <h3 className="font-semibold text-lg">Apariencia</h3>
                 <div>
-                  <Label htmlFor="image">URL de Imagen</Label>
-                  <Input
-                    id="image"
-                    name="image"
-                    defaultValue={editingProduct?.image || ""}
-                    placeholder="/images/product.png"
+                  <Label>Imágenes del Producto (Hasta 3)</Label>
+                  <ImageUploader
+                    images={productImages}
+                    onChange={setProductImages}
+                    maxImages={3}
                   />
                 </div>
                 <div>

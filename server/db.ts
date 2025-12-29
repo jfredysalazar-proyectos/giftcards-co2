@@ -6,6 +6,7 @@ import {
   categories, 
   products, 
   productAmounts, 
+  productImages,
   orders, 
   orderItems, 
   reviews, 
@@ -14,6 +15,7 @@ import {
   InsertCategory,
   InsertProduct,
   InsertProductAmount,
+  InsertProductImage,
   InsertOrder,
   InsertOrderItem,
   InsertReview,
@@ -235,6 +237,45 @@ export async function deleteProductAmount(id: number) {
   if (!db) throw new Error("Database not available");
   
   await db.delete(productAmounts).where(eq(productAmounts.id, id));
+}
+
+// Product images queries
+export async function getProductImages(productId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(productImages)
+    .where(eq(productImages.productId, productId))
+    .orderBy(productImages.displayOrder);
+}
+
+export async function createProductImage(image: InsertProductImage) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const result = await db.insert(productImages).values(image);
+  return result;
+}
+
+export async function updateProductImage(id: number, image: Partial<InsertProductImage>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.update(productImages).set(image).where(eq(productImages.id, id));
+}
+
+export async function deleteProductImage(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.delete(productImages).where(eq(productImages.id, id));
+}
+
+export async function deleteProductImagesByProductId(productId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.delete(productImages).where(eq(productImages.productId, productId));
 }
 
 // Order queries
