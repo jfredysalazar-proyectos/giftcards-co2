@@ -1,0 +1,8 @@
+{
+  "query": "INSERT INTO products (name, slug, description, fullDescription, categoryId, image, gradient, inStock, featured, createdAt, updatedAt) VALUES ('Xbox Gift Card', 'xbox-gift-card', 'Tarjetas de regalo Xbox para juegos y contenido digital', 'Compra tarjetas de regalo Xbox y úsalas para adquirir los últimos juegos, aplicaciones, películas, programas de TV y más en Xbox y Windows. Compatible con Xbox Series X|S, Xbox One y Windows PC. Código entregado instantáneamente por WhatsApp.', 1, '/images/product-category-xbox.png', 'from-green-600 to-teal-500', 1, 1, NOW(), NOW())",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user q8Ed9efAHcuZDzr.root --database iVAPtUQGMwL6qxGuVbNjoM --execute INSERT INTO products (name, slug, description, fullDescription, categoryId, image, gradient, inStock, featured, createdAt, updatedAt) VALUES ('Xbox Gift Card', 'xbox-gift-card', 'Tarjetas de regalo Xbox para juegos y contenido digital', 'Compra tarjetas de regalo Xbox y úsalas para adquirir los últimos juegos, aplicaciones, películas, programas de TV y más en Xbox y Windows. Compatible con Xbox Series X|S, Xbox One y Windows PC. Código entregado instantáneamente por WhatsApp.', 1, '/images/product-category-xbox.png', 'from-green-600 to-teal-500', 1, 1, NOW(), NOW())",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1105 (HY000) at line 1: no available peers, region: {id:1877813 region_epoch:<conf_ver:5 version:342203 > peers:<id:1877814 store_id:1001 > peers:<id:1877815 store_id:1074 > peers:<id:1877816 store_id:1129 > }"
+  ]
+}

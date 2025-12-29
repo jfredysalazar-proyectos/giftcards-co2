@@ -6,6 +6,7 @@ import { trpc } from "@/lib/trpc";
 import { useState, useMemo } from "react";
 import { Search, ShoppingCart, MessageCircle, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { Link } from "wouter";
+import { getLoginUrl } from "@/const";
 
 interface Creator {
   id: string;
@@ -122,11 +123,11 @@ export default function Home() {
                 </Button>
               </>
             ) : (
-              <Link href="/login">
+              <a href={getLoginUrl()}>
                 <Button variant="outline" size="sm">
                   Iniciar Sesión
                 </Button>
-              </Link>
+              </a>
             )}
           </div>
         </div>
@@ -345,7 +346,7 @@ export default function Home() {
               <h3 className="font-display font-bold text-white mb-4">Cuenta</h3>
               <ul className="text-sm space-y-2">
                 <li><Link href="/orders"><a className="hover:text-white transition">Mis Pedidos</a></Link></li>
-                <li><Link href="/login"><a className="hover:text-white transition">Iniciar Sesión</a></Link></li>
+                <li><a href={getLoginUrl()} className="hover:text-white transition">Iniciar Sesión</a></li>
               </ul>
             </div>
           </div>

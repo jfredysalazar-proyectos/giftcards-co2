@@ -66,3 +66,14 @@
 - [x] Agregar montos ($10, $25, $50, $100) para cada producto nuevo
 - [x] Insertar productos en base de datos con SQL
 - [ ] Verificar que todos los productos se muestren correctamente cuando la base de datos se estabilice
+
+## Nuevo Producto Solicitado
+- [ ] Agregar producto Xbox Gift Card a categoría Videojuegos
+- [ ] Agregar montos disponibles para Xbox Gift Card
+- [ ] Verificar que el producto se muestre correctamente en el frontend
+
+## Error de Autenticación
+- [x] Investigar y resolver error 404 en inicio de sesión
+- [x] Corregir enlaces de login para usar getLoginUrl() en lugar de /login
+- [x] Actualizar Home.tsx con enlaces correctos de OAuth
+- [ ] Probar flujo completo de login con usuario
