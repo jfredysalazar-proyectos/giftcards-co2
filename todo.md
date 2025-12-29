@@ -160,3 +160,17 @@
 - [x] Usar número +573334315646 como valor por defecto
 - [ ] Probar que el número se actualice correctamente desde el Admin
 - [ ] Verificar que todos los enlaces de WhatsApp funcionen correctamente
+
+## Mejora del Sistema de Carrito de Compras
+- [x] Actualizar ProductDetail.tsx con dos botones: "Agregar al Carrito" y "Comprar Ahora"
+- [x] Actualizar CartContext para incluir productId e image en CartItem
+- [x] Mejorar CartModal para mostrar todos los productos agregados con imágenes
+- [x] Implementar funcionalidad de agregar producto al carrito desde ProductDetail
+- [x] Mantener funcionalidad de compra directa por WhatsApp desde ProductDetail
+- [x] El CartModal ya tiene botón de checkout por WhatsApp funcional
+- [x] El mensaje de WhatsApp ya muestra resumen completo de productos
+- [x] Agregar toast de confirmación al agregar productos al carrito
+- [x] Agregar ícono de carrito en la navegación con contador de items
+- [x] Agregar CartModal en Home.tsx para mostrar el carrito
+- [ ] Implementar persistencia del carrito en localStorage
+- [ ] Probar flujo completo de agregar múltiples productos y comprar

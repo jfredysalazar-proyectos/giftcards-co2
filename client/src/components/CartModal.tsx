@@ -70,6 +70,11 @@ export function CartModal({ isOpen, onClose }: CartModalProps) {
                   key={item.id}
                   className="flex gap-4 p-4 bg-gray-50 rounded-lg border border-gray-200"
                 >
+                  <img 
+                    src={item.image} 
+                    alt={item.productName}
+                    className="w-16 h-16 object-cover rounded-lg"
+                  />
                   <div className="flex-1">
                     <h3 className="font-semibold text-gray-900">
                       {item.productName}

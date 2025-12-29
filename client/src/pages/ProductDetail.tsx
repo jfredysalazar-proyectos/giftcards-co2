@@ -1,4 +1,5 @@
 import { useAuth } from "@/_core/hooks/useAuth";
+import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -15,6 +16,7 @@ export default function ProductDetail() {
   const { slug } = useParams();
   const [, setLocation] = useLocation();
   const { user, isAuthenticated } = useAuth();
+  const { addItem } = useCart();
   
   const [selectedAmount, setSelectedAmount] = useState<string>("");
   const [selectedPrice, setSelectedPrice] = useState<string>("");
@@ -60,6 +62,27 @@ export default function ProductDetail() {
       setSelectedAmount(value);
       setSelectedPrice(selectedAmountObj.price);
     }
+  };
+
+  const handleAddToCart = () => {
+    if (!selectedAmount) {
+      toast.error("Por favor selecciona un monto");
+      return;
+    }
+
+    if (!product) return;
+
+    addItem({
+      id: `${product.id}-${selectedAmount}`,
+      productId: product.id,
+      productName: product.name,
+      amount: selectedAmount,
+      price: parseFloat(selectedPrice),
+      quantity,
+      image: product.image || "/images/placeholder.png",
+    });
+
+    toast.success("¡Producto agregado al carrito!");
   };
 
   const handleWhatsAppCheckout = () => {
@@ -256,14 +279,24 @@ export default function ProductDetail() {
                   </div>
                 )}
 
-                <Button
-                  className="w-full bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white font-bold py-6 text-lg"
-                  onClick={handleWhatsAppCheckout}
-                  disabled={!product.inStock || !selectedAmount}
-                >
-                  <MessageCircle className="w-5 h-5 mr-2" />
-                  Comprar por WhatsApp
-                </Button>
+                <div className="grid grid-cols-2 gap-3">
+                  <Button
+                    className="bg-white border-2 border-purple-600 text-purple-600 hover:bg-purple-50 font-bold py-6 text-lg"
+                    onClick={handleAddToCart}
+                    disabled={!product.inStock || !selectedAmount}
+                  >
+                    <ShoppingCart className="w-5 h-5 mr-2" />
+                    Agregar al Carrito
+                  </Button>
+                  <Button
+                    className="bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white font-bold py-6 text-lg"
+                    onClick={handleWhatsAppCheckout}
+                    disabled={!product.inStock || !selectedAmount}
+                  >
+                    <MessageCircle className="w-5 h-5 mr-2" />
+                    Comprar Ahora
+                  </Button>
+                </div>
 
                 <div className="flex items-center gap-2 text-sm text-gray-600 justify-center">
                   <Check className="w-4 h-4 text-green-600" />

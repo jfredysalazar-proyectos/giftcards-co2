@@ -8,6 +8,8 @@ import { Search, ShoppingCart, MessageCircle, ChevronLeft, ChevronRight, Loader2
 import HeroCarousel from "@/components/HeroCarousel";
 import TestimonialsCarousel from "@/components/TestimonialsCarousel";
 import { Link } from "wouter";
+import { useCart } from "@/contexts/CartContext";
+import { CartModal } from "@/components/CartModal";
 import { getLoginUrl } from "@/const";
 
 interface Creator {
@@ -51,6 +53,8 @@ const CREATORS: Creator[] = [
 
 export default function Home() {
   const { user, isAuthenticated, logout, loading: authLoading } = useAuth();
+  const { items: cartItems, total: cartTotal } = useCart();
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [carouselIndex, setCarouselIndex] = useState(0);
@@ -109,6 +113,19 @@ export default function Home() {
             </div>
           </Link>
           <div className="flex items-center gap-3">
+            {/* Cart Icon */}
+            <button
+              onClick={() => setIsCartOpen(true)}
+              className="relative p-2 hover:bg-gray-100 rounded-lg transition"
+            >
+              <ShoppingCart className="w-6 h-6 text-gray-700" />
+              {cartItems.length > 0 && (
+                <span className="absolute -top-1 -right-1 bg-gradient-to-r from-purple-600 to-cyan-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {cartItems.length}
+                </span>
+              )}
+            </button>
+            
             {isAuthenticated ? (
               <>
                 <span className="text-gray-700">Hola, {user?.name}</span>
@@ -307,6 +324,9 @@ export default function Home() {
           </div>
         </div>
       </footer>
+      
+      {/* Cart Modal */}
+      <CartModal isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </div>
   );
 }
