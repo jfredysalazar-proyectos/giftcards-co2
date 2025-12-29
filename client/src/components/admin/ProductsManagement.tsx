@@ -73,8 +73,15 @@ export function ProductsManagement() {
 
   const updateMutation = trpc.products.update.useMutation({
     onSuccess: async (product) => {
-      // Only update images if they were actually modified (productImages has items)
-      if (productImages.length > 0) {
+      // Only update images if they were actually modified
+      // Check if productImages differs from existingImages
+      const imagesWereModified = productImages.length !== existingImages.length ||
+        productImages.some((img, idx) => {
+          const existing = existingImages[idx];
+          return !existing || img.url !== existing.imageUrl || img.isPrimary !== existing.isPrimary;
+        });
+      
+      if (imagesWereModified && productImages.length > 0) {
         // Delete old images that are not in the current list
         const currentImageIds = productImages.filter(img => img.id).map(img => img.id!);
         const imagesToDelete = existingImages.filter(img => !currentImageIds.includes(img.id));

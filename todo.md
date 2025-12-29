@@ -261,3 +261,13 @@
 - [x] Generar imagen impactante y profesional de Amazon Gift Card
 - [x] Actualizar referencia en base de datos
 - [x] Verificar que la imagen se muestre correctamente en el sitio
+
+## Bug Persistente: Imágenes se Borran al Editar Montos (Investigación Profunda)
+- [x] Analizar flujo completo: handleEdit → useEffect → handleSubmit
+- [x] Verificar si useEffect está cargando correctamente las imágenes existentes
+- [x] Identificar por qué productImages está vacío al guardar
+- [x] Revisar si el problema está en el reseteo de productImages
+- [x] Implementar solución que no dependa del estado productImages
+- [x] Considerar comparar directamente con existingImages en updateMutation
+- [x] Probar múltiples escenarios: editar solo montos, solo descripción, solo imágenes
+- [x] Verificar que la solución funcione en todos los casos
