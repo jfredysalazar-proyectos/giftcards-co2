@@ -337,3 +337,12 @@
 - [x] Optimizar imágenes de testimonios
 - [x] Reducir calidad a 80% y redimensionar si es necesario
 - [x] Verificar que todas las imágenes optimizadas se vean bien
+
+## Mejora de Botones de Compra con Animaciones Dinámicas
+- [x] Actualizar botones en ProductDetail.tsx con gradientes vibrantes
+- [x] Agregar animaciones de hover (escalado, brillo, pulso)
+- [x] Implementar sombras dinámicas que se mueven con el hover
+- [x] Agregar efectos de pulso para llamar la atención
+- [x] Actualizar botones en Home.tsx con el mismo estilo
+- [x] Agregar animaciones CSS keyframes para efectos continuos
+- [x] Verificar que las animaciones funcionen en móvil y desktop

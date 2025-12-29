@@ -254,8 +254,9 @@ export default function Home() {
                           </span>
                         )}
                       </div>
-                      <Button className="w-full bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white font-semibold py-3 rounded-lg transition shadow-md hover:shadow-lg">
-                        Ver Detalles
+                      <Button className="relative overflow-hidden w-full bg-gradient-to-r from-purple-600 via-purple-500 to-pink-500 text-white font-semibold py-3 rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:brightness-110">
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer"></div>
+                        <span className="relative z-10">Ver Detalles</span>
                       </Button>
                     </div>
                   </Card>

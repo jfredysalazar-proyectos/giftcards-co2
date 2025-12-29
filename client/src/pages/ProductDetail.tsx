@@ -319,20 +319,22 @@ export default function ProductDetail() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <Button
-                    className="bg-white border-2 border-purple-600 text-purple-600 hover:bg-purple-50 font-bold py-6 text-sm sm:text-base lg:text-lg flex items-center justify-center whitespace-nowrap"
+                    className="relative overflow-hidden bg-gradient-to-r from-purple-600 via-purple-500 to-pink-500 text-white font-bold py-6 text-sm sm:text-base lg:text-lg flex items-center justify-center whitespace-nowrap shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:brightness-110 animate-pulse-slow"
                     onClick={handleAddToCart}
                     disabled={!product.inStock || !selectedAmount}
                   >
-                    <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2 flex-shrink-0" />
-                    <span className="truncate">Agregar al Carrito</span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer"></div>
+                    <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2 flex-shrink-0 relative z-10" />
+                    <span className="truncate relative z-10">Agregar al Carrito</span>
                   </Button>
                   <Button
-                    className="bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white font-bold py-6 text-sm sm:text-base lg:text-lg flex items-center justify-center whitespace-nowrap"
+                    className="relative overflow-hidden bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 text-white font-bold py-6 text-sm sm:text-base lg:text-lg flex items-center justify-center whitespace-nowrap shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:brightness-110 animate-pulse-slow"
                     onClick={handleWhatsAppCheckout}
                     disabled={!product.inStock || !selectedAmount}
                   >
-                    <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2 flex-shrink-0" />
-                    <span className="truncate">Comprar Ahora</span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer"></div>
+                    <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2 flex-shrink-0 relative z-10" />
+                    <span className="truncate relative z-10">Comprar Ahora</span>
                   </Button>
                 </div>
 
