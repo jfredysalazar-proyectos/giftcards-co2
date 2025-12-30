@@ -361,3 +361,10 @@
 - [x] Agregar palabras clave estratégicas al contenido
 - [x] Añadir textos alternativos a las 8 imágenes sin alt (ya estaban todas con alt)
 - [x] Verificar que todos los cambios de SEO funcionen correctamente
+
+## Sitemap XML y Robots.txt para SEO
+- [x] Crear archivo robots.txt estático en client/public
+- [x] Crear endpoint API para sitemap.xml dinámico
+- [x] Incluir todas las URLs importantes (home, productos, categorías)
+- [x] Configurar prioridades y frecuencias de actualización
+- [x] Verificar que robots.txt y sitemap.xml sean accesibles

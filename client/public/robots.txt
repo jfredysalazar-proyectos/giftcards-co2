@@ -1,0 +1,21 @@
+# robots.txt para GiftCards Colombia
+# Permite el rastreo completo del sitio para todos los buscadores
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://giftcards-co.manus.space/sitemap.xml
+
+# Bloquear archivos innecesarios
+Disallow: /api/
+Disallow: /*.json$
+Disallow: /admin/
+Disallow: /my-orders/
+
+# Crawl-delay para bots agresivos
+User-agent: Baiduspider
+Crawl-delay: 5
+
+User-agent: Yandex
+Crawl-delay: 2
