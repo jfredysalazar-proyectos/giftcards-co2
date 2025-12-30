@@ -55,6 +55,7 @@ export const products = mysqlTable("products", {
   gradient: varchar("gradient", { length: 100 }),
   inStock: boolean("inStock").default(true).notNull(),
   featured: boolean("featured").default(false).notNull(),
+  displayOrder: int("displayOrder").default(0).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

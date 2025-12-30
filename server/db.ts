@@ -1,4 +1,4 @@
-import { eq, desc, and, sql } from "drizzle-orm";
+import { eq, desc, asc, and, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { 
   InsertUser, 
@@ -155,7 +155,7 @@ export async function getAllProducts() {
   const db = await getDb();
   if (!db) return [];
   
-  return await db.select().from(products).orderBy(desc(products.createdAt));
+  return await db.select().from(products).orderBy(asc(products.displayOrder), desc(products.createdAt));
 }
 
 export async function getProductById(id: number) {

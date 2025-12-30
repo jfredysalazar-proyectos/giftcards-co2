@@ -368,3 +368,12 @@
 - [x] Incluir todas las URLs importantes (home, productos, categorías)
 - [x] Configurar prioridades y frecuencias de actualización
 - [x] Verificar que robots.txt y sitemap.xml sean accesibles
+
+## Reordenamiento de Productos en Página Principal
+- [x] Actualizar orden de productos en la base de datos
+- [x] PlayStation Network (orden 1)
+- [x] Amazon Gift Cards (orden 2)
+- [x] Nintendo eShop (orden 3)
+- [x] Xbox Gift Card (orden 4)
+- [x] Xbox Game Pass (orden 5)
+- [x] Verificar que el orden se muestre correctamente en la página principal
