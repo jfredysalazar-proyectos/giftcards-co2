@@ -13,6 +13,7 @@ import { ReviewsManagement } from "@/components/admin/ReviewsManagement";
 import { FAQsManagement } from "@/components/admin/FAQsManagement";
 import SettingsManagement from "@/components/admin/SettingsManagement";
 import AnnouncementManagement from "@/components/admin/AnnouncementManagement";
+import { ProductReorderList } from "@/components/ProductReorderList";
 
 export default function Admin() {
   const { user, loading, isAuthenticated } = useAuth();
@@ -126,8 +127,9 @@ export default function Admin() {
         {/* Management Tabs */}
         <Card className="p-6">
           <Tabs defaultValue="products" className="w-full">
-            <TabsList className="grid w-full grid-cols-7 mb-6">
+            <TabsList className="grid w-full grid-cols-8 mb-6">
               <TabsTrigger value="products">Productos</TabsTrigger>
+              <TabsTrigger value="reorder">Reordenar</TabsTrigger>
               <TabsTrigger value="categories">Categorías</TabsTrigger>
               <TabsTrigger value="orders">Pedidos</TabsTrigger>
               <TabsTrigger value="reviews">Reseñas</TabsTrigger>
@@ -138,6 +140,10 @@ export default function Admin() {
 
             <TabsContent value="products">
               <ProductsManagement />
+            </TabsContent>
+
+            <TabsContent value="reorder">
+              <ProductReorderList />
             </TabsContent>
 
             <TabsContent value="categories">

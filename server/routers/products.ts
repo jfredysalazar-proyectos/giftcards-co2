@@ -218,4 +218,29 @@ export const productsRouter = router({
       await db.deleteProductImage(input.id);
       return { success: true };
     }),
+
+  // Update display order for multiple products
+  updateDisplayOrder: protectedProcedure
+    .input(
+      z.object({
+        updates: z.array(
+          z.object({
+            id: z.number(),
+            displayOrder: z.number(),
+          })
+        ),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      if (ctx.user.role !== "admin") {
+        throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+      }
+      
+      // Update each product's displayOrder
+      for (const update of input.updates) {
+        await db.updateProduct(update.id, { displayOrder: update.displayOrder });
+      }
+      
+      return { success: true };
+    }),
 });

@@ -377,3 +377,12 @@
 - [x] Xbox Gift Card (orden 4)
 - [x] Xbox Game Pass (orden 5)
 - [x] Verificar que el orden se muestre correctamente en la página principal
+
+## Drag & Drop para Reordenar Productos en Admin Panel
+- [x] Instalar biblioteca @dnd-kit/core y @dnd-kit/sortable
+- [x] Crear componente ProductReorderList con drag & drop
+- [x] Agregar endpoint API para actualizar displayOrder de múltiples productos
+- [x] Implementar lógica de reordenamiento en el frontend
+- [x] Agregar feedback visual durante el arrastre
+- [x] Integrar componente en página Admin
+- [x] Verificar que el reordenamiento se persista correctamente
