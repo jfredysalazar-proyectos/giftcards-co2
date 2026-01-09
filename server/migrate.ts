@@ -27,17 +27,14 @@ async function runMigrations() {
   }
 }
 
-// Run migrations if this file is executed directly
-if (require.main === module) {
-  runMigrations()
-    .then(() => {
-      console.log("[Migration] Done");
-      process.exit(0);
-    })
-    .catch((error) => {
-      console.error("[Migration] Fatal error:", error);
-      process.exit(1);
-    });
-}
+// Run migrations immediately when this file is imported
+runMigrations()
+  .then(() => {
+    console.log("[Migration] Done");
+  })
+  .catch((error) => {
+    console.error("[Migration] Fatal error:", error);
+    process.exit(1);
+  });
 
 export { runMigrations };
