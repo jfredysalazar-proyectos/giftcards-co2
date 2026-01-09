@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { trpc } from "../lib/trpc";
-import { useNavigate } from "react-router-dom";
+import { useLocation } from "wouter";
 
 export default function AdminSetup() {
   const [email] = useState("misegundoingreso2023@gmail.com");
@@ -9,14 +9,14 @@ export default function AdminSetup() {
   const [secretKey, setSecretKey] = useState("");
   const [result, setResult] = useState<string>("");
   const [error, setError] = useState<string>("");
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
 
   const createAdminMutation = trpc.adminSetup.createAdmin.useMutation({
     onSuccess: (data) => {
       setResult(`✅ ${data.message}`);
       setError("");
       setTimeout(() => {
-        navigate("/auth");
+        setLocation("/auth");
       }, 2000);
     },
     onError: (error) => {
