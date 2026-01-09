@@ -1,5 +1,6 @@
 import { eq, desc, asc, and, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
+import * as schema from "../drizzle/schema.js";
 import { 
   InsertUser, 
   users, 
@@ -23,7 +24,7 @@ import {
   InsertFAQ,
   InsertSetting,
   InsertAnnouncement
-} from "../drizzle/schema";
+} from "../drizzle/schema.js";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -32,7 +33,7 @@ let _db: ReturnType<typeof drizzle> | null = null;
 export async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
     try {
-      _db = drizzle(process.env.DATABASE_URL);
+      _db = drizzle(process.env.DATABASE_URL, { schema });
     } catch (error) {
       console.warn("[Database] Failed to connect:", error);
       _db = null;
