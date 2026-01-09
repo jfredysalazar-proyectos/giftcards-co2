@@ -17,6 +17,7 @@ import Contact from "./pages/Contact";
 import HelpCenter from "./pages/HelpCenter";
 import Auth from "./pages/Auth";
 import AdminSetup from "./pages/AdminSetup";
+import ImportData from "./pages/ImportData";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -25,6 +26,7 @@ function Router() {
       <Route path={"/"} component={Home} />
       <Route path={"/auth"} component={Auth} />
       <Route path={"/admin-setup"} component={AdminSetup} />
+      <Route path={"/import-data"} component={ImportData} />
       <Route path={"/admin"} component={Admin} />
       <Route path={"/product/:slug"} component={ProductDetail} />
       <Route path={"/faq"} component={FAQ} />
