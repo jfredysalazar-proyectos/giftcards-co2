@@ -268,6 +268,20 @@ class SDKServer {
 
     const sessionUserId = session.openId;
     const signedInAt = new Date();
+    
+    // Check if this is an email-based session (new auth system)
+    if (sessionUserId.startsWith("email:")) {
+      const email = sessionUserId.substring(6); // Remove "email:" prefix
+      let user = await db.getUserByEmail(email);
+      
+      if (!user) {
+        throw ForbiddenError("User not found");
+      }
+      
+      return user;
+    }
+    
+    // Legacy OAuth-based session
     let user = await db.getUserByOpenId(sessionUserId);
 
     // If user not in DB, sync from OAuth server automatically
@@ -292,10 +306,12 @@ class SDKServer {
       throw ForbiddenError("User not found");
     }
 
-    await db.upsertUser({
-      openId: user.openId,
-      lastSignedIn: signedInAt,
-    });
+    if (user.openId) {
+      await db.upsertUser({
+        openId: user.openId,
+        lastSignedIn: signedInAt,
+      });
+    }
 
     return user;
   }
