@@ -35,6 +35,10 @@ async function startServer() {
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   // OAuth callback under /api/oauth/callback
   registerOAuthRoutes(app);
+  
+  // Upload images endpoint
+  const { uploadProductImages } = await import("./upload-images");
+  app.post("/api/upload-images", uploadProductImages);
   // Import data endpoint
   app.post("/api/import-data", async (req, res) => {
     try {
