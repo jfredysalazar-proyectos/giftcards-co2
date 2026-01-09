@@ -16,6 +16,7 @@ import RefundPolicy from "./pages/RefundPolicy";
 import Contact from "./pages/Contact";
 import HelpCenter from "./pages/HelpCenter";
 import Auth from "./pages/Auth";
+import AdminSetup from "./pages/AdminSetup";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -23,6 +24,7 @@ function Router() {
     <Switch>
       <Route path={"/"} component={Home} />
       <Route path={"/auth"} component={Auth} />
+      <Route path={"/admin-setup"} component={AdminSetup} />
       <Route path={"/admin"} component={Admin} />
       <Route path={"/product/:slug"} component={ProductDetail} />
       <Route path={"/faq"} component={FAQ} />
