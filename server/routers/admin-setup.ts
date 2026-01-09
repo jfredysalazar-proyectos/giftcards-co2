@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { publicProcedure, router } from "../_core/trpc.js";
 import bcrypt from "bcrypt";
-import { db } from "../db.js";
+import { getDb } from "../db.js";
 import { users } from "../../drizzle/schema.js";
 
 export const adminSetupRouter = router({
@@ -21,6 +21,11 @@ export const adminSetupRouter = router({
       }
 
       try {
+        const db = await getDb();
+        if (!db) {
+          throw new Error("Database not available");
+        }
+
         // Hash password
         const passwordHash = await bcrypt.hash(input.password, 12);
 
