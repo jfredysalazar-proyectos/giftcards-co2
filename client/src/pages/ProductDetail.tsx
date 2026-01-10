@@ -288,7 +288,13 @@ export default function ProductDetail() {
                 <div className="flex items-center gap-2 text-gray-600">
                   <Flame className="w-5 h-5 text-orange-500" />
                   <span className="text-sm font-medium">
-                    {Math.floor(Math.random() * (12 - 3 + 1)) + 3} Vendidos Hoy
+                    {(() => {
+                      // Generar número basado en la fecha actual (cambia cada 24 horas)
+                      const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+                      const seed = today.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+                      const random = (seed * 9301 + 49297) % 233280 / 233280;
+                      return Math.floor(random * (12 - 3 + 1)) + 3;
+                    })()} Vendidos Hoy
                   </span>
                 </div>
               </div>
