@@ -11,7 +11,7 @@ import { trpc } from "@/lib/trpc";
 import { useState } from "react";
 import { getMediumImageUrl, getThumbnailUrl } from "@/lib/cloudinary";
 import { Link, useLocation, useParams } from "wouter";
-import { ArrowLeft, MessageCircle, ShoppingCart, Star, Loader2, Check } from "lucide-react";
+import { ArrowLeft, MessageCircle, ShoppingCart, Star, Loader2, Check, Eye, Flame } from "lucide-react";
 import { toast } from "sonner";
 import AnnouncementBar from "@/components/AnnouncementBar";
 
@@ -276,6 +276,22 @@ export default function ProductDetail() {
               <p className="text-gray-700 text-lg leading-relaxed">
                 {product.fullDescription || product.description}
               </p>
+              
+              {/* Social Proof Indicators */}
+              <div className="mt-4 space-y-2">
+                <div className="flex items-center gap-2 text-gray-600">
+                  <Eye className="w-5 h-5 text-blue-600" />
+                  <span className="text-sm font-medium">
+                    {Math.floor(Math.random() * (86 - 15 + 1)) + 15} personas están viendo este producto ahora
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <Flame className="w-5 h-5 text-orange-500" />
+                  <span className="text-sm font-medium">
+                    {Math.floor(Math.random() * (12 - 3 + 1)) + 3} Vendidos Hoy
+                  </span>
+                </div>
+              </div>
             </div>
 
             <Card className="p-6 border-2 border-purple-100">
