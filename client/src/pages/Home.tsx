@@ -2,9 +2,8 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { trpc } from "@/lib/trpc";
-import { useState, useMemo } from "react";
-import { Search, ShoppingCart, MessageCircle, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { trpc } from "@/lib/trpc";import { useState, useEffect } from "react";
+import { getCardImageUrl } from "@/lib/cloudinary";import { Search, ShoppingCart, MessageCircle, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import HeroCarousel from "@/components/HeroCarousel";
 import TestimonialsCarousel from "@/components/TestimonialsCarousel";
 import AnnouncementBar from "@/components/AnnouncementBar";
@@ -228,9 +227,10 @@ export default function Home() {
                     <div className={`h-64 bg-gradient-to-br ${product.gradient || "from-gray-400 to-gray-600"} relative overflow-hidden`}>
                       {product.image && (
                         <img
-                          src={product.image}
+                          src={getCardImageUrl(product.image)}
                           alt={product.name}
                           className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition"
+                          loading="lazy"
                         />
                       )}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />

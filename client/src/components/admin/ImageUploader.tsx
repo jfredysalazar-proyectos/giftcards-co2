@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { X, Upload, Image as ImageIcon } from "lucide-react";
+import { X, Upload, Image as ImageIcon, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { trpc } from "@/lib/trpc";
 
 interface ImageEntry {
   id?: number;
@@ -18,28 +19,74 @@ interface ImageUploaderProps {
 }
 
 export function ImageUploader({ images, onChange, maxImages = 3 }: ImageUploaderProps) {
-  const [newImageUrl, setNewImageUrl] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const uploadMutation = trpc.upload.uploadImage.useMutation();
 
-  const handleAddImage = () => {
-    if (!newImageUrl.trim()) {
-      toast.error("Por favor ingresa una URL de imagen");
-      return;
-    }
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
     if (images.length >= maxImages) {
       toast.error(`Máximo ${maxImages} imágenes permitidas`);
       return;
     }
 
-    const newImage: ImageEntry = {
-      url: newImageUrl,
-      displayOrder: images.length,
-      isPrimary: images.length === 0, // Primera imagen es primaria por defecto
-    };
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast.error("Por favor selecciona un archivo de imagen válido");
+      return;
+    }
 
-    onChange([...images, newImage]);
-    setNewImageUrl("");
-    toast.success("Imagen agregada");
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("La imagen debe ser menor a 5MB");
+      return;
+    }
+
+    setUploading(true);
+
+    try {
+      // Convert file to base64
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      
+      reader.onload = async () => {
+        try {
+          const base64 = (reader.result as string).split(',')[1];
+          
+          // Upload to Cloudinary
+          const result = await uploadMutation.mutateAsync({
+            imageData: base64,
+            folder: 'giftcards/products',
+            filename: file.name.split('.')[0] // Remove extension
+          });
+
+          const newImage: ImageEntry = {
+            url: result.url,
+            displayOrder: images.length,
+            isPrimary: images.length === 0, // Primera imagen es primaria por defecto
+          };
+
+          onChange([...images, newImage]);
+          toast.success(`Imagen subida exitosamente (${(result.bytes / 1024).toFixed(1)} KB)`);
+          
+          // Reset file input
+          e.target.value = '';
+        } catch (error: any) {
+          toast.error(`Error al subir imagen: ${error.message}`);
+        } finally {
+          setUploading(false);
+        }
+      };
+
+      reader.onerror = () => {
+        toast.error("Error al leer el archivo");
+        setUploading(false);
+      };
+    } catch (error: any) {
+      toast.error(`Error: ${error.message}`);
+      setUploading(false);
+    }
   };
 
   const handleRemoveImage = (index: number) => {
@@ -91,32 +138,25 @@ export function ImageUploader({ images, onChange, maxImages = 3 }: ImageUploader
     <div className="space-y-4">
       <div className="flex gap-2">
         <div className="flex-1">
-          <Label htmlFor="imageUrl">URL de Imagen</Label>
-          <input
-            id="imageUrl"
-            type="text"
-            value={newImageUrl}
-            onChange={(e) => setNewImageUrl(e.target.value)}
-            placeholder="/images/product-image.webp"
-            className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground"
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                handleAddImage();
-              }
-            }}
-          />
-        </div>
-        <div className="flex items-end">
-          <Button
-            type="button"
-            onClick={handleAddImage}
-            variant="outline"
-            disabled={images.length >= maxImages}
-          >
-            <Upload className="w-4 h-4 mr-2" />
-            Agregar
-          </Button>
+          <Label htmlFor="imageFile">Subir Imagen a Cloudinary</Label>
+          <div className="flex gap-2">
+            <input
+              id="imageFile"
+              type="file"
+              accept="image/*"
+              onChange={handleFileSelect}
+              disabled={uploading || images.length >= maxImages}
+              className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground file:mr-4 file:py-1 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100 disabled:opacity-50"
+            />
+            {uploading && (
+              <div className="flex items-center">
+                <Loader2 className="w-5 h-5 animate-spin text-purple-600" />
+              </div>
+            )}
+          </div>
+          <p className="text-xs text-muted-foreground mt-1">
+            Formatos: JPG, PNG, WebP. Máximo 5MB. Se convertirá automáticamente a WebP optimizado.
+          </p>
         </div>
       </div>
 
@@ -154,7 +194,7 @@ export function ImageUploader({ images, onChange, maxImages = 3 }: ImageUploader
               {/* Image Info */}
               <div className="space-y-2">
                 <div className="text-xs text-muted-foreground truncate">
-                  {image.url || "Sin URL"}
+                  {image.url ? new URL(image.url).pathname.split('/').pop() : "Sin URL"}
                 </div>
 
                 {image.isPrimary && (

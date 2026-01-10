@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { trpc } from "@/lib/trpc";
 import { useState } from "react";
+import { getMediumImageUrl, getThumbnailUrl } from "@/lib/cloudinary";
 import { Link, useLocation, useParams } from "wouter";
 import { ArrowLeft, MessageCircle, ShoppingCart, Star, Loader2, Check } from "lucide-react";
 import { toast } from "sonner";
@@ -216,9 +217,10 @@ export default function ProductDetail() {
               <div className={`h-96 bg-gradient-to-br ${product.gradient || "from-gray-400 to-gray-600"} relative`}>
                 {(productImages.length > 0 ? productImages[selectedImageIndex]?.imageUrl : product.image) && (
                   <img
-                    src={productImages.length > 0 ? productImages[selectedImageIndex]?.imageUrl : (product.image || "/images/placeholder.png")}
+                    src={getMediumImageUrl(productImages.length > 0 ? productImages[selectedImageIndex]?.imageUrl : (product.image || "/images/placeholder.png"))}
                     alt={product.name}
                     className="w-full h-full object-cover"
+                    loading="eager"
                   />
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
@@ -239,9 +241,10 @@ export default function ProductDetail() {
                     }`}
                   >
                     <img
-                      src={img.imageUrl}
+                      src={getThumbnailUrl(img.imageUrl)}
                       alt={`${product.name} - Imagen ${index + 1}`}
                       className="w-full h-full object-cover"
+                      loading="lazy"
                     />
                   </div>
                 ))}

@@ -36,9 +36,7 @@ async function startServer() {
   // OAuth callback under /api/oauth/callback
   registerOAuthRoutes(app);
   
-  // Upload images endpoint
-  const { uploadProductImages } = await import("./upload-images");
-  app.post("/api/upload-images", uploadProductImages);
+  // Upload images endpoint removed - now using Cloudinary via tRPC
   // Update product images endpoint
   app.post("/api/update-product-images", async (req, res) => {
     try {
