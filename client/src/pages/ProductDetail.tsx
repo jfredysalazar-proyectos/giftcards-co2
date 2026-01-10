@@ -289,9 +289,12 @@ export default function ProductDetail() {
                   <Flame className="w-5 h-5 text-orange-500" />
                   <span className="text-sm font-medium">
                     {(() => {
-                      // Generar número basado en la fecha actual (cambia cada 24 horas)
+                      // Generar número único por producto basado en fecha + ID del producto
                       const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-                      const seed = today.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+                      const productId = product?.id || 0;
+                      // Combinar fecha y ID del producto para generar semilla única
+                      const seedString = `${today}-${productId}`;
+                      const seed = seedString.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
                       const random = (seed * 9301 + 49297) % 233280 / 233280;
                       return Math.floor(random * (12 - 3 + 1)) + 3;
                     })()} Vendidos Hoy
