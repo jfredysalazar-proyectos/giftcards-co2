@@ -496,15 +496,118 @@ export default function ProductDetail() {
         </div>
       </div>
 
+      {/* Related Products Section */}
+      {product && (
+        <section className="py-16 bg-white">
+          <div className="container">
+            <h2 className="font-display text-3xl font-bold text-center mb-12">También te Puede Interesar</h2>
+            <RelatedProducts categoryId={product.categoryId} currentProductId={product.id} />
+          </div>
+        </section>
+      )}
+
       {/* Footer */}
-      <footer className="bg-gray-900 text-gray-300 py-12 mt-16">
-        <div className="container text-center">
-          <p className="text-sm">&copy; 2025 GiftCards Colombia. Todos los derechos reservados.</p>
+      <footer className="bg-gray-900 text-gray-300 py-12">
+        <div className="container">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            <div>
+              <h3 className="font-display font-bold text-white mb-4">Acerca de</h3>
+              <p className="text-sm">Tu marketplace confiable para tarjetas de regalo digitales instantáneas.</p>
+            </div>
+            <div>
+              <h3 className="font-display font-bold text-white mb-4">Soporte</h3>
+              <ul className="text-sm space-y-2">
+                <li><Link href="/faq"><a className="hover:text-white transition cursor-pointer">Preguntas Frecuentes</a></Link></li>
+                <li><Link href="/help"><a className="hover:text-white transition cursor-pointer">Centro de Ayuda</a></Link></li>
+                <li><Link href="/contact"><a className="hover:text-white transition cursor-pointer">Contáctanos</a></Link></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-display font-bold text-white mb-4">Legal</h3>
+              <ul className="text-sm space-y-2">
+                <li><Link href="/terms"><a className="hover:text-white transition cursor-pointer">Términos de Servicio</a></Link></li>
+                <li><Link href="/privacy"><a className="hover:text-white transition cursor-pointer">Política de Privacidad</a></Link></li>
+                <li><Link href="/refund"><a className="hover:text-white transition cursor-pointer">Política de Reembolso</a></Link></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-display font-bold text-white mb-4">Cuenta</h3>
+              <ul className="text-sm space-y-2">
+                <li><Link href="/orders"><a className="hover:text-white transition cursor-pointer">Mis Pedidos</a></Link></li>
+                <li><Link href="/auth"><a className="hover:text-white transition cursor-pointer">Iniciar Sesión</a></Link></li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-gray-800 pt-8 text-center text-sm">
+            <p>&copy; 2025 GiftCards Colombia. Todos los derechos reservados. | Impulsado por entrega digital instantánea</p>
+          </div>
         </div>
       </footer>
 
       {/* Cart Modal */}
       <CartModal isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+    </div>
+  );
+}
+
+// Related Products Component
+function RelatedProducts({ categoryId, currentProductId }: { categoryId: number; currentProductId: number }) {
+  const { data: relatedProducts = [], isLoading } = trpc.products.getByCategory.useQuery(
+    { categoryId },
+    { enabled: !!categoryId }
+  );
+
+  // Filter out current product and limit to 4 products
+  const filteredProducts = relatedProducts
+    .filter(p => p.id !== currentProductId)
+    .slice(0, 4);
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center py-8">
+        <Loader2 className="w-8 h-8 animate-spin text-purple-600" />
+      </div>
+    );
+  }
+
+  if (filteredProducts.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {filteredProducts.map((product) => (
+        <Link key={product.id} href={`/product/${product.slug}`}>
+          <Card className="group cursor-pointer overflow-hidden border-2 border-transparent hover:border-purple-500 transition-all duration-300 hover:shadow-xl">
+            <div className={`h-48 bg-gradient-to-br ${product.gradient || "from-gray-400 to-gray-600"} relative overflow-hidden`}>
+              {product.image && (
+                <img
+                  src={getMediumImageUrl(product.image)}
+                  alt={product.name}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  loading="lazy"
+                />
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+            </div>
+            <div className="p-4">
+              <h3 className="font-display font-bold text-lg mb-2 group-hover:text-purple-600 transition">
+                {product.name}
+              </h3>
+              <p className="text-sm text-gray-600 line-clamp-2">{product.description}</p>
+              {product.inStock ? (
+                <span className="inline-block mt-3 px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
+                  En Stock
+                </span>
+              ) : (
+                <span className="inline-block mt-3 px-3 py-1 bg-red-100 text-red-700 text-xs font-semibold rounded-full">
+                  Agotado
+                </span>
+              )}
+            </div>
+          </Card>
+        </Link>
+      ))}
     </div>
   );
 }
