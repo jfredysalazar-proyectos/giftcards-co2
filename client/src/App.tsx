@@ -18,6 +18,8 @@ import HelpCenter from "./pages/HelpCenter";
 import Auth from "./pages/Auth";
 import AdminSetup from "./pages/AdminSetup";
 import ImportData from "./pages/ImportData";
+import RecentPurchaseNotification from "./components/RecentPurchaseNotification";
+import { trpc } from "./lib/trpc";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -49,6 +51,9 @@ function Router() {
 // - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
 
 function App() {
+  // Obtener productos para las notificaciones de prueba social
+  const { data: products } = trpc.products.list.useQuery();
+
   return (
     <ErrorBoundary>
       <ThemeProvider
@@ -59,6 +64,9 @@ function App() {
           <TooltipProvider>
             <Toaster />
             <Router />
+            {products && products.length > 0 && (
+              <RecentPurchaseNotification products={products} />
+            )}
           </TooltipProvider>
         </CartProvider>
       </ThemeProvider>
