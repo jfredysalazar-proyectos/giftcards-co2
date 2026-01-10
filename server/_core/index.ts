@@ -61,9 +61,9 @@ async function startServer() {
 
       const results = [];
 
-      for (const [slug, imageUrl] of Object.entries(imageUrls)) {
+      for (const [slug, imageUrl] of Object.entries(imageUrls as Record<string, string>)) {
         await db.update(schema.products)
-          .set({ imageUrl })
+          .set({ imageUrl: imageUrl as string })
           .where(eq(schema.products.slug, slug));
         
         results.push({ slug, imageUrl });
