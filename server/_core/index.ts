@@ -39,6 +39,47 @@ async function startServer() {
   // Upload images endpoint
   const { uploadProductImages } = await import("./upload-images");
   app.post("/api/upload-images", uploadProductImages);
+  // Update product images endpoint
+  app.post("/api/update-product-images", async (req, res) => {
+    try {
+      const { secret, imageUrls } = req.body;
+      
+      if (secret !== "update-images-2025") {
+        res.status(401).json({ error: "Invalid secret" });
+        return;
+      }
+
+      const { getDb } = await import("../db");
+      const schema = await import("../../drizzle/schema");
+      const { eq } = await import("drizzle-orm");
+      const db = await getDb();
+      
+      if (!db) {
+        res.status(500).json({ error: "Database not available" });
+        return;
+      }
+
+      const results = [];
+
+      for (const [slug, imageUrl] of Object.entries(imageUrls)) {
+        await db.update(schema.products)
+          .set({ imageUrl })
+          .where(eq(schema.products.slug, slug));
+        
+        results.push({ slug, imageUrl });
+      }
+
+      res.json({ 
+        success: true, 
+        message: "Product images updated successfully",
+        updated: results
+      });
+    } catch (error: any) {
+      console.error("Error updating product images:", error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   // Import data endpoint
   app.post("/api/import-data", async (req, res) => {
     try {
