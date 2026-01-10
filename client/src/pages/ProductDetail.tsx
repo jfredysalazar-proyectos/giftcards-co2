@@ -8,10 +8,10 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { trpc } from "@/lib/trpc";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { getMediumImageUrl, getThumbnailUrl } from "@/lib/cloudinary";
 import { Link, useLocation, useParams } from "wouter";
-import { ArrowLeft, MessageCircle, ShoppingCart, Star, Loader2, Check, Eye, Flame } from "lucide-react";
+import { ArrowLeft, MessageCircle, ShoppingCart, Star, Loader2, Check, Eye, Flame, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import AnnouncementBar from "@/components/AnnouncementBar";
 
@@ -550,17 +550,48 @@ export default function ProductDetail() {
   );
 }
 
-// Related Products Component
+// Related Products Carousel Component
 function RelatedProducts({ categoryId, currentProductId }: { categoryId: number; currentProductId: number }) {
   const { data: relatedProducts = [], isLoading } = trpc.products.getByCategory.useQuery(
     { categoryId },
     { enabled: !!categoryId }
   );
 
-  // Filter out current product and limit to 4 products
-  const filteredProducts = relatedProducts
-    .filter(p => p.id !== currentProductId)
-    .slice(0, 4);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const carouselRef = useRef<HTMLDivElement>(null);
+
+  // Filter out current product
+  const filteredProducts = relatedProducts.filter(p => p.id !== currentProductId);
+
+  // Auto-rotate carousel every 4 seconds
+  useEffect(() => {
+    if (filteredProducts.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % filteredProducts.length);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [filteredProducts.length]);
+
+  // Scroll to current index
+  useEffect(() => {
+    if (carouselRef.current) {
+      const cardWidth = carouselRef.current.scrollWidth / filteredProducts.length;
+      carouselRef.current.scrollTo({
+        left: cardWidth * currentIndex,
+        behavior: 'smooth'
+      });
+    }
+  }, [currentIndex, filteredProducts.length]);
+
+  const goToPrevious = () => {
+    setCurrentIndex((prev) => (prev - 1 + filteredProducts.length) % filteredProducts.length);
+  };
+
+  const goToNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % filteredProducts.length);
+  };
 
   if (isLoading) {
     return (
@@ -575,39 +606,86 @@ function RelatedProducts({ categoryId, currentProductId }: { categoryId: number;
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      {filteredProducts.map((product) => (
-        <Link key={product.id} href={`/product/${product.slug}`}>
-          <Card className="group cursor-pointer overflow-hidden border-2 border-transparent hover:border-purple-500 transition-all duration-300 hover:shadow-xl">
-            <div className={`h-48 bg-gradient-to-br ${product.gradient || "from-gray-400 to-gray-600"} relative overflow-hidden`}>
-              {product.image && (
-                <img
-                  src={getMediumImageUrl(product.image)}
-                  alt={product.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                  loading="lazy"
-                />
-              )}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+    <div className="relative">
+      {/* Navigation Buttons */}
+      {filteredProducts.length > 1 && (
+        <>
+          <button
+            onClick={goToPrevious}
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 transition"
+            aria-label="Anterior"
+          >
+            <ChevronLeft className="w-6 h-6 text-gray-800" />
+          </button>
+          <button
+            onClick={goToNext}
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 transition"
+            aria-label="Siguiente"
+          >
+            <ChevronRight className="w-6 h-6 text-gray-800" />
+          </button>
+        </>
+      )}
+
+      {/* Carousel Container */}
+      <div
+        ref={carouselRef}
+        className="flex overflow-x-auto scrollbar-hide snap-x snap-mandatory gap-6"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      >
+        {filteredProducts.map((product) => (
+          <Link key={product.id} href={`/product/${product.slug}`}>
+            <div className="flex-shrink-0 w-[280px] snap-center">
+              <Card className="group cursor-pointer overflow-hidden border-2 border-transparent hover:border-purple-500 transition-all duration-300 hover:shadow-xl h-full">
+                <div className={`h-48 bg-gradient-to-br ${product.gradient || "from-gray-400 to-gray-600"} relative overflow-hidden`}>
+                  {product.image && (
+                    <img
+                      src={getMediumImageUrl(product.image)}
+                      alt={product.name}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      loading="lazy"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                </div>
+                <div className="p-4">
+                  <h3 className="font-display font-bold text-lg mb-2 group-hover:text-purple-600 transition">
+                    {product.name}
+                  </h3>
+                  <p className="text-sm text-gray-600 line-clamp-2">{product.description}</p>
+                  {product.inStock ? (
+                    <span className="inline-block mt-3 px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
+                      En Stock
+                    </span>
+                  ) : (
+                    <span className="inline-block mt-3 px-3 py-1 bg-red-100 text-red-700 text-xs font-semibold rounded-full">
+                      Agotado
+                    </span>
+                  )}
+                </div>
+              </Card>
             </div>
-            <div className="p-4">
-              <h3 className="font-display font-bold text-lg mb-2 group-hover:text-purple-600 transition">
-                {product.name}
-              </h3>
-              <p className="text-sm text-gray-600 line-clamp-2">{product.description}</p>
-              {product.inStock ? (
-                <span className="inline-block mt-3 px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
-                  En Stock
-                </span>
-              ) : (
-                <span className="inline-block mt-3 px-3 py-1 bg-red-100 text-red-700 text-xs font-semibold rounded-full">
-                  Agotado
-                </span>
-              )}
-            </div>
-          </Card>
-        </Link>
-      ))}
+          </Link>
+        ))}
+      </div>
+
+      {/* Dots Indicator */}
+      {filteredProducts.length > 1 && (
+        <div className="flex justify-center gap-2 mt-6">
+          {filteredProducts.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentIndex(index)}
+              className={`w-2 h-2 rounded-full transition-all ${
+                index === currentIndex
+                  ? 'bg-purple-600 w-8'
+                  : 'bg-gray-300 hover:bg-gray-400'
+              }`}
+              aria-label={`Ir al producto ${index + 1}`}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
