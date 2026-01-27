@@ -1,6 +1,6 @@
 import { eq, desc, asc, and, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import * as schema from "../drizzle/schema.js";
+import * as schema from "../drizzle/schema";
 import { 
   InsertUser, 
   users, 
@@ -24,7 +24,7 @@ import {
   InsertFAQ,
   InsertSetting,
   InsertAnnouncement
-} from "../drizzle/schema.js";
+} from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -517,4 +517,45 @@ export async function deleteAnnouncement(id: number) {
   if (!db) throw new Error("Database not available");
   
   await db.delete(announcements).where(eq(announcements.id, id));
+}
+
+// Blog queries
+import { blogPosts, blogCategories, blogPostCategories, InsertBlogPost, InsertBlogCategory } from "../drizzle/schema";
+
+export async function getAllBlogPosts() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(blogPosts).where(eq(blogPosts.published, true)).orderBy(desc(blogPosts.publishedAt));
+}
+
+export async function getBlogPostBySlug(slug: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(blogPosts).where(eq(blogPosts.slug, slug)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createBlogPost(post: InsertBlogPost) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(blogPosts).values(post);
+  return result;
+}
+
+export async function updateBlogPost(id: number, post: Partial<InsertBlogPost>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(blogPosts).set(post).where(eq(blogPosts.id, id));
+}
+
+export async function deleteBlogPost(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(blogPosts).where(eq(blogPosts.id, id));
+}
+
+export async function getAllBlogCategories() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(blogCategories).orderBy(blogCategories.name);
 }
