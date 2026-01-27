@@ -1,6 +1,6 @@
 import { eq, desc, asc, and, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import * as schema from "../drizzle/schema";
+import * as schema from "../drizzle/schema.js";
 import { 
   InsertUser, 
   users, 
@@ -24,8 +24,8 @@ import {
   InsertFAQ,
   InsertSetting,
   InsertAnnouncement
-} from "../drizzle/schema";
-import { ENV } from './_core/env';
+} from "../drizzle/schema.js";
+import { ENV } from './_core/env.js';
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -340,113 +340,6 @@ export async function getOrdersByUser(userId: number) {
   return await db.select().from(orders).where(eq(orders.userId, userId)).orderBy(desc(orders.createdAt));
 }
 
-export async function createOrder(order: InsertOrder) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  
-  const result = await db.insert(orders).values(order);
-  return result;
-}
-
-export async function updateOrderStatus(id: number, status: "pending" | "processing" | "completed" | "cancelled") {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  
-  await db.update(orders).set({ status }).where(eq(orders.id, id));
-}
-
-// Order items queries
-export async function getOrderItems(orderId: number) {
-  const db = await getDb();
-  if (!db) return [];
-  
-  return await db.select().from(orderItems).where(eq(orderItems.orderId, orderId));
-}
-
-export async function createOrderItem(item: InsertOrderItem) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  
-  const result = await db.insert(orderItems).values(item);
-  return result;
-}
-
-// Review queries
-export async function getProductReviews(productId: number) {
-  const db = await getDb();
-  if (!db) return [];
-  
-  return await db.select().from(reviews)
-    .where(and(eq(reviews.productId, productId), eq(reviews.approved, true)))
-    .orderBy(desc(reviews.createdAt));
-}
-
-export async function getAllReviews() {
-  const db = await getDb();
-  if (!db) return [];
-  
-  return await db.select().from(reviews).orderBy(desc(reviews.createdAt));
-}
-
-export async function createReview(review: InsertReview) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  
-  const result = await db.insert(reviews).values(review);
-  return result;
-}
-
-export async function approveReview(id: number) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  
-  await db.update(reviews).set({ approved: true }).where(eq(reviews.id, id));
-}
-
-export async function deleteReview(id: number) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  
-  await db.delete(reviews).where(eq(reviews.id, id));
-}
-
-// FAQ queries
-export async function getAllFAQs() {
-  const db = await getDb();
-  if (!db) return [];
-  
-  return await db.select().from(faqs).where(eq(faqs.published, true)).orderBy(faqs.order);
-}
-
-export async function getAllFAQsAdmin() {
-  const db = await getDb();
-  if (!db) return [];
-  
-  return await db.select().from(faqs).orderBy(faqs.order);
-}
-
-export async function createFAQ(faq: InsertFAQ) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  
-  const result = await db.insert(faqs).values(faq);
-  return result;
-}
-
-export async function updateFAQ(id: number, faq: Partial<InsertFAQ>) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  
-  await db.update(faqs).set(faq).where(eq(faqs.id, id));
-}
-
-export async function deleteFAQ(id: number) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  
-  await db.delete(faqs).where(eq(faqs.id, id));
-}
-
 // Settings queries
 export async function getSetting(key: string) {
   const db = await getDb();
@@ -520,7 +413,7 @@ export async function deleteAnnouncement(id: number) {
 }
 
 // Blog queries
-import { blogPosts, blogCategories, blogPostCategories, InsertBlogPost, InsertBlogCategory } from "../drizzle/schema";
+import { blogPosts, blogCategories, blogPostCategories, InsertBlogPost, InsertBlogCategory } from "../drizzle/schema.js";
 
 export async function getAllBlogPosts() {
   const db = await getDb();
