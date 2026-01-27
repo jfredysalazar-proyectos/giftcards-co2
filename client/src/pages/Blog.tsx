@@ -1,8 +1,9 @@
 import { Link } from 'wouter';
 import SEO from '../components/SEO';
 import { trpc } from '../lib/trpc';
+import Footer from '../components/Footer';
 
-// Cache bust: Tue Jan 27 15:35:00 EST 2026
+// Cache bust: Tue Jan 27 15:50:00 EST 2026
 export default function Blog() {
   const { data: posts, isLoading: loading } = trpc.blog.getPosts.useQuery();
 
@@ -15,8 +16,8 @@ export default function Blog() {
         keywords="blog tarjetas regalo, guías gift cards, tutoriales PSN, amazon gift card"
       />
       
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-        <div className="max-w-6xl mx-auto px-4 py-12">
+      <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-white">
+        <div className="max-w-6xl mx-auto px-4 py-12 flex-grow">
           {/* Header */}
           <div className="mb-12">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
@@ -36,7 +37,7 @@ export default function Blog() {
 
           {/* Blog Posts Grid */}
           {!loading && posts && posts.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
               {posts.map((post) => (
                 <Link key={post.id} href={`/blog/${post.slug}`}>
                   <article
@@ -97,6 +98,7 @@ export default function Blog() {
             </div>
           )}
         </div>
+        <Footer />
       </div>
     </>
   );

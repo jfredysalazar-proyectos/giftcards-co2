@@ -3,6 +3,7 @@ import SEO from '../components/SEO';
 import { trpc } from '../lib/trpc';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, Calendar, User, Eye } from 'lucide-react';
+import Footer from '../components/Footer';
 
 export default function BlogPost() {
   const { slug } = useParams();
@@ -69,7 +70,7 @@ export default function BlogPost() {
         schema={schema}
       />
 
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen flex flex-col bg-white">
         {/* Navigation Bar */}
         <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b border-gray-100">
           <div className="max-w-4xl mx-auto px-4 h-16 flex items-center">
@@ -83,7 +84,7 @@ export default function BlogPost() {
           </div>
         </div>
 
-        <div className="max-w-4xl mx-auto px-4 py-8 md:py-12">
+        <div className="max-w-4xl mx-auto px-4 py-8 md:py-12 flex-grow">
           <article>
             {/* Header Section */}
             <header className="mb-10 text-center">
@@ -136,7 +137,7 @@ export default function BlogPost() {
             />
 
             {/* Footer Call to Action */}
-            <div className="bg-gradient-to-r from-purple-600 to-indigo-700 rounded-2xl p-8 md:p-12 text-white text-center shadow-lg">
+            <div className="bg-gradient-to-r from-purple-600 to-indigo-700 rounded-2xl p-8 md:p-12 text-white text-center shadow-lg mb-12">
               <h3 className="text-2xl md:text-3xl font-bold mb-4">
                 ¿Buscas las mejores tarjetas de regalo?
               </h3>
@@ -152,6 +153,7 @@ export default function BlogPost() {
             </div>
           </article>
         </div>
+        <Footer />
       </div>
     </>
   );
