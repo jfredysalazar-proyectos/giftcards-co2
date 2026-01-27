@@ -1,5 +1,5 @@
 import { publicProcedure, router, adminProcedure } from "../_core/trpc";
-import { db } from "../db";
+import { getDb } from "../db";
 import { blogPosts, blogPostCategories, blogCategories } from "@shared/schema";
 import { eq, and, desc } from "drizzle-orm";
 import { z } from "zod";
@@ -7,6 +7,8 @@ import { z } from "zod";
 export const blogRouter = router({
   // Get all published blog posts (public)
   getPosts: publicProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
     return await db
       .select()
       .from(blogPosts)
@@ -17,6 +19,8 @@ export const blogRouter = router({
 
   // Get all blog posts including drafts (admin only)
   getAllPosts: adminProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
     return await db
       .select()
       .from(blogPosts)
@@ -28,6 +32,8 @@ export const blogRouter = router({
   getPostBySlug: publicProcedure
     .input(z.object({ slug: z.string() }))
     .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
       const posts = await db
         .select()
         .from(blogPosts)
@@ -51,6 +57,8 @@ export const blogRouter = router({
   getRelatedPosts: publicProcedure
     .input(z.object({ slug: z.string(), limit: z.number().default(3) }))
     .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
       const currentPost = await db
         .select()
         .from(blogPosts)
@@ -96,6 +104,8 @@ export const blogRouter = router({
 
   // Get all blog categories (public)
   getCategories: publicProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
     return await db
       .select()
       .from(blogCategories)
@@ -106,6 +116,8 @@ export const blogRouter = router({
   getPostsByCategory: publicProcedure
     .input(z.object({ categorySlug: z.string() }))
     .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
       const category = await db
         .select()
         .from(blogCategories)
@@ -148,6 +160,8 @@ export const blogRouter = router({
       })
     )
     .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
       // Check if slug already exists
       const existing = await db
         .select()
@@ -183,6 +197,8 @@ export const blogRouter = router({
       })
     )
     .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
       const { id, ...data } = input;
 
       // Check if slug already exists (excluding current post)
@@ -220,6 +236,8 @@ export const blogRouter = router({
   deletePost: adminProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
       // Delete associated categories
       await db
         .delete(blogPostCategories)
@@ -243,6 +261,8 @@ export const blogRouter = router({
       })
     )
     .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
       const result = await db.insert(blogCategories).values(input);
       return result;
     }),
@@ -251,6 +271,8 @@ export const blogRouter = router({
   deleteCategory: adminProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
       // Delete associated post categories
       await db
         .delete(blogPostCategories)
