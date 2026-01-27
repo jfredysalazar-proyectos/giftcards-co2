@@ -2,6 +2,7 @@ import { useLocation } from 'wouter';
 import SEO from '../components/SEO';
 import { trpc } from '../lib/trpc';
 
+// Cache bust: Tue Jan 27 13:50:08 EST 2026
 export default function Blog() {
   const [, setLocation] = useLocation();
   const { data: posts, isLoading: loading } = trpc.blog.getPosts.useQuery();
