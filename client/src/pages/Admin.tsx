@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { trpc } from "@/lib/trpc";
 import { useEffect } from "react";
 import { useLocation } from "wouter";
-import { Package, ShoppingCart, Star, HelpCircle, Loader2 } from "lucide-react";
+import { Package, ShoppingCart, Star, HelpCircle, Loader2, BookOpen } from "lucide-react";
 import { ProductsManagement } from "@/components/admin/ProductsManagement";
 import { CategoriesManagement } from "@/components/admin/CategoriesManagement";
 import { OrdersManagement } from "@/components/admin/OrdersManagement";
@@ -14,6 +14,7 @@ import { FAQsManagement } from "@/components/admin/FAQsManagement";
 import SettingsManagement from "@/components/admin/SettingsManagement";
 import AnnouncementManagement from "@/components/admin/AnnouncementManagement";
 import { ProductReorderList } from "@/components/ProductReorderList";
+import { BlogManagement } from "@/components/admin/BlogManagement";
 
 export default function Admin() {
   const { user, loading, isAuthenticated } = useAuth();
@@ -122,12 +123,24 @@ export default function Admin() {
               </div>
             </div>
           </Card>
+
+          <Card className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600 mb-1">Blog Posts</p>
+                <p className="text-3xl font-bold text-blue-600">-</p>
+              </div>
+              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                <BookOpen className="w-6 h-6 text-blue-600" />
+              </div>
+            </div>
+          </Card>
         </div>
 
         {/* Management Tabs */}
         <Card className="p-6">
           <Tabs defaultValue="products" className="w-full">
-            <TabsList className="grid w-full grid-cols-8 mb-6">
+            <TabsList className="grid w-full grid-cols-9 mb-6">
               <TabsTrigger value="products">Productos</TabsTrigger>
               <TabsTrigger value="reorder">Reordenar</TabsTrigger>
               <TabsTrigger value="categories">Categorías</TabsTrigger>
@@ -135,6 +148,7 @@ export default function Admin() {
               <TabsTrigger value="reviews">Reseñas</TabsTrigger>
               <TabsTrigger value="faqs">FAQs</TabsTrigger>
               <TabsTrigger value="announcements">Anuncios</TabsTrigger>
+              <TabsTrigger value="blog">Blog</TabsTrigger>
               <TabsTrigger value="settings">Configuración</TabsTrigger>
             </TabsList>
 
@@ -164,6 +178,10 @@ export default function Admin() {
 
             <TabsContent value="announcements">
               <AnnouncementManagement />
+            </TabsContent>
+
+            <TabsContent value="blog">
+              <BlogManagement />
             </TabsContent>
 
             <TabsContent value="settings">
