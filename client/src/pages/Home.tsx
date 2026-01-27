@@ -13,6 +13,7 @@ import { Link } from "wouter";
 import { useCart } from "@/contexts/CartContext";
 import { CartModal } from "@/components/CartModal";
 import { getLoginUrl } from "@/const";
+import SEO from "@/components/SEO";
 
 interface Creator {
   id: string;
@@ -101,6 +102,11 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-white">
+      <SEO 
+        title="Tarjetas de Regalo Digitales Colombia | PSN, Xbox, Amazon"
+        description="La mejor tienda de gift cards en Colombia. Tarjetas PSN Colombia y USA, Xbox, Nintendo y Amazon con entrega instantánea por WhatsApp."
+        keywords="tarjeta PSN Colombia, PlayStation Store Colombia, tarjeta PSN USA, códigos PSN, gift card Colombia"
+      />
       {/* Announcement Bar */}
       <AnnouncementBar />
       

@@ -14,6 +14,7 @@ import { Link, useLocation, useParams } from "wouter";
 import { ArrowLeft, MessageCircle, ShoppingCart, Star, Loader2, Check, Eye, Flame, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import AnnouncementBar from "@/components/AnnouncementBar";
+import SEO from "@/components/SEO";
 
 export default function ProductDetail() {
   const { slug } = useParams();
@@ -135,6 +136,32 @@ export default function ProductDetail() {
     ? approvedReviews.reduce((sum, r) => sum + r.rating, 0) / approvedReviews.length
     : 0;
 
+  // Schema.org Product Markup
+  const productSchema = product ? {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": product.name,
+    "image": product.image,
+    "description": product.description,
+    "brand": {
+      "@type": "Brand",
+      "name": product.name.split(' ')[0]
+    },
+    "offers": {
+      "@type": "AggregateOffer",
+      "offerCount": amounts.length,
+      "lowPrice": amounts.length > 0 ? Math.min(...amounts.map(a => parseFloat(a.price))) : 0,
+      "highPrice": amounts.length > 0 ? Math.max(...amounts.map(a => parseFloat(a.price))) : 0,
+      "priceCurrency": "USD",
+      "availability": product.inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
+    },
+    "aggregateRating": approvedReviews.length > 0 ? {
+      "@type": "AggregateRating",
+      "ratingValue": averageRating.toFixed(1),
+      "reviewCount": approvedReviews.length
+    } : undefined
+  } : undefined;
+
   const renderStars = (rating: number, interactive = false, onRate?: (rating: number) => void) => {
     return (
       <div className="flex gap-1">
@@ -172,6 +199,14 @@ export default function ProductDetail() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <SEO 
+        title={product.name}
+        description={product.description || `Compra ${product.name} en Colombia con entrega instantánea. Los mejores precios y soporte por WhatsApp.`}
+        keywords={`${product.name}, comprar ${product.name} colombia, gift card ${product.name}, tarjeta ${product.name}`}
+        image={product.image}
+        url={`https://giftcards.com.co/product/${product.slug}`}
+        schema={productSchema}
+      />
       {/* Announcement Bar */}
       <AnnouncementBar />
       

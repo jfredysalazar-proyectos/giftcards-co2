@@ -5,7 +5,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://giftcards-co.manus.space/sitemap.xml
+Sitemap: https://giftcards.com.co/sitemap.xml
 
 # Bloquear archivos innecesarios
 Disallow: /api/

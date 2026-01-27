@@ -18,11 +18,15 @@ import HelpCenter from "./pages/HelpCenter";
 import Auth from "./pages/Auth";
 import AdminSetup from "./pages/AdminSetup";
 import ImportData from "./pages/ImportData";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 import RecentPurchaseNotification from "./components/RecentPurchaseNotification";
 import { trpc } from "./lib/trpc";
+import { HelmetProvider } from "react-helmet-async";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
+  // Blog routes are public and SEO-optimized
   return (
     <Switch>
       <Route path={"/"} component={Home} />
@@ -38,6 +42,8 @@ function Router() {
       <Route path={"/refund"} component={RefundPolicy} />
       <Route path={"/contact"} component={Contact} />
       <Route path={"/help"} component={HelpCenter} />
+      <Route path={"/blog"} component={Blog} />
+      <Route path={"/blog/:slug"} component={BlogPost} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
@@ -55,6 +61,7 @@ function App() {
   const { data: products } = trpc.products.list.useQuery();
 
   return (
+    <HelmetProvider>
     <ErrorBoundary>
       <ThemeProvider
         defaultTheme="light"
@@ -71,6 +78,7 @@ function App() {
         </CartProvider>
       </ThemeProvider>
     </ErrorBoundary>
+    </HelmetProvider>
   );
 }
 
