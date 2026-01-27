@@ -1,52 +1,17 @@
-import { useEffect, useState } from 'react';
-import { useLocation, useParams } from 'wouter';
+import { useParams, useLocation } from 'wouter';
 import SEO from '../components/SEO';
-
-interface BlogPost {
-  id: number;
-  title: string;
-  slug: string;
-  excerpt: string;
-  content: string;
-  featuredImage?: string;
-  publishedAt: string;
-  author: string;
-  views: number;
-  metaDescription?: string;
-  metaKeywords?: string;
-}
+import { trpc } from '../lib/trpc';
+import { Button } from '@/components/ui/button';
+import { ChevronLeft, Calendar, User, Eye } from 'lucide-react';
 
 export default function BlogPost() {
   const { slug } = useParams();
-  const [post, setPost] = useState<BlogPost | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([]);
   const [, setLocation] = useLocation();
 
-  useEffect(() => {
-    const fetchBlogPost = async () => {
-      try {
-        const response = await fetch(`/api/blog/posts/${slug}`);
-        if (!response.ok) throw new Error('Post not found');
-        const data = await response.json();
-        setPost(data);
-
-        // Fetch related posts
-        const relatedResponse = await fetch(`/api/blog/posts/${slug}/related`);
-        const relatedData = await relatedResponse.json();
-        setRelatedPosts(relatedData);
-      } catch (error) {
-        console.error('Error fetching blog post:', error);
-        setLocation('/blog');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (slug) {
-      fetchBlogPost();
-    }
-  }, [slug, setLocation]);
+  const { data: post, isLoading: loading, error } = trpc.blog.getPostBySlug.useQuery(
+    { slug: slug || '' },
+    { enabled: !!slug }
+  );
 
   if (loading) {
     return (
@@ -56,17 +21,23 @@ export default function BlogPost() {
     );
   }
 
-  if (!post) {
+  if (error || !post) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Artículo no encontrado</h1>
-          <button
-            onClick={() => navigate('/blog')}
-            className="text-purple-600 hover:text-purple-700 font-semibold"
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+        <div className="text-center bg-white p-8 rounded-xl shadow-sm max-w-md w-full">
+          <div className="text-purple-600 mb-4 flex justify-center">
+            <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 9.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Artículo no encontrado</h1>
+          <p className="text-gray-600 mb-6">Lo sentimos, el artículo que buscas no existe o ha sido movido.</p>
+          <Button
+            onClick={() => setLocation('/blog')}
+            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold"
           >
             Volver al blog
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -90,7 +61,7 @@ export default function BlogPost() {
   return (
     <>
       <SEO
-        title={post.title}
+        title={`${post.title} | Blog GiftCards.com.co`}
         description={post.metaDescription || post.excerpt}
         image={post.featuredImage}
         url={`https://giftcards.com.co/blog/${post.slug}`}
@@ -98,94 +69,87 @@ export default function BlogPost() {
         schema={schema}
       />
 
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-        <div className="max-w-3xl mx-auto px-4 py-12">
-          {/* Header */}
+      <div className="min-h-screen bg-white">
+        {/* Navigation Bar */}
+        <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b border-gray-100">
+          <div className="max-w-4xl mx-auto px-4 h-16 flex items-center">
+            <button
+              onClick={() => setLocation('/blog')}
+              className="flex items-center text-gray-600 hover:text-purple-600 transition-colors font-medium group"
+            >
+              <ChevronLeft className="w-5 h-5 mr-1 group-hover:-translate-x-1 transition-transform" />
+              Volver al Blog
+            </button>
+          </div>
+        </div>
+
+        <div className="max-w-4xl mx-auto px-4 py-8 md:py-12">
           <article>
+            {/* Header Section */}
+            <header className="mb-10 text-center">
+              <h1 className="text-3xl md:text-5xl font-extrabold text-gray-900 mb-6 leading-tight">
+                {post.title}
+              </h1>
+              
+              <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8 text-gray-500 text-sm md:text-base">
+                <div className="flex items-center">
+                  <User className="w-4 h-4 mr-2 text-purple-500" />
+                  <span className="font-medium text-gray-700">{post.author}</span>
+                </div>
+                <div className="flex items-center">
+                  <Calendar className="w-4 h-4 mr-2 text-purple-500" />
+                  <span>
+                    {post.publishedAt ? new Date(post.publishedAt).toLocaleDateString('es-CO', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    }) : 'Borrador'}
+                  </span>
+                </div>
+                <div className="flex items-center">
+                  <Eye className="w-4 h-4 mr-2 text-purple-500" />
+                  <span>{post.views || 0} vistas</span>
+                </div>
+              </div>
+            </header>
+
             {/* Featured Image */}
             {post.featuredImage && (
-              <img
-                src={post.featuredImage}
-                alt={post.title}
-                className="w-full h-96 object-cover rounded-lg mb-8"
-              />
+              <div className="mb-12 rounded-2xl overflow-hidden shadow-xl ring-1 ring-gray-200">
+                <img
+                  src={post.featuredImage}
+                  alt={post.title}
+                  className="w-full h-auto max-h-[500px] object-cover"
+                />
+              </div>
             )}
 
-            {/* Title */}
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              {post.title}
-            </h1>
-
-            {/* Meta Information */}
-            <div className="flex items-center justify-between text-gray-600 mb-8 pb-8 border-b border-gray-200">
-              <div className="flex items-center space-x-4">
-                <span className="font-semibold">{post.author}</span>
-                <span>
-                  {new Date(post.publishedAt).toLocaleDateString('es-CO', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  })}
-                </span>
-              </div>
-              <span className="text-sm">{post.views} vistas</span>
-            </div>
-
-            {/* Content */}
+            {/* Content Body */}
             <div
-              className="prose prose-lg max-w-none mb-12 text-gray-700"
+              className="prose prose-lg md:prose-xl max-w-none mb-16 text-gray-800 
+                prose-headings:text-gray-900 prose-headings:font-bold
+                prose-p:leading-relaxed prose-p:mb-6
+                prose-img:rounded-xl prose-img:shadow-md
+                prose-a:text-purple-600 prose-a:no-underline hover:prose-a:underline
+                prose-strong:text-gray-900"
               dangerouslySetInnerHTML={{ __html: post.content }}
             />
 
-            {/* Call to Action */}
-            <div className="bg-purple-50 border border-purple-200 rounded-lg p-8 mb-12">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
-                ¿Listo para comprar tarjetas de regalo?
+            {/* Footer Call to Action */}
+            <div className="bg-gradient-to-r from-purple-600 to-indigo-700 rounded-2xl p-8 md:p-12 text-white text-center shadow-lg">
+              <h3 className="text-2xl md:text-3xl font-bold mb-4">
+                ¿Buscas las mejores tarjetas de regalo?
               </h3>
-              <p className="text-gray-600 mb-4">
-                Explora nuestro catálogo completo y encuentra la tarjeta perfecta.
+              <p className="text-purple-100 text-lg mb-8 max-w-2xl mx-auto">
+                En GiftCards.com.co tenemos el catálogo más completo de Colombia con entrega inmediata y pagos seguros.
               </p>
-              <button
+              <Button
                 onClick={() => setLocation('/')}
-                className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
+                className="bg-white text-purple-700 hover:bg-gray-100 font-bold py-6 px-10 rounded-xl text-lg transition-all transform hover:scale-105"
               >
-                Ver todas las tarjetas
-              </button>
+                Explorar Catálogo Ahora
+              </Button>
             </div>
-
-            {/* Related Posts */}
-            {relatedPosts.length > 0 && (
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                  Artículos relacionados
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {relatedPosts.map((relatedPost) => (
-                    <div
-                      key={relatedPost.id}
-                      className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer"
-                      onClick={() => setLocation(`/blog/${relatedPost.slug}`)}
-                    >
-                      {relatedPost.featuredImage && (
-                        <img
-                          src={relatedPost.featuredImage}
-                          alt={relatedPost.title}
-                          className="w-full h-40 object-cover rounded-t-lg"
-                        />
-                      )}
-                      <div className="p-4">
-                        <h3 className="font-bold text-gray-900 mb-2 line-clamp-2">
-                          {relatedPost.title}
-                        </h3>
-                        <p className="text-gray-600 text-sm line-clamp-2">
-                          {relatedPost.excerpt}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
           </article>
         </div>
       </div>
