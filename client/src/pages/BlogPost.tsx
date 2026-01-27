@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useLocation, useParams } from 'wouter';
 import SEO from '../components/SEO';
 
 interface BlogPost {
@@ -17,11 +17,11 @@ interface BlogPost {
 }
 
 export default function BlogPost() {
-  const { slug } = useParams<{ slug: string }>();
+  const { slug } = useParams();
   const [post, setPost] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
   const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([]);
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
 
   useEffect(() => {
     const fetchBlogPost = async () => {
@@ -37,7 +37,7 @@ export default function BlogPost() {
         setRelatedPosts(relatedData);
       } catch (error) {
         console.error('Error fetching blog post:', error);
-        navigate('/blog');
+        setLocation('/blog');
       } finally {
         setLoading(false);
       }
@@ -46,7 +46,7 @@ export default function BlogPost() {
     if (slug) {
       fetchBlogPost();
     }
-  }, [slug, navigate]);
+  }, [slug, setLocation]);
 
   if (loading) {
     return (
@@ -146,7 +146,7 @@ export default function BlogPost() {
                 Explora nuestro catálogo completo y encuentra la tarjeta perfecta.
               </p>
               <button
-                onClick={() => navigate('/')}
+                onClick={() => setLocation('/')}
                 className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
               >
                 Ver todas las tarjetas
@@ -164,7 +164,7 @@ export default function BlogPost() {
                     <div
                       key={relatedPost.id}
                       className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer"
-                      onClick={() => navigate(`/blog/${relatedPost.slug}`)}
+                      onClick={() => setLocation(`/blog/${relatedPost.slug}`)}
                     >
                       {relatedPost.featuredImage && (
                         <img

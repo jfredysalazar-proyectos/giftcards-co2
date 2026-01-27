@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'wouter';
 import SEO from '../components/SEO';
 
 interface BlogPost {
@@ -16,7 +16,7 @@ interface BlogPost {
 export default function Blog() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
 
   useEffect(() => {
     const fetchBlogPosts = async () => {
@@ -69,7 +69,7 @@ export default function Blog() {
                 <article
                   key={post.id}
                   className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer overflow-hidden"
-                  onClick={() => navigate(`/blog/${post.slug}`)}
+                  onClick={() => setLocation(`/blog/${post.slug}`)}
                 >
                   {/* Featured Image */}
                   {post.featuredImage && (
