@@ -4,7 +4,7 @@ import * as db from "../db";
 import bcrypt from "bcrypt";
 import { TRPCError } from "@trpc/server";
 import { sdk } from "../_core/sdk";
-import { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
+import { COOKIE_NAME, ONE_YEAR_MS } from "../../shared/const";
 import { getSessionCookieOptions } from "../_core/cookies";
 
 const SALT_ROUNDS = 12;
