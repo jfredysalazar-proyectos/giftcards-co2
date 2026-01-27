@@ -4,6 +4,7 @@ import { blogPosts, blogPostCategories, blogCategories } from "../shared/schema"
 import { eq, and, desc } from "drizzle-orm";
 import { z } from "zod";
 
+// Blog Router for GiftCards Colombia
 export const blogRouter = router({
   // Get all published blog posts (public)
   getPosts: publicProcedure.query(async () => {
