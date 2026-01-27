@@ -1,4 +1,5 @@
-import { db, getDb } from './server/db.js';
+import { getDb } from './server/db.js';
+import { blogPosts as blogPostsTable } from './drizzle/schema.js';
 
 const blogPosts = [
   {
@@ -157,47 +158,11 @@ Aunque Steam acepta tarjetas de crédito internacionales, usar un código prepag
 2. **Control de Gasto:** Al ser prepagado, te ayuda a mantener un presupuesto claro para tus compras de juegos.
 3. **Acceso a Ofertas:** Te permite tener saldo listo para aprovechar las famosas rebajas de Steam (como las de Verano o Invierno), que ofrecen descuentos masivos.
 
-## Recarga tu Billetera Steam con Códigos Digitales
+## Cómo Pagar Netflix y Spotify en Colombia con Gift Cards
 
-El proceso de recarga es el mismo, independientemente de si el código es en dólares (USD) o pesos colombianos (COP).
+Las suscripciones de *streaming* son parte esencial de nuestra vida diaria. En Colombia, pagar servicios como **Netflix** y **Spotify Premium** con tarjetas de regalo es la opción preferida para quienes buscan seguridad y control.
 
-### Paso 1: Compra tu Tarjeta Steam
-Adquiere tu código digital en un *marketplace* confiable. Las denominaciones más comunes son $20, $50 y $100 USD.
-
-### Paso 2: Canjea el Código en la Plataforma
-1. Inicia sesión en tu cuenta de Steam (desde la aplicación de escritorio o el navegador).
-2. En el menú superior, haz clic en **"Juegos"** y luego en **"Canjear un código de Cartera de Steam"**.
-3. Ingresa el código digital que recibiste.
-4. El saldo se añadirá a tu billetera de Steam. Si el código es en USD y tu cuenta está en COP, Steam realizará la conversión automática al tipo de cambio del día.
-
-## Consejos para Comprar Juegos en Steam desde Colombia
-
-- **Precios Regionales:** Steam aplica precios regionales en muchos juegos. Asegúrate de que tu cuenta esté configurada correctamente para Colombia para acceder a precios más bajos en COP.
-- **Ofertas:** La mejor época para recargar tu billetera es justo antes de las grandes rebajas de temporada, cuando los descuentos alcanzan hasta el 90%.`,
-    excerpt: 'Guía para gamers de PC en Colombia. Aprende a recargar tu billetera Steam con códigos digitales de forma segura y aprovecha las mejores ofertas de juegos.',
-    featured_image: 'https://files.manuscdn.com/user_upload_by_module/session_file/310519663313418334/ulKnqTWmzcjlCMkd.png',
-    meta_title: 'Steam Colombia: Cómo Recargar tu Billetera con Tarjetas de Regalo (Guía 2026)',
-    meta_description: 'Guía para gamers de PC en Colombia. Aprende a recargar tu billetera Steam con códigos digitales de forma segura y aprovecha las mejores ofertas de juegos.',
-    keywords: 'Steam Colombia, comprar juegos steam colombia, steam wallet colombia, tarjetas steam baratas, recargar steam colombia',
-    published: true,
-  },
-  {
-    title: 'Netflix y Spotify: Paga tus Suscripciones sin Tarjeta de Crédito en Colombia',
-    slug: 'netflix-spotify-sin-tarjeta-credito',
-    content: `# Netflix y Spotify: Paga tus Suscripciones sin Tarjeta de Crédito en Colombia
-
-El entretenimiento digital es una necesidad, no un lujo, y **Netflix** y **Spotify** son los líderes indiscutibles en Colombia para *streaming* de video y música. Sin embargo, la barrera de la tarjeta de crédito internacional o la preocupación por los cargos recurrentes detiene a muchos usuarios.
-
-La solución más práctica y segura son las **Tarjetas de Regalo Digitales**, que permiten pagar tus suscripciones de forma prepagada, sin vincular tu información bancaria.
-
-## La Solución Prepagada: Control y Seguridad
-
-Las tarjetas de regalo de Netflix y Spotify funcionan como saldo que se añade a tu cuenta, cubriendo el costo de la suscripción por el tiempo equivalente al valor de la tarjeta.
-
-### Netflix
-- **Tarjeta Netflix Colombia:** Permite pagar la mensualidad sin tarjeta de crédito. Ideal para controlar el gasto familiar.
-
-### Spotify
+- **Tarjeta Netflix Colombia:** Permite recargar saldo en tu cuenta de Netflix. No necesitas tarjeta de crédito, el saldo se descuenta mes a mes.
 - **Tarjeta Spotify Premium:** Acceso a música sin anuncios y *streaming* offline. Perfecto para estudiantes o quienes no tienen cuenta bancaria.
 
 ## Guía para Activar tu Suscripción con Gift Cards
@@ -231,20 +196,25 @@ async function seedBlogPosts() {
     console.log('🌱 Iniciando inserción de artículos del blog...');
     
     const database = await getDb();
+    if (!database) {
+      console.error('❌ No se pudo conectar a la base de datos.');
+      process.exit(1);
+    }
     
     for (const post of blogPosts) {
-      await database.insert(blogPosts).values({
+      await database.insert(blogPostsTable).values({
         title: post.title,
         slug: post.slug,
         content: post.content,
         excerpt: post.excerpt,
-        featured_image: post.featured_image,
-        meta_title: post.meta_title,
-        meta_description: post.meta_description,
+        featuredImage: post.featured_image,
+        metaTitle: post.meta_title,
+        metaDescription: post.meta_description,
         keywords: post.keywords,
         published: post.published ? 1 : 0,
-        created_at: new Date(),
-        updated_at: new Date(),
+        publishedAt: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
       });
       console.log(`✓ Artículo publicado: ${post.title}`);
     }
