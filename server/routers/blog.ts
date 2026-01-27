@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { router, publicProcedure, adminProcedure } from "../_core/trpc";
-import * as db from "../db";
+import * as db from "../db.js";
 import { TRPCError } from "@trpc/server";
 
 export const blogRouter = router({
