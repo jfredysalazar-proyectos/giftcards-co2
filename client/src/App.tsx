@@ -20,6 +20,7 @@ import AdminSetup from "./pages/AdminSetup";
 import ImportData from "./pages/ImportData";
 import RecentPurchaseNotification from "./components/RecentPurchaseNotification";
 import { trpc } from "./lib/trpc";
+import { HelmetProvider } from "react-helmet-async";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -55,6 +56,7 @@ function App() {
   const { data: products } = trpc.products.list.useQuery();
 
   return (
+    <HelmetProvider>
     <ErrorBoundary>
       <ThemeProvider
         defaultTheme="light"
@@ -71,6 +73,7 @@ function App() {
         </CartProvider>
       </ThemeProvider>
     </ErrorBoundary>
+    </HelmetProvider>
   );
 }
 
