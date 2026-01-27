@@ -418,7 +418,8 @@ import { blogPosts, blogCategories, blogPostCategories, InsertBlogPost, InsertBl
 export async function getAllBlogPosts() {
   const db = await getDb();
   if (!db) return [];
-  return await db.select().from(blogPosts).where(eq(blogPosts.published, true)).orderBy(desc(blogPosts.publishedAt));
+  // Return all posts for now to ensure visibility, ordered by creation or published date
+  return await db.select().from(blogPosts).orderBy(desc(blogPosts.createdAt));
 }
 
 export async function getBlogPostBySlug(slug: string) {
