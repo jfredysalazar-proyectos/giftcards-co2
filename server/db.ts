@@ -432,14 +432,30 @@ export async function getBlogPostBySlug(slug: string) {
 export async function createBlogPost(post: InsertBlogPost) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  const result = await db.insert(blogPosts).values(post);
+  
+  const postData: any = { ...post };
+  if (post.published) {
+    postData.publishedAt = new Date();
+  }
+  
+  const result = await db.insert(blogPosts).values(postData);
   return result;
 }
 
 export async function updateBlogPost(id: number, post: Partial<InsertBlogPost>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  await db.update(blogPosts).set(post).where(eq(blogPosts.id, id));
+  
+  const updateData: any = { ...post };
+  
+  // Si se está publicando y no tiene fecha de publicación, asignarla ahora
+  if (post.published === true) {
+    updateData.publishedAt = new Date();
+  } else if (post.published === false) {
+    updateData.publishedAt = null;
+  }
+  
+  await db.update(blogPosts).set(updateData).where(eq(blogPosts.id, id));
 }
 
 export async function deleteBlogPost(id: number) {
