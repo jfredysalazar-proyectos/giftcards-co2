@@ -252,16 +252,21 @@ export function BlogManagement() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Meta Descripción (SEO)
+                Meta Descripción (SEO) - Máximo 320 caracteres
               </label>
-              <Input
+              <textarea
                 value={formData.metaDescription || ""}
                 onChange={(e) =>
                   setFormData({ ...formData, metaDescription: e.target.value })
                 }
-                placeholder="Descripción para Google"
-                maxLength={160}
+                placeholder="Descripción para Google (160-320 caracteres recomendado)"
+                maxLength={320}
+                rows={3}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 resize-vertical"
               />
+              <p className="text-xs text-gray-500 mt-1">
+                {(formData.metaDescription || "").length}/320 caracteres
+              </p>
             </div>
 
             <div>
