@@ -4,7 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { trpc } from "@/lib/trpc";
 import { Loader2, Trash2, Edit2, Plus } from "lucide-react";
-import { MarkdownEditor } from "@/components/MarkdownEditor";
+import { RichTextEditor } from "@/components/RichTextEditor";
+import { ImageUploader } from "@/components/admin/ImageUploader";
 
 interface BlogPost {
   id: number;
@@ -12,11 +13,12 @@ interface BlogPost {
   slug: string;
   excerpt: string;
   content: string;
-  metaDescription?: string;
-  metaKeywords?: string;
+  featuredImage?: string | null;
+  metaDescription?: string | null;
+  metaKeywords?: string | null;
   published: boolean;
   createdAt: Date;
-  publishedAt?: Date;
+  publishedAt?: Date | null;
 }
 
 export function BlogManagement() {
@@ -27,6 +29,7 @@ export function BlogManagement() {
     slug: "",
     excerpt: "",
     content: "",
+    featuredImage: "",
     metaDescription: "",
     metaKeywords: "",
     published: false,
@@ -220,9 +223,22 @@ export function BlogManagement() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Contenido (Markdown)
+                Imagen Destacada
               </label>
-              <MarkdownEditor
+              <ImageUploader
+                images={formData.featuredImage ? [{ url: formData.featuredImage, displayOrder: 0, isPrimary: true }] : []}
+                onChange={(images) => 
+                  setFormData({ ...formData, featuredImage: images.length > 0 ? images[0].url : "" })
+                }
+                maxImages={1}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Contenido del Artículo
+              </label>
+              <RichTextEditor
                 value={formData.content || ""}
                 onChange={(content) =>
                   setFormData({ ...formData, content })

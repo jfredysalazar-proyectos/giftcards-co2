@@ -64,7 +64,7 @@ export default function BlogPost() {
       <SEO
         title={`${post.title} | Blog GiftCards.com.co`}
         description={post.metaDescription || post.excerpt}
-        image={post.featuredImage}
+        image={post.featuredImage || undefined}
         url={`https://giftcards.com.co/blog/${post.slug}`}
         type="article"
         schema={schema}
@@ -133,7 +133,7 @@ export default function BlogPost() {
                 prose-img:rounded-xl prose-img:shadow-md
                 prose-a:text-purple-600 prose-a:no-underline hover:prose-a:underline
                 prose-strong:text-gray-900"
-              dangerouslySetInnerHTML={{ __html: post.content }}
+              dangerouslySetInnerHTML={{ __html: post.content || "" }}
             />
 
             {/* Footer Call to Action */}
