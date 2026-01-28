@@ -14,6 +14,7 @@ interface BlogPost {
   excerpt: string;
   content: string;
   featuredImage?: string | null;
+  metaTitle?: string | null;
   metaDescription?: string | null;
   metaKeywords?: string | null;
   published: boolean;
@@ -31,6 +32,7 @@ export function BlogManagement() {
     excerpt: "",
     content: "",
     featuredImage: "",
+    metaTitle: "",
     metaDescription: "",
     metaKeywords: "",
     published: false,
@@ -60,6 +62,7 @@ export function BlogManagement() {
         slug: "",
         excerpt: "",
         content: "",
+        metaTitle: "",
         metaDescription: "",
         metaKeywords: "",
         published: false,
@@ -100,6 +103,7 @@ export function BlogManagement() {
       slug: "",
       excerpt: "",
       content: "",
+      metaTitle: "",
       metaDescription: "",
       metaKeywords: "",
       published: false,
@@ -248,6 +252,23 @@ export function BlogManagement() {
                   setFormData({ ...formData, content })
                 }
               />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Meta Título (SEO) - Máximo 60 caracteres
+              </label>
+              <Input
+                value={formData.metaTitle || ""}
+                onChange={(e) =>
+                  setFormData({ ...formData, metaTitle: e.target.value })
+                }
+                placeholder="Título optimizado para Google (50-60 caracteres)"
+                maxLength={60}
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                {(formData.metaTitle || "").length}/60 caracteres - Si está vacío, se usará el título del artículo
+              </p>
             </div>
 
             <div>
