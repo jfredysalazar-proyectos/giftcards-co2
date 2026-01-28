@@ -93,5 +93,34 @@ export const blogRouter = router({
         });
       }
     }),
+
+  incrementViews: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input }) => {
+      try {
+        await db.incrementBlogPostViews(input.id);
+        return { success: true };
+      } catch (error) {
+        console.error("Error incrementing blog post views:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "No se pudo incrementar las visitas",
+        });
+      }
+    }),
+
+  getRandomPosts: publicProcedure
+    .input(z.object({ limit: z.number().default(4), excludeId: z.number().optional() }))
+    .query(async ({ input }) => {
+      try {
+        return await db.getRandomBlogPosts(input.limit, input.excludeId);
+      } catch (error) {
+        console.error("Error fetching random blog posts:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "No se pudieron cargar los artículos aleatorios",
+        });
+      }
+    }),
 });
 // Cache bust: Tue Jan 27 13:50:08 EST 2026

@@ -469,3 +469,22 @@ export async function getAllBlogCategories() {
   if (!db) return [];
   return await db.select().from(blogCategories).orderBy(blogCategories.name);
 }
+
+export async function incrementBlogPostViews(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(blogPosts).set({ views: sql`views + 1` }).where(eq(blogPosts.id, id));
+}
+
+export async function getRandomBlogPosts(limit: number = 4, excludeId?: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  let conditions = eq(blogPosts.published, true);
+  
+  if (excludeId) {
+    conditions = and(conditions, sql`id != ${excludeId}`);
+  }
+  
+  return await db.select().from(blogPosts).where(conditions).orderBy(sql`RAND()`).limit(limit);
+}
