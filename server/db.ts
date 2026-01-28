@@ -434,7 +434,9 @@ export async function createBlogPost(post: InsertBlogPost) {
   if (!db) throw new Error("Database not available");
   
   const postData: any = { ...post };
-  if (post.published) {
+  
+  // Si el usuario no proporcionó una fecha pero marcó como publicado, usar ahora
+  if (post.published && !post.publishedAt) {
     postData.publishedAt = new Date();
   }
   
@@ -448,9 +450,13 @@ export async function updateBlogPost(id: number, post: Partial<InsertBlogPost>) 
   
   const updateData: any = { ...post };
   
-  // Si se está publicando y no tiene fecha de publicación, asignarla ahora
-  if (post.published === true) {
-    updateData.publishedAt = new Date();
+  // Si se marca como publicado y no hay fecha previa ni nueva, usar ahora
+  if (post.published === true && !post.publishedAt) {
+    // Solo asignar nueva fecha si no existía una previamente
+    const [existing] = await db.select().from(blogPosts).where(eq(blogPosts.id, id));
+    if (!existing.publishedAt) {
+      updateData.publishedAt = new Date();
+    }
   } else if (post.published === false) {
     updateData.publishedAt = null;
   }
