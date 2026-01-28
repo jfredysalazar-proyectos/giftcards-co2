@@ -1,10 +1,12 @@
-import { Link } from 'wouter';
+import { Link, useLocation } from 'wouter';
 import SEO from '../components/SEO';
 import { trpc } from '../lib/trpc';
+import { Button } from '@/components/ui/button';
 import Footer from '../components/Footer';
 
 // Cache bust: Tue Jan 27 15:50:00 EST 2026
 export default function Blog() {
+  const [, setLocation] = useLocation();
   const { data: posts, isLoading: loading } = trpc.blog.getPosts.useQuery();
 
   return (
@@ -86,6 +88,24 @@ export default function Blog() {
                   </article>
                 </Link>
               ))}
+            </div>
+          )}
+
+          {/* Call to Action Section */}
+          {!loading && posts && posts.length > 0 && (
+            <div className="bg-gradient-to-r from-purple-600 to-indigo-700 rounded-2xl p-8 md:p-12 text-white text-center shadow-lg mb-12">
+              <h3 className="text-2xl md:text-3xl font-bold mb-4">
+                ¿Buscas las mejores tarjetas de regalo?
+              </h3>
+              <p className="text-purple-100 text-lg mb-8 max-w-2xl mx-auto">
+                En GiftCards.com.co tenemos el catálogo más completo de Colombia con entrega inmediata y pagos seguros.
+              </p>
+              <Button
+                onClick={() => setLocation('/')}
+                className="bg-white text-purple-700 hover:bg-gray-100 font-bold py-6 px-10 rounded-xl text-lg transition-all transform hover:scale-105"
+              >
+                Explorar Catálogo Ahora
+              </Button>
             </div>
           )}
 
