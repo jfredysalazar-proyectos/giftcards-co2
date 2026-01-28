@@ -14,6 +14,19 @@ export default function BlogPost() {
     { slug: slug || '' },
     { enabled: !!slug }
   );
+  
+  const incrementViewsMutation = trpc.blog.incrementViews.useMutation();
+  const { data: relatedPosts = [] } = trpc.blog.getRandomPosts.useQuery(
+    { limit: 4, excludeId: post?.id },
+    { enabled: !!post?.id }
+  );
+  
+  // Incrementar visitas cuando se carga el artículo
+  useEffect(() => {
+    if (post?.id && !loading) {
+      incrementViewsMutation.mutate({ id: post.id });
+    }
+  }, [post?.id, loading]);
 
   if (loading) {
     return (
@@ -110,7 +123,7 @@ export default function BlogPost() {
                 </div>
                 <div className="flex items-center">
                   <Eye className="w-4 h-4 mr-2 text-purple-500" />
-                  <span>{post.views || 0} vistas</span>
+                  <span>{(post.views || 0) + 1} vistas</span>
                 </div>
               </div>
             </header>
@@ -136,6 +149,45 @@ export default function BlogPost() {
                 prose-strong:text-gray-900"
               dangerouslySetInnerHTML={{ __html: post.content || "" }}
             />
+
+            {/* Related Articles Carousel */}
+            {relatedPosts.length > 0 && (
+              <div className="mb-16">
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8">Más Artículos del Blog</h2>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {relatedPosts.map((article: any) => (
+                    <div
+                      key={article.id}
+                      onClick={() => setLocation(`/blog/${article.slug}`)}
+                      className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden cursor-pointer transform hover:scale-105 border border-gray-200"
+                    >
+                      {article.featuredImage && (
+                        <div className="h-40 overflow-hidden bg-gray-200">
+                          <img
+                            src={article.featuredImage}
+                            alt={article.title}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      )}
+                      <div className="p-4">
+                        <h3 className="font-semibold text-gray-900 text-sm md:text-base line-clamp-2 mb-2">
+                          {article.title}
+                        </h3>
+                        <p className="text-gray-600 text-xs md:text-sm line-clamp-2">
+                          {article.excerpt}
+                        </p>
+                        <div className="flex items-center gap-2 mt-4 text-xs text-gray-500">
+                          <Eye className="w-3 h-3" />
+                          <span>{article.views || 0} vistas</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Footer Call to Action */}
             <div className="bg-gradient-to-r from-purple-600 to-indigo-700 rounded-2xl p-8 md:p-12 text-white text-center shadow-lg mb-12">
