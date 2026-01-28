@@ -269,6 +269,7 @@ export const blogPosts = mysqlTable("blog_posts", {
   content: text("content").notNull(),
   author: varchar("author", { length: 100 }).default("GiftCards Colombia").notNull(),
   featuredImage: varchar("featuredImage", { length: 500 }),
+  metaTitle: text("metaTitle"),
   metaDescription: text("metaDescription"),
   metaKeywords: text("metaKeywords"),
   published: boolean("published").default(false).notNull(),
