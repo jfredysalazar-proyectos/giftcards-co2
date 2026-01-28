@@ -130,11 +130,11 @@ export default function BlogPost() {
 
             {/* Featured Image */}
             {post.featuredImage && (
-              <div className="mb-12 rounded-2xl overflow-hidden shadow-xl ring-1 ring-gray-200">
+              <div className="mb-12 rounded-2xl overflow-hidden shadow-xl ring-1 ring-gray-200 bg-gray-100">
                 <img
                   src={post.featuredImage}
                   alt={post.title}
-                  className="w-full h-auto max-h-[500px] object-cover"
+                  className="w-full h-auto object-contain"
                 />
               </div>
             )}
