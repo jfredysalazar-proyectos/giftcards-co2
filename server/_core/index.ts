@@ -283,6 +283,65 @@ async function startServer() {
     }
   });
   
+  // Add metaTitle column migration endpoint
+  app.post("/api/migrate-add-meta-title", async (req, res) => {
+    try {
+      const { secret } = req.body;
+      
+      if (secret !== "update-blog-seo-2026") {
+        res.status(401).json({ error: "Invalid secret" });
+        return;
+      }
+
+      const { getDb } = await import("../db");
+      const db = await getDb();
+      
+      if (!db) {
+        res.status(500).json({ error: "Database not available" });
+        return;
+      }
+
+      try {
+        // Check if column already exists
+        const checkResult = await db.execute(`
+          SELECT COUNT(*) as count 
+          FROM information_schema.COLUMNS 
+          WHERE TABLE_SCHEMA = DATABASE() 
+          AND TABLE_NAME = 'blog_posts' 
+          AND COLUMN_NAME = 'metaTitle'
+        `);
+        
+        const exists = (checkResult as any)[0]?.[0]?.count > 0;
+        
+        if (exists) {
+          res.json({
+            success: true,
+            message: "Column metaTitle already exists",
+            alreadyExists: true
+          });
+          return;
+        }
+
+        // Add the column
+        await db.execute(`
+          ALTER TABLE blog_posts 
+          ADD COLUMN metaTitle TEXT AFTER featuredImage
+        `);
+
+        res.json({
+          success: true,
+          message: "Column metaTitle added successfully"
+        });
+      } catch (error: any) {
+        console.error('Error adding metaTitle column:', error);
+        res.status(500).json({ error: error.message });
+      }
+    } catch (error: any) {
+      console.error('Error in migration endpoint:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+  
   // Update blog metadata endpoint
   app.post("/api/update-blog-metadata", async (req, res) => {
     try {
