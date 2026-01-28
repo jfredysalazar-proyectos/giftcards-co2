@@ -1,4 +1,5 @@
 import { useParams, useLocation } from 'wouter';
+import { useEffect } from 'react';
 import SEO from '../components/SEO';
 import { trpc } from '../lib/trpc';
 import { Button } from '@/components/ui/button';
