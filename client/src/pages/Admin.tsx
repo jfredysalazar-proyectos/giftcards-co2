@@ -33,6 +33,7 @@ export default function Admin() {
   const { data: reviews = [] } = trpc.reviews.listAll.useQuery(undefined, {
     enabled: user?.role === "admin",
   });
+  const { data: blogPosts = [] } = trpc.blog.getPosts.useQuery();
 
   if (loading) {
     return (
@@ -128,7 +129,7 @@ export default function Admin() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 mb-1">Blog Posts</p>
-                <p className="text-3xl font-bold text-blue-600">-</p>
+                <p className="text-3xl font-bold text-blue-600">{blogPosts.length}</p>
               </div>
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
                 <BookOpen className="w-6 h-6 text-blue-600" />
