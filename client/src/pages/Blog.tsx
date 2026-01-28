@@ -4,7 +4,7 @@ import { trpc } from '../lib/trpc';
 import { Button } from '@/components/ui/button';
 import Footer from '../components/Footer';
 
-// Cache bust: Tue Jan 27 15:50:00 EST 2026
+// Cache bust: Tue Jan 28 16:30:00 EST 2026
 export default function Blog() {
   const [, setLocation] = useLocation();
   const { data: posts, isLoading: loading } = trpc.blog.getPosts.useQuery();
