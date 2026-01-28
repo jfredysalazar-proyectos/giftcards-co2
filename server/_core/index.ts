@@ -283,6 +283,36 @@ async function startServer() {
     }
   });
   
+  // List all blog post slugs endpoint
+  app.get("/api/list-blog-slugs", async (_req, res) => {
+    try {
+
+      const { getDb } = await import("../db");
+      const schema = await import("../../drizzle/schema");
+      const db = await getDb();
+      
+      if (!db) {
+        res.status(500).json({ error: "Database not available" });
+        return;
+      }
+
+      const posts = await db.select({
+        slug: schema.blogPosts.slug,
+        title: schema.blogPosts.title,
+        published: schema.blogPosts.published
+      }).from(schema.blogPosts);
+
+      res.json({
+        success: true,
+        total: posts.length,
+        posts
+      });
+    } catch (error: any) {
+      console.error('Error listing blog slugs:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+  
   // Add metaTitle column migration endpoint
   app.post("/api/migrate-add-meta-title", async (req, res) => {
     try {
