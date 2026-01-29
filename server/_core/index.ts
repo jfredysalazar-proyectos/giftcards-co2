@@ -651,6 +651,52 @@ async function startServer() {
     }
   });
   
+  // Update Nintendo eShop product endpoint
+  app.post("/api/update-nintendo-product", async (req, res) => {
+    try {
+      const { secret } = req.body;
+      
+      if (secret !== "update-nintendo-seo-2026") {
+        res.status(401).json({ error: "Invalid secret" });
+        return;
+      }
+
+      const { getDb } = await import("../db");
+      const schema = await import("../../drizzle/schema");
+      const { eq } = await import("drizzle-orm");
+      const db = await getDb();
+      
+      if (!db) {
+        res.status(500).json({ error: "Database not available" });
+        return;
+      }
+
+      const metaTitle = "Nintendo Switch Colombia: Tarjetas eShop | Entrega Inmediata";
+      const metaDescription = "Compra tarjetas para la Nintendo eShop en Colombia y recarga tu saldo para Nintendo Switch. Accede a juegos, DLCs y más. ¡Recibe tu código digital al instante!";
+      const fullDescription = `<h3>Recarga tu Nintendo Switch en Colombia: ¡Juegos Digitales al Instante!</h3>\n\n<p>¿Buscas la forma más fácil de comprar juegos para tu <strong>Nintendo Switch</strong> en <strong>Colombia</strong>? Con nuestras <strong>tarjetas de regalo para la Nintendo eShop</strong>, puedes recargar tu saldo en segundos y acceder a un universo de entretenimiento digital. Olvídate de las tarjetas de crédito y los complicados procesos de compra. ¡Es rápido, seguro y al instante!</p>\n\n<p>La <strong>Nintendo eShop</strong> es la tienda digital oficial de Nintendo, donde encontrarás miles de juegos, desde los grandes lanzamientos de Mario y Zelda hasta joyas independientes. Con una <strong>tarjeta eShop</strong>, tienes el control total de tus gastos y acceso inmediato a todo el catálogo.</p>\n\n<h3>Beneficios de Usar una Tarjeta Nintendo eShop</h3>\n\n<ul>\n  <li>✅ <strong>Acceso a la eShop de USA:</strong> Compra en la tienda con el catálogo más grande y, a menudo, mejores precios.</li>\n  <li>✅ <strong>Sin Tarjeta de Crédito:</strong> No necesitas una tarjeta internacional. Paga con métodos de pago locales.</li>\n  <li>✅ <strong>Control Total:</strong> Carga solo el saldo que necesitas y gestiona tu presupuesto gamer.</li>\n  <li>✅ <strong>Entrega Inmediata:</strong> Recibe tu código digital al instante en tu correo electrónico y WhatsApp.</li>\n  <li>✅ <strong>Regalo Ideal para Gamers:</strong> La mejor opción para sorprender a cualquier fan de <strong>Nintendo Switch</strong>.</li>\n  <li>✅ <strong>Compatible con Nintendo Switch 2:</strong> ¡Prepárate para el futuro! Este saldo será compatible con la próxima consola de Nintendo.</li>\n</ul>\n\n<h3>¿Cómo Canjear tu Tarjeta eShop en tu Nintendo Switch?</h3>\n\n<p>Canjear tu código es muy sencillo. Sigue estos pasos:</p>\n\n<ol>\n  <li>En el menú HOME de tu <strong>Nintendo Switch</strong>, selecciona el ícono de la <strong>Nintendo eShop</strong>.</li>\n  <li>Selecciona tu perfil de usuario (asegúrate de que sea de la región de USA).</li>\n  <li>En el menú de la izquierda, elige "Canjear código".</li>\n  <li>Ingresa el código de 16 dígitos que recibiste.</li>\n  <li>¡Listo! El saldo se agregará a tu cuenta y podrás empezar a comprar.</li>\n</ol>\n\n<h3>Preguntas Frecuentes (FAQs)</h3>\n\n<p><strong>¿Necesito una cuenta de USA para usar estas tarjetas?</strong><br>\nSí, estas tarjetas son para la eShop de Estados Unidos. Si no tienes una cuenta de USA, puedes crear una fácilmente. Es la región con el catálogo más completo.</p>\n\n<p><strong>¿Puedo usar estas tarjetas en una cuenta de Colombia?</strong><br>\nNo, las tarjetas de la eShop están bloqueadas por región. Estas son exclusivamente para cuentas de USA.</p>\n\n<p><strong>¿El saldo de la eShop tiene vencimiento?</strong><br>\nNo, el saldo que agregues a tu cuenta de Nintendo no tiene fecha de vencimiento.</p>\n\n<p><strong>¿Qué pasa si compro un juego digital y no me gusta?</strong><br>\nGeneralmente, las compras en la Nintendo eShop son finales y no se ofrecen reembolsos, salvo en casos excepcionales. Te recomendamos ver gameplays y leer reseñas antes de comprar.</p>\n\n<p>¡No esperes más para ampliar tu biblioteca de juegos! Compra tu <strong>tarjeta Nintendo eShop Colombia</strong> hoy y sumérgete en nuevas aventuras en tu <strong>Nintendo Switch</strong>.</p>`;
+      
+      await db.update(schema.products)
+        .set({
+          name: metaTitle,
+          description: metaDescription,
+          fullDescription: fullDescription
+        })
+        .where(eq(schema.products.slug, 'nintendo-eshop'));
+      
+      res.json({
+        message: 'Nintendo eShop product updated successfully',
+        updates: {
+          metaTitle,
+          metaDescription,
+          fullDescriptionLength: fullDescription.length
+        }
+      });
+    } catch (error: any) {
+      console.error('Error updating Nintendo product:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+  
   // Sitemap.xml endpoint
   app.get("/sitemap.xml", async (_req, res) => {
     try {
