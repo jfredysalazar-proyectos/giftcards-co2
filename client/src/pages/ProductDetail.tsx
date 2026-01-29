@@ -308,9 +308,10 @@ export default function ProductDetail() {
                   </span>
                 )}
               </div>
-              <p className="text-gray-700 text-lg leading-relaxed">
-                {product.fullDescription || product.description}
-              </p>
+              <div 
+                className="text-gray-700 text-lg leading-relaxed prose prose-lg max-w-none"
+                dangerouslySetInnerHTML={{ __html: product.fullDescription || product.description || '' }}
+              />
               
               {/* Social Proof Indicators */}
               <div className="mt-4 space-y-2">
