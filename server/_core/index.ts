@@ -605,6 +605,52 @@ async function startServer() {
     }
   });
   
+  // Update Amazon Gift Cards product endpoint
+  app.post("/api/update-amazon-product", async (req, res) => {
+    try {
+      const { secret } = req.body;
+      
+      if (secret !== "update-amazon-seo-2026") {
+        res.status(401).json({ error: "Invalid secret" });
+        return;
+      }
+
+      const { getDb } = await import("../db");
+      const schema = await import("../../drizzle/schema");
+      const { eq } = await import("drizzle-orm");
+      const db = await getDb();
+      
+      if (!db) {
+        res.status(500).json({ error: "Database not available" });
+        return;
+      }
+
+      const metaTitle = "Amazon Colombia: Compra con Gift Cards USA | Entrega Inmediata";
+      const metaDescription = "Compra en Amazon USA desde Colombia sin tarjeta de crédito. Usa nuestras Amazon Gift Cards para pagar de forma segura y controlar tus gastos. ¡Recibe tu código al instante!";
+      const fullDescription = `<h3>¿Cómo Comprar en Amazon desde Colombia? ¡La Solución es una Amazon Gift Card!</h3>\n\n<p>¿Siempre has querido acceder al inmenso catálogo de <strong>Amazon USA</strong> pero te frena no tener una tarjeta de crédito internacional o los complicados procesos de envío? ¡Tenemos la solución perfecta para ti! Con una <strong>Amazon Gift Card</strong>, puedes <strong>comprar en Amazon desde Colombia</strong> de forma fácil, rápida y segura.</p>\n\n<p>Olvida las barreras y empieza a disfrutar de millones de productos exclusivos de la tienda de Estados Unidos. Desde lo último en tecnología hasta moda, libros y mucho más. Nuestras <strong>tarjetas de regalo Amazon</strong> son tu pasaporte al mercado más grande del mundo.</p>\n\n<h3>Beneficios de Usar una Tarjeta Amazon en Colombia</h3>\n\n<ul>\n  <li>✅ <strong>Acceso Total a Amazon USA:</strong> Compra cualquier producto del catálogo de Estados Unidos sin restricciones.</li>\n  <li>✅ <strong>Sin Tarjeta de Crédito:</strong> No necesitas una tarjeta internacional. Paga con métodos de pago locales.</li>\n  <li>✅ <strong>Control de Gastos:</strong> Carga solo el saldo que necesitas y evita sorpresas en tu extracto.</li>\n  <li>✅ <strong>Seguridad Garantizada:</strong> No expones tus datos bancarios en línea.</li>\n  <li>✅ <strong>Entrega Inmediata:</strong> Recibe tu código digital al instante en tu correo electrónico.</li>\n  <li>✅ <strong>Regalo Perfecto:</strong> Sorprende a tus amigos y familiares con el regalo que ellos elijan.</li>\n</ul>\n\n<h3>¿Cómo Funciona? Guía Paso a Paso</h3>\n\n<p>Comprar y usar tu <strong>tarjeta Amazon</strong> es muy sencillo:</p>\n\n<ol>\n  <li><strong>Elige el Monto:</strong> Selecciona el valor de la Amazon Gift Card que deseas comprar.</li>\n  <li><strong>Paga con Medios Locales:</strong> Aceptamos una amplia variedad de métodos de pago en Colombia.</li>\n  <li><strong>Recibe tu Código:</strong> En minutos, recibirás el código de la gift card en tu correo.</li>\n  <li><strong>Canjea en Amazon:</strong><br>\n    a. Inicia sesión en tu cuenta de Amazon.com (o crea una nueva).<br>\n    b. Ve a "Cuentas y Listas" y selecciona "Tarjetas de Regalo".<br>\n    c. Haz clic en "Canjear una Tarjeta de Regalo" e ingresa tu código.<br>\n    d. ¡Listo! El saldo se agregará a tu cuenta y podrás empezar a <strong>comprar en Amazon</strong>.\n  </li>\n</ol>\n\n<h3>¿Necesito un Casillero Virtual para Envíos a Colombia?</h3>\n\n<p>Sí. Para los productos que no tienen envío directo a Colombia, necesitarás un <strong>casillero virtual</strong>. Este servicio te proporciona una dirección en Estados Unidos a la que Amazon enviará tus productos. Luego, el casillero se encarga de enviártelos a tu casa en Colombia. Es un proceso seguro y muy común para quienes realizan <strong>compras en Amazon desde Colombia</strong>.</p>\n\n<h3>Preguntas Frecuentes (FAQs)</h3>\n\n<p><strong>¿Las Amazon Gift Cards tienen vencimiento?</strong><br>\nNo, el saldo de tu tarjeta de regalo Amazon no tiene fecha de vencimiento.</p>\n\n<p><strong>¿Puedo usar esta gift card en Amazon España o México?</strong><br>\nNo, estas tarjetas son exclusivamente para la tienda de <strong>Amazon.com (USA)</strong>.</p>\n\n<p><strong>¿Puedo usar el saldo para pagar Amazon Prime Video?</strong><br>\nSí, puedes usar el saldo de tu gift card para pagar tu suscripción a Amazon Prime, que incluye Prime Video, Prime Gaming y envíos gratis en USA.</p>\n\n<p><strong>¿Es seguro comprar una Amazon Gift Card aquí?</strong><br>\nTotalmente. Somos distribuidores autorizados y garantizamos que todos nuestros códigos son 100% válidos y se entregan de forma segura e inmediata.</p>\n\n<p>¡No esperes más! Compra tu <strong>Amazon Gift Card Colombia</strong> hoy mismo y empieza a disfrutar de un mundo de posibilidades. ¡El catálogo de <strong>Amazon USA</strong> te espera!</p>`;
+      
+      await db.update(schema.products)
+        .set({
+          name: metaTitle,
+          description: metaDescription,
+          fullDescription: fullDescription
+        })
+        .where(eq(schema.products.slug, 'amazon-gift-cards'));
+      
+      res.json({
+        message: 'Amazon Gift Cards product updated successfully',
+        updates: {
+          metaTitle,
+          metaDescription,
+          fullDescriptionLength: fullDescription.length
+        }
+      });
+    } catch (error: any) {
+      console.error('Error updating Amazon product:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+  
   // Sitemap.xml endpoint
   app.get("/sitemap.xml", async (_req, res) => {
     try {
