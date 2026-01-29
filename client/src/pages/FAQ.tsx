@@ -10,12 +10,38 @@ import {
 import { trpc } from "@/lib/trpc";
 import { Link } from "wouter";
 import { ArrowLeft, Loader2, MessageCircle } from "lucide-react";
+import SEO from "@/components/SEO";
 
 export default function FAQ() {
   const { data: faqs = [], isLoading } = trpc.faqs.list.useQuery();
 
+  // Schema.org JSON-LD para SEO
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map(faq => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer
+      }
+    }))
+  };
+
   return (
     <>
+      <SEO
+        title="Preguntas Frecuentes | GiftCards Colombia"
+        description="Encuentra respuestas rápidas a las preguntas más comunes sobre tarjetas de regalo digitales en Colombia. Compra, canje, métodos de pago y más."
+        keywords="preguntas frecuentes, FAQ, ayuda, soporte, tarjetas de regalo Colombia, gift cards"
+      />
+      {faqs.length > 0 && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
+      )}
       <AnnouncementBar />
       <div className="min-h-screen bg-gray-50">
       {/* Navigation */}

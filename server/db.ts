@@ -494,3 +494,37 @@ export async function getRandomBlogPosts(limit: number = 4, excludeId?: number) 
   
   return await db.select().from(blogPosts).where(conditions).orderBy(sql`RAND()`).limit(limit);
 }
+
+
+// ==================== FAQs ====================
+
+export async function getAllFAQs() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(faqs).where(eq(faqs.published, true)).orderBy(faqs.order);
+}
+
+export async function getAllFAQsAdmin() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(faqs).orderBy(faqs.order);
+}
+
+export async function createFAQ(faq: InsertFAQ) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(faqs).values(faq);
+  return result;
+}
+
+export async function updateFAQ(id: number, faq: Partial<InsertFAQ>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(faqs).set(faq).where(eq(faqs.id, id));
+}
+
+export async function deleteFAQ(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(faqs).where(eq(faqs.id, id));
+}
