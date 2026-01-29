@@ -83,9 +83,16 @@ export function FAQsManagement() {
     }
   };
 
-  const handleDialogClose = () => {
-    setIsDialogOpen(false);
+  const handleDialogClose = (open: boolean) => {
+    setIsDialogOpen(open);
+    if (!open) {
+      setEditingFAQ(null);
+    }
+  };
+
+  const handleNewFAQ = () => {
     setEditingFAQ(null);
+    setIsDialogOpen(true);
   };
 
   if (isLoading) {
@@ -101,12 +108,13 @@ export function FAQsManagement() {
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Gestión de FAQs</h2>
         <Dialog open={isDialogOpen} onOpenChange={handleDialogClose}>
-          <DialogTrigger asChild>
-            <Button className="bg-gradient-to-r from-purple-600 to-cyan-600">
-              <Plus className="w-4 h-4 mr-2" />
-              Nueva FAQ
-            </Button>
-          </DialogTrigger>
+          <Button 
+            onClick={handleNewFAQ}
+            className="bg-gradient-to-r from-purple-600 to-cyan-600"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Nueva FAQ
+          </Button>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
               <DialogTitle>
