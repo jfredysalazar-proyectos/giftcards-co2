@@ -8,9 +8,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
-import { Plus, Edit, Trash2, Loader2, X } from "lucide-react";
+import { Plus, Edit, Trash2, Loader2, X, Info } from "lucide-react";
 import { toast } from "sonner";
 import { ImageUploader } from "./ImageUploader";
+import { RichTextEditor } from "./RichTextEditor";
 
 type AmountEntry = {
   amount: string;
@@ -29,6 +30,11 @@ export function ProductsManagement() {
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [amounts, setAmounts] = useState<AmountEntry[]>([{ amount: "", price: "" }]);
   const [productImages, setProductImages] = useState<ImageEntry[]>([]);
+  
+  // SEO character counters
+  const [metaTitle, setMetaTitle] = useState("");
+  const [metaDescription, setMetaDescription] = useState("");
+  const [fullDescription, setFullDescription] = useState("");
 
   const utils = trpc.useUtils();
   const { data: products = [], isLoading } = trpc.products.list.useQuery();
@@ -59,11 +65,8 @@ export function ProductsManagement() {
         });
       }
       utils.products.list.invalidate();
+      resetForm();
       setIsDialogOpen(false);
-      setEditingProduct(null);
-      setLoadingProductId(null);
-      setAmounts([{ amount: "", price: "" }]);
-      setProductImages([]);
       toast.success("Producto creado exitosamente");
     },
     onError: (error) => {
@@ -74,7 +77,6 @@ export function ProductsManagement() {
   const updateMutation = trpc.products.update.useMutation({
     onSuccess: async (product) => {
       // Only update images if they were actually modified
-      // Check if productImages differs from existingImages
       const imagesWereModified = productImages.length !== existingImages.length ||
         productImages.some((img, idx) => {
           const existing = existingImages[idx];
@@ -82,7 +84,6 @@ export function ProductsManagement() {
         });
       
       if (imagesWereModified && productImages.length > 0) {
-        // Delete old images that are not in the current list
         const currentImageIds = productImages.filter(img => img.id).map(img => img.id!);
         const imagesToDelete = existingImages.filter(img => !currentImageIds.includes(img.id));
         
@@ -90,7 +91,6 @@ export function ProductsManagement() {
           await deleteImageMutation.mutateAsync({ id: img.id });
         }
         
-        // Create new images (those without id)
         const newImages = productImages.filter(img => !img.id);
         for (const image of newImages) {
           await createImageMutation.mutateAsync({
@@ -103,11 +103,8 @@ export function ProductsManagement() {
       }
       
       utils.products.list.invalidate();
+      resetForm();
       setIsDialogOpen(false);
-      setEditingProduct(null);
-      setLoadingProductId(null);
-      setAmounts([{ amount: "", price: "" }]);
-      setProductImages([]);
       toast.success("Producto actualizado exitosamente");
     },
     onError: (error) => {
@@ -137,6 +134,16 @@ export function ProductsManagement() {
     },
   });
 
+  const resetForm = () => {
+    setEditingProduct(null);
+    setLoadingProductId(null);
+    setAmounts([{ amount: "", price: "" }]);
+    setProductImages([]);
+    setMetaTitle("");
+    setMetaDescription("");
+    setFullDescription("");
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -148,14 +155,25 @@ export function ProductsManagement() {
       return;
     }
 
+    // Validate SEO fields
+    if (metaTitle.length > 60) {
+      toast.error("El Meta Title debe tener máximo 60 caracteres");
+      return;
+    }
+    
+    if (metaDescription.length > 160) {
+      toast.error("La Meta Description debe tener máximo 160 caracteres");
+      return;
+    }
+
     // Get primary image for backward compatibility
     const primaryImage = productImages.find(img => img.isPrimary)?.url || productImages[0]?.url || "";
 
     const data = {
-      name: formData.get("name") as string,
+      name: metaTitle,
       slug: formData.get("slug") as string,
-      description: formData.get("description") as string,
-      fullDescription: formData.get("fullDescription") as string,
+      description: metaDescription,
+      fullDescription: fullDescription,
       categoryId: parseInt(formData.get("categoryId") as string),
       image: primaryImage,
       gradient: formData.get("gradient") as string,
@@ -177,6 +195,9 @@ export function ProductsManagement() {
   const handleEdit = async (product: any) => {
     setEditingProduct(product);
     setLoadingProductId(product.id);
+    setMetaTitle(product.name || "");
+    setMetaDescription(product.description || "");
+    setFullDescription(product.fullDescription || "");
     setIsDialogOpen(true);
   };
   
@@ -208,11 +229,8 @@ export function ProductsManagement() {
   };
 
   const handleNewProduct = () => {
-    setEditingProduct(null);
-    setLoadingProductId(null);
+    resetForm();
     setIsDialogOpen(true);
-    setAmounts([{ amount: "", price: "" }]);
-    setProductImages([]);
   };
 
   const handleAddAmount = () => {
@@ -264,27 +282,72 @@ export function ProductsManagement() {
               </DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* SEO Section */}
+              <div className="space-y-4 border-l-4 border-purple-500 pl-4">
+                <div className="flex items-center gap-2">
+                  <h3 className="font-semibold text-lg">Optimización SEO</h3>
+                  <Info className="w-4 h-4 text-gray-400" />
+                </div>
+                
+                {/* Meta Title */}
+                <div>
+                  <div className="flex justify-between items-center mb-1">
+                    <Label htmlFor="metaTitle">Meta Title (Título SEO) *</Label>
+                    <span className={`text-xs ${metaTitle.length > 60 ? 'text-red-500 font-semibold' : metaTitle.length > 50 ? 'text-orange-500' : 'text-gray-500'}`}>
+                      {metaTitle.length}/60
+                    </span>
+                  </div>
+                  <Input
+                    id="metaTitle"
+                    value={metaTitle}
+                    onChange={(e) => setMetaTitle(e.target.value)}
+                    placeholder="Tarjeta PlayStation Store USA $10 | Entrega Inmediata"
+                    required
+                    maxLength={70}
+                  />
+                  <p className="text-xs text-gray-500 mt-1 flex items-start gap-1">
+                    <Info className="w-3 h-3 mt-0.5 flex-shrink-0" />
+                    <span>Incluye palabras clave principales y ubicación. Aparece en Google y pestañas del navegador.</span>
+                  </p>
+                </div>
+
+                {/* Meta Description */}
+                <div>
+                  <div className="flex justify-between items-center mb-1">
+                    <Label htmlFor="metaDescription">Meta Description (Descripción SEO) *</Label>
+                    <span className={`text-xs ${metaDescription.length > 160 ? 'text-red-500 font-semibold' : metaDescription.length > 150 ? 'text-orange-500' : 'text-gray-500'}`}>
+                      {metaDescription.length}/160
+                    </span>
+                  </div>
+                  <Textarea
+                    id="metaDescription"
+                    value={metaDescription}
+                    onChange={(e) => setMetaDescription(e.target.value)}
+                    placeholder="Compra tu tarjeta PlayStation Store de $10 USD. Entrega inmediata en Colombia. Recarga tu PSN y accede a juegos, DLC y más."
+                    rows={3}
+                    required
+                    maxLength={170}
+                  />
+                  <p className="text-xs text-gray-500 mt-1 flex items-start gap-1">
+                    <Info className="w-3 h-3 mt-0.5 flex-shrink-0" />
+                    <span>Resumen atractivo que aparece en resultados de Google. Debe motivar al clic.</span>
+                  </p>
+                </div>
+              </div>
+
               {/* Basic Product Info */}
               <div className="space-y-4">
                 <h3 className="font-semibold text-lg">Información Básica</h3>
-                <div>
-                  <Label htmlFor="name">Nombre *</Label>
-                  <Input
-                    id="name"
-                    name="name"
-                    defaultValue={editingProduct?.name}
-                    required
-                  />
-                </div>
                 <div>
                   <Label htmlFor="slug">Slug (URL) *</Label>
                   <Input
                     id="slug"
                     name="slug"
                     defaultValue={editingProduct?.slug}
-                    placeholder="playstation-network"
+                    placeholder="tarjeta-playstation-store-usa-10"
                     required
                   />
+                  <p className="text-xs text-gray-500 mt-1">URL amigable (solo letras minúsculas, números y guiones)</p>
                 </div>
                 <div>
                   <Label htmlFor="categoryId">Categoría *</Label>
@@ -301,22 +364,15 @@ export function ProductsManagement() {
                     </SelectContent>
                   </Select>
                 </div>
+                
+                {/* Rich Text Editor for Full Description */}
                 <div>
-                  <Label htmlFor="description">Descripción Corta</Label>
-                  <Textarea
-                    id="description"
-                    name="description"
-                    defaultValue={editingProduct?.description || ""}
-                    rows={2}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="fullDescription">Descripción Completa</Label>
-                  <Textarea
-                    id="fullDescription"
-                    name="fullDescription"
-                    defaultValue={editingProduct?.fullDescription || ""}
-                    rows={4}
+                  <Label htmlFor="fullDescription">Descripción Completa del Producto</Label>
+                  <p className="text-xs text-gray-500 mb-2">Usa el editor para dar formato al texto (negritas, listas, enlaces, etc.)</p>
+                  <RichTextEditor
+                    content={fullDescription}
+                    onChange={setFullDescription}
+                    placeholder="Describe detalladamente el producto, cómo funciona, beneficios, instrucciones de uso..."
                   />
                 </div>
               </div>
@@ -408,44 +464,46 @@ export function ProductsManagement() {
                     Agregar Monto
                   </Button>
                 </Card>
-                <p className="text-sm text-gray-500">
-                  Nota: Los montos se guardarán después de crear el producto. Usa los botones rápidos o agrega montos personalizados.
-                </p>
               </div>
 
-              {/* Settings */}
+              {/* Stock and Featured */}
               <div className="space-y-4">
-                <h3 className="font-semibold text-lg">Configuración</h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
+                <h3 className="font-semibold text-lg">Estado</h3>
+                <div className="flex gap-4">
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      id="inStock"
+                      name="inStock"
+                      value="true"
+                      defaultChecked={editingProduct?.inStock ?? true}
+                      className="w-4 h-4"
+                    />
                     <Label htmlFor="inStock">En Stock</Label>
-                    <Select name="inStock" defaultValue={editingProduct?.inStock ? "true" : "false"}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="true">Sí</SelectItem>
-                        <SelectItem value="false">No</SelectItem>
-                      </SelectContent>
-                    </Select>
                   </div>
-                  <div>
-                    <Label htmlFor="featured">Destacado</Label>
-                    <Select name="featured" defaultValue={editingProduct?.featured ? "true" : "false"}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="true">Sí</SelectItem>
-                        <SelectItem value="false">No</SelectItem>
-                      </SelectContent>
-                    </Select>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      id="featured"
+                      name="featured"
+                      value="true"
+                      defaultChecked={editingProduct?.featured ?? false}
+                      className="w-4 h-4"
+                    />
+                    <Label htmlFor="featured">Producto Destacado</Label>
                   </div>
                 </div>
               </div>
 
               <div className="flex justify-end gap-2 pt-4 border-t">
-                <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setIsDialogOpen(false);
+                    resetForm();
+                  }}
+                >
                   Cancelar
                 </Button>
                 <Button
@@ -453,14 +511,10 @@ export function ProductsManagement() {
                   disabled={createMutation.isPending || updateMutation.isPending}
                   className="bg-gradient-to-r from-purple-600 to-cyan-600"
                 >
-                  {createMutation.isPending || updateMutation.isPending ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Guardando...
-                    </>
-                  ) : (
-                    "Guardar Producto"
+                  {(createMutation.isPending || updateMutation.isPending) && (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                   )}
+                  {editingProduct ? "Actualizar" : "Crear"} Producto
                 </Button>
               </div>
             </form>
@@ -468,7 +522,8 @@ export function ProductsManagement() {
         </Dialog>
       </div>
 
-      <div className="border rounded-lg">
+      {/* Products Table */}
+      <Card>
         <Table>
           <TableHeader>
             <TableRow>
@@ -477,69 +532,48 @@ export function ProductsManagement() {
               <TableHead>Slug</TableHead>
               <TableHead>Stock</TableHead>
               <TableHead>Destacado</TableHead>
-              <TableHead className="text-right">Acciones</TableHead>
+              <TableHead>Acciones</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {products.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={6} className="text-center text-gray-500 py-8">
-                  No hay productos. Crea uno nuevo para comenzar.
+            {products.map((product: any) => (
+              <TableRow key={product.id}>
+                <TableCell className="font-medium">{product.name}</TableCell>
+                <TableCell>{product.category?.name}</TableCell>
+                <TableCell className="text-sm text-gray-500">{product.slug}</TableCell>
+                <TableCell>
+                  <span className={`px-2 py-1 rounded text-xs ${product.inStock ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                    {product.inStock ? 'En Stock' : 'Agotado'}
+                  </span>
+                </TableCell>
+                <TableCell>
+                  {product.featured && (
+                    <span className="px-2 py-1 rounded text-xs bg-purple-100 text-purple-700">Sí</span>
+                  )}
+                </TableCell>
+                <TableCell>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleEdit(product)}
+                    >
+                      <Edit className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleDelete(product.id)}
+                    >
+                      <Trash2 className="w-4 h-4 text-red-500" />
+                    </Button>
+                  </div>
                 </TableCell>
               </TableRow>
-            ) : (
-              products.map((product) => (
-                <TableRow key={product.id}>
-                  <TableCell className="font-medium">{product.name}</TableCell>
-                  <TableCell>
-                    {categories.find(c => c.id === product.categoryId)?.name || "N/A"}
-                  </TableCell>
-                  <TableCell className="text-sm text-gray-600">{product.slug}</TableCell>
-                  <TableCell>
-                    {product.inStock ? (
-                      <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">
-                        En Stock
-                      </span>
-                    ) : (
-                      <span className="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full">
-                        Agotado
-                      </span>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {product.featured ? (
-                      <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">
-                        Sí
-                      </span>
-                    ) : (
-                      <span className="text-gray-400 text-xs">No</span>
-                    )}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleEdit(product)}
-                      >
-                        <Edit className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDelete(product.id)}
-                        disabled={deleteMutation.isPending}
-                      >
-                        <Trash2 className="w-4 h-4 text-red-600" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
+            ))}
           </TableBody>
         </Table>
-      </div>
+      </Card>
     </div>
   );
 }
