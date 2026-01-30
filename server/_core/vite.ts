@@ -35,18 +35,92 @@ export async function setupVite(app: Express, server: Server) {
       // always reload the index.html file from disk incase it changes
       let template = await fs.promises.readFile(clientTemplate, "utf-8");
       
-      // Inject dynamic meta tags for blog posts
-      if (url.startsWith('/blog/') && url !== '/blog' && url !== '/blog/') {
-        const slug = url.replace('/blog/', '').split('?')[0];
+      // Inject dynamic meta tags for products
+      if (url.startsWith("/product/")) {
+        const slug = url.replace("/product/", "").split("?")[0];
         try {
-          const { getBlogPostBySlug } = await import('../db');
+          const { getProductBySlug } = await import("../db");
+          const product = await getProductBySlug(slug);
+          
+          if (product) {
+            const title = product.metaTitle || `${product.name} | GiftCards Colombia`;
+            const description = product.metaDescription || product.description?.substring(0, 160) || "";
+            const keywords = product.metaKeywords || product.category || "";
+            const image = product.image || "/logo-giftcards-colombia.webp";
+            const productUrl = `https://giftcards.com.co/product/${product.slug}`;
+            
+            // Replace meta tags in template
+            template = template.replace(
+              /<title>.*?<\/title>/,
+              `<title>${title}</title>`
+            );
+            template = template.replace(
+              /<meta name="description" content=".*?" \/>/,
+              `<meta name="description" content="${description}" />`
+            );
+            template = template.replace(
+              /<meta name="keywords" content=".*?" \/>/,
+              `<meta name="keywords" content="${keywords}" />`
+            );
+            
+            // Add Open Graph tags and Schema.org Product markup
+            const productMarkup = `
+    <meta property="og:type" content="product" />
+    <meta property="og:url" content="${productUrl}" />
+    <meta property="og:title" content="${title}" />
+    <meta property="og:description" content="${description}" />
+    <meta property="og:image" content="${image}" />
+    <meta property="product:price:amount" content="${product.basePrice || 10}" />
+    <meta property="product:price:currency" content="USD" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="${title}" />
+    <meta name="twitter:description" content="${description}" />
+    <meta name="twitter:image" content="${image}" />
+    <link rel="canonical" href="${productUrl}" />
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org/",
+      "@type": "Product",
+      "name": "${product.name}",
+      "image": "${image}",
+      "description": "${description}",
+      "brand": {
+        "@type": "Brand",
+        "name": "GiftCards Colombia"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "${productUrl}",
+        "priceCurrency": "USD",
+        "price": "${product.basePrice || 10}",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "GiftCards Colombia"
+        }
+      }
+    }
+    </script>`;
+            
+            template = template.replace("</head>", `${productMarkup}\n  </head>`);
+          }
+        } catch (error) {
+          console.error("Error fetching product metadata:", error);
+        }
+      }
+      
+      // Inject dynamic meta tags for blog posts
+      if (url.startsWith("/blog/") && url !== "/blog" && url !== "/blog/") {
+        const slug = url.replace("/blog/", "").split("?")[0];
+        try {
+          const { getBlogPostBySlug } = await import("../db");
           const post = await getBlogPostBySlug(slug);
           
           if (post && post.published) {
             const title = post.metaTitle || `${post.title} | Blog GiftCards.com.co`;
             const description = post.metaDescription || post.excerpt;
-            const keywords = post.metaKeywords || post.keywords || '';
-            const image = post.featuredImage || '/logo-giftcards-colombia.webp';
+            const keywords = post.metaKeywords || post.keywords || "";
+            const image = post.featuredImage || "/logo-giftcards-colombia.webp";
             const postUrl = `https://giftcards.com.co/blog/${post.slug}`;
             
             // Replace meta tags in template
@@ -70,7 +144,7 @@ export async function setupVite(app: Express, server: Server) {
     <meta property="og:title" content="${title}" />
     <meta property="og:description" content="${description}" />
     <meta property="og:image" content="${image}" />
-    <meta property="article:published_time" content="${post.publishedAt?.toISOString() || ''}" />
+    <meta property="article:published_time" content="${post.publishedAt?.toISOString() || ""}" />
     <meta property="article:author" content="${post.author}" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${title}" />
@@ -78,10 +152,10 @@ export async function setupVite(app: Express, server: Server) {
     <meta name="twitter:image" content="${image}" />
     <link rel="canonical" href="${postUrl}" />`;
             
-            template = template.replace('</head>', `${ogTags}\n  </head>`);
+            template = template.replace("</head>", `${ogTags}\n  </head>`);
           }
         } catch (error) {
-          console.error('Error fetching blog post metadata:', error);
+          console.error("Error fetching blog post metadata:", error);
         }
       }
       
@@ -111,16 +185,95 @@ export function serveStatic(app: Express) {
 
   app.use(express.static(distPath));
 
-  // fall through to index.html if the file doesn't exist
+  // fall through to index.html if the file doesn"t exist
   app.use("*", async (req, res) => {
     const url = req.originalUrl;
     const indexPath = path.resolve(distPath, "index.html");
     
-    // Inject dynamic meta tags for blog posts in production
-    if (url.startsWith('/blog/') && url !== '/blog' && url !== '/blog/') {
-      const slug = url.replace('/blog/', '').split('?')[0];
+    // Inject dynamic meta tags for products in production
+    if (url.startsWith("/product/")) {
+      const slug = url.replace("/product/", "").split("?")[0];
       try {
-        const { getBlogPostBySlug } = await import('../db');
+        const { getProductBySlug } = await import("../db");
+        const product = await getProductBySlug(slug);
+        
+        if (product) {
+          let template = await fs.promises.readFile(indexPath, "utf-8");
+          
+          const title = product.metaTitle || `${product.name} | GiftCards Colombia`;
+          const description = product.metaDescription || product.description?.substring(0, 160) || "";
+          const keywords = product.metaKeywords || product.category || "";
+          const image = product.image || "/logo-giftcards-colombia.webp";
+          const productUrl = `https://giftcards.com.co/product/${product.slug}`;
+          
+          // Replace meta tags in template
+          template = template.replace(
+            /<title>.*?<\/title>/,
+            `<title>${title}</title>`
+          );
+          template = template.replace(
+            /<meta name="description" content=".*?" \/>/,
+            `<meta name="description" content="${description}" />`
+          );
+          template = template.replace(
+            /<meta name="keywords" content=".*?" \/>/,
+            `<meta name="keywords" content="${keywords}" />`
+          );
+          
+          // Add Open Graph tags and Schema.org Product markup
+          const productMarkup = `
+    <meta property="og:type" content="product" />
+    <meta property="og:url" content="${productUrl}" />
+    <meta property="og:title" content="${title}" />
+    <meta property="og:description" content="${description}" />
+    <meta property="og:image" content="${image}" />
+    <meta property="product:price:amount" content="${product.basePrice || 10}" />
+    <meta property="product:price:currency" content="USD" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="${title}" />
+    <meta name="twitter:description" content="${description}" />
+    <meta name="twitter:image" content="${image}" />
+    <link rel="canonical" href="${productUrl}" />
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org/",
+      "@type": "Product",
+      "name": "${product.name}",
+      "image": "${image}",
+      "description": "${description}",
+      "brand": {
+        "@type": "Brand",
+        "name": "GiftCards Colombia"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "${productUrl}",
+        "priceCurrency": "USD",
+        "price": "${product.basePrice || 10}",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "GiftCards Colombia"
+        }
+      }
+    }
+    </script>`;
+          
+          template = template.replace("</head>", `${productMarkup}\n  </head>`);
+          
+          res.status(200).set({ "Content-Type": "text/html" }).send(template);
+          return;
+        }
+      } catch (error) {
+        console.error("Error fetching product metadata:", error);
+      }
+    }
+    
+    // Inject dynamic meta tags for blog posts in production
+    if (url.startsWith("/blog/") && url !== "/blog" && url !== "/blog/") {
+      const slug = url.replace("/blog/", "").split("?")[0];
+      try {
+        const { getBlogPostBySlug } = await import("../db");
         const post = await getBlogPostBySlug(slug);
         
         if (post && post.published) {
@@ -128,8 +281,8 @@ export function serveStatic(app: Express) {
           
           const title = post.metaTitle || `${post.title} | Blog GiftCards.com.co`;
           const description = post.metaDescription || post.excerpt;
-          const keywords = post.metaKeywords || post.keywords || '';
-          const image = post.featuredImage || '/logo-giftcards-colombia.webp';
+          const keywords = post.metaKeywords || post.keywords || "";
+          const image = post.featuredImage || "/logo-giftcards-colombia.webp";
           const postUrl = `https://giftcards.com.co/blog/${post.slug}`;
           
           // Replace meta tags in template
@@ -153,7 +306,7 @@ export function serveStatic(app: Express) {
     <meta property="og:title" content="${title}" />
     <meta property="og:description" content="${description}" />
     <meta property="og:image" content="${image}" />
-    <meta property="article:published_time" content="${post.publishedAt?.toISOString() || ''}" />
+    <meta property="article:published_time" content="${post.publishedAt?.toISOString() || ""}" />
     <meta property="article:author" content="${post.author}" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${title}" />
@@ -161,13 +314,13 @@ export function serveStatic(app: Express) {
     <meta name="twitter:image" content="${image}" />
     <link rel="canonical" href="${postUrl}" />`;
           
-          template = template.replace('</head>', `${ogTags}\n  </head>`);
+          template = template.replace("</head>", `${ogTags}\n  </head>`);
           
           res.status(200).set({ "Content-Type": "text/html" }).send(template);
           return;
         }
       } catch (error) {
-        console.error('Error fetching blog post metadata:', error);
+        console.error("Error fetching blog post metadata:", error);
       }
     }
     
