@@ -528,3 +528,41 @@ export async function deleteFAQ(id: number) {
   if (!db) throw new Error("Database not available");
   await db.delete(faqs).where(eq(faqs.id, id));
 }
+
+// Get product by slug for SSR
+export async function getProductBySlug(slug: string) {
+  const db = await getDb();
+  if (!db) {
+    console.log('[DB] Database not available');
+    return null;
+  }
+  
+  try {
+    console.log('[DB] Querying product with slug:', slug);
+    const result = await db.select().from(products).where(eq(products.slug, slug)).limit(1);
+    console.log('[DB] Query result:', result.length > 0 ? 'FOUND' : 'NOT FOUND');
+    return result[0] || null;
+  } catch (error) {
+    console.error('[DB] Error querying product:', error);
+    return null;
+  }
+}
+
+// Get blog post by slug for SSR
+export async function getPostBySlug(slug: string) {
+  const db = await getDb();
+  if (!db) {
+    console.log('[DB] Database not available');
+    return null;
+  }
+  
+  try {
+    console.log('[DB] Querying post with slug:', slug);
+    const result = await db.select().from(blogPosts).where(eq(blogPosts.slug, slug)).limit(1);
+    console.log('[DB] Query result:', result.length > 0 ? 'FOUND' : 'NOT FOUND');
+    return result[0] || null;
+  } catch (error) {
+    console.error('[DB] Error querying post:', error);
+    return null;
+  }
+}
