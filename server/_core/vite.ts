@@ -113,14 +113,14 @@ export async function setupVite(app: Express, server: Server) {
       if (url.startsWith("/blog/") && url !== "/blog" && url !== "/blog/") {
         const slug = url.replace("/blog/", "").split("?")[0];
         try {
-          const { getBlogPostBySlug } = await import("../db");
-          const post = await getBlogPostBySlug(slug);
+          const { getPostBySlug } = await import("../db");
+          const post = await getPostBySlug(slug);
           
-          if (post && post.published) {
-            const title = post.metaTitle || `${post.title} | Blog GiftCards.com.co`;
-            const description = post.metaDescription || post.excerpt;
-            const keywords = post.metaKeywords || post.keywords || "";
-            const image = post.featuredImage || "/logo-giftcards-colombia.webp";
+          if (post) {
+            const title = post.metaTitle || `${post.title} | GiftCards Colombia Blog`;
+            const description = post.metaDescription || post.excerpt?.substring(0, 160) || "";
+            const keywords = post.metaKeywords || post.category || "";
+            const image = post.image || "/logo-giftcards-colombia.webp";
             const postUrl = `https://giftcards.com.co/blog/${post.slug}`;
             
             // Replace meta tags in template
@@ -185,7 +185,7 @@ export function serveStatic(app: Express) {
 
   app.use(express.static(distPath));
 
-  // fall through to index.html if the file doesn"t exist
+  // fall through to index.html if the file doesn't exist
   app.use("*", async (req, res) => {
     const url = req.originalUrl;
     const indexPath = path.resolve(distPath, "index.html");
@@ -193,14 +193,22 @@ export function serveStatic(app: Express) {
     // Inject dynamic meta tags for products in production
     if (url.startsWith("/product/")) {
       const slug = url.replace("/product/", "").split("?")[0];
+      console.log('[SSR PRODUCT] ============================================');
+      console.log('[SSR PRODUCT] URL:', url);
+      console.log('[SSR PRODUCT] Slug:', slug);
       try {
         const { getProductBySlug } = await import("../db");
+        console.log('[SSR PRODUCT] Fetching from database...');
         const product = await getProductBySlug(slug);
+        console.log('[SSR PRODUCT] Product found:', product ? product.name : 'NOT FOUND');
         
         if (product) {
+          console.log('[SSR PRODUCT] Product exists, generating SSR...');
           let template = await fs.promises.readFile(indexPath, "utf-8");
+          console.log('[SSR PRODUCT] Template loaded, length:', template.length);
           
           const title = product.metaTitle || `${product.name} | GiftCards Colombia`;
+          console.log('[SSR PRODUCT] Title:', title);
           const description = product.metaDescription || product.description?.substring(0, 160) || "";
           const keywords = product.metaKeywords || product.category || "";
           const image = product.image || "/logo-giftcards-colombia.webp";
@@ -260,29 +268,35 @@ export function serveStatic(app: Express) {
     </script>`;
           
           template = template.replace("</head>", `${productMarkup}\n  </head>`);
+          console.log('[SSR PRODUCT] Template modified successfully');
+          console.log('[SSR PRODUCT] Sending SSR HTML to client');
           
           res.status(200).set({ "Content-Type": "text/html" }).send(template);
           return;
         }
       } catch (error) {
-        console.error("Error fetching product metadata:", error);
+        console.error("[SSR PRODUCT] Error fetching product metadata:", error);
+        console.error("[SSR PRODUCT] Stack trace:", error.stack);
       }
+      console.log('[SSR PRODUCT] No product found or error occurred, serving default HTML');
+    } else {
+      console.log('[SSR] Request for non-product URL:', url);
     }
     
     // Inject dynamic meta tags for blog posts in production
     if (url.startsWith("/blog/") && url !== "/blog" && url !== "/blog/") {
       const slug = url.replace("/blog/", "").split("?")[0];
       try {
-        const { getBlogPostBySlug } = await import("../db");
-        const post = await getBlogPostBySlug(slug);
+        const { getPostBySlug } = await import("../db");
+        const post = await getPostBySlug(slug);
         
-        if (post && post.published) {
+        if (post) {
           let template = await fs.promises.readFile(indexPath, "utf-8");
           
-          const title = post.metaTitle || `${post.title} | Blog GiftCards.com.co`;
-          const description = post.metaDescription || post.excerpt;
-          const keywords = post.metaKeywords || post.keywords || "";
-          const image = post.featuredImage || "/logo-giftcards-colombia.webp";
+          const title = post.metaTitle || `${post.title} | GiftCards Colombia Blog`;
+          const description = post.metaDescription || post.excerpt?.substring(0, 160) || "";
+          const keywords = post.metaKeywords || post.category || "";
+          const image = post.image || "/logo-giftcards-colombia.webp";
           const postUrl = `https://giftcards.com.co/blog/${post.slug}`;
           
           // Replace meta tags in template
@@ -299,7 +313,7 @@ export function serveStatic(app: Express) {
             `<meta name="keywords" content="${keywords}" />`
           );
           
-          // Add Open Graph tags
+          // Add Open Graph tags if not present
           const ogTags = `
     <meta property="og:type" content="article" />
     <meta property="og:url" content="${postUrl}" />
